@@ -1,19 +1,281 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
-  provider = "prisma-client-js"
   output = "../generated/client"
+  provider = "prisma-client-js"
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Account {
+  accout_id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  role Role @default(user)
+  isVerified Boolean @default(false)
+  user_profile User?
+  address Address[]
+  admin Admin?
+
+  @@map("account")
+}
+
+enum Role {
+  user
+  admin
+  super_admin
+}
+
+model User{
+  user_id Int @id @default(autoincrement())
+  account_id Int @unique
+  account Account @relation(fields: [account_id],references: [accout_id])
+  referred_id Int 
+  referred Referral @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
+  phone String
+  pfp_url String
+  referral Referral? @relation(name: "UserProfileReferral")
+  
+  @@map("user")
+}
+
+model Referral{
+  referral_id Int @id @default(autoincrement())
+  user_id Int @unique
+  user User @relation(fields: [user_id], references: [user_id], name: "UserProfileReferral")
+  referral_code String
+  referred User[] @relation(name: "ReferredReferral")
+
+  @@map("referral")
+}
+
+model Address{
+  address_id Int @id @default(autoincrement())
+  account_id Int
+  account Account @relation(fields: [account_id], references: [accout_id])
+  street String
+  city String
+  province String
+  island String
+  country String
+
+  @@map("address")
+}
+
+model Admin {
+  admin_id Int @id @default(autoincrement())
+  account_id Int @unique
+  account Account @relation(fields: [account_id], references: [accout_id])
+  store_id Int
+  store Store @relation(fields: [store_id], references: [store_id])
+  phone String
+  position String
+
+  @@map("admin")
+}
+
+model Store {
+  store_id Int @id @default(autoincrement())
+  store_name String @unique
+  store_address String
+  city String
+  lat String
+  lng String
+  admin Admin[]
+  stock Stock[]
+  stock_journal StockJournal[]
+
+  @@map("store")
+}
+
+model Stock {
+  stock_id Int @id @default(autoincrement())
+  store_id Int
+  store Store @relation(fields: [store_id], references: [store_id])
+  product_id Int @unique
+  product Product @relation(fields: [product_id], references: [product_id])
+  quantity Int
+  stock_journal StockJournal[]
+
+  @@map("stock")
+}
+
+model StockJournal {
+  stock_journal_id Int @id @default(autoincrement())
+  store_id Int
+  store Store @relation(fields: [store_id], references: [store_id])
+  stock_id Int
+  stock Stock @relation(fields: [stock_id], references: [stock_id])
+  product_id String @unique
+  quantity Int
+  type String
+  notes String
+  created_at DateTime
+
+  @@map("stock_journal")
+}
+
+enum StockType {
+  in
+  out
+  transfer
+}
+
+model Product {
+  product_id Int @id @default(autoincrement())
+  product_name String @unique
+  product_price Int
+  product_category_id Int
+  product_category ProductCategory @relation(fields: [product_category_id], references: [product_category_id])
+  stock Stock[]
+  product_img ProductImg[]
+
+  @@map("product")
+}
+
+model ProductImg {
+  image_id Int @id @default(autoincrement())
+  image_url String
+  product_id Int
+  product Product @relation(fields: [product_id], references: [product_id])
+
+  @@map("product_img")
+}
+
+model ProductCategory {
+  product_category_id Int @id @default(autoincrement())
+  product_category_name String @unique
+  product Product[]
+
+  @@map("product_category")
+}
+
+model VoucherStore {
+  voucher_store_id Int @id @default(autoincrement())
+  voucher_store_code String @unique
+  voucher_store_amount_percentage Int
+  voucher_store_exact_nominal Int
+  voucher_store_minimum_buy Int
+  voucher_store_maximum_nominal Int
+  voucher_store_startdate DateTime
+  voucher_store_enddate DateTime
+  created_at DateTime
+
+  // relation
+  admin_responsible Int
+  user_id Int
+  store_id Int
+
+  @@map("voucher_store")
+}
+
+model VoucherOngkir{
+  voucher_ongkir_id Int @id @default(autoincrement())
+  voucher_ongkir_code String @unique
+  voucher_ongkir_nominal Int
+  voucher_ongkir_startdate DateTime
+  voucher_ongkir_enddate DateTime
+  created_at DateTime
+
+  // relation
+  admin_responsible Int
+  store_id Int
+
+  @@map("voucher_ongkir")
+}
+
+model VoucherProduct{
+  voucher_product_id Int @id @default(autoincrement())
+  voucher_product_code String @unique
+  voucher_product_nominal Int
+  voucher_product_startdate DateTime
+  voucher_product_enddate DateTime
+  created_at DateTime
+
+  // relation
+  admin_responsible Int
+  product_id Int
+
+  @@map("voucher_product")
+}
+
+model Discount{
+  discount_id Int @id @default(autoincrement())
+  discount_product String 
+  discount_amount Int
+  created_at DateTime
+  discount_startdate DateTime
+  discount_enddate DateTime
+  isActive Boolean
+
+  @@map("discount")
+}
+
+model Cart {
+  cart_id Int @id @default(autoincrement())
+  user_id Int
+  created_at DateTime
+
+  @@map("cart")
+}
+
+model CartItem {
+  cart_item_id Int @id @default(autoincrement())
+  cart_id Int
+  product_id Int
+  quantity Int
+}
+
+model Order {
+  order_id Int @id @default(autoincrement())
+  user_id Int
+  store_id Int
+  address_id Int
+  total_price Int
+  status String
+  order_date DateTime
+}
+
+model OrderItem {
+  order_item_id Int @id @default(autoincrement())
+  order_id Int
+  product_id Int
+  quantity Int
+  price Int
+  subtotal Int
+}
+
+model PaymentProof {
+  payment_proof_id Int @id @default(autoincrement())
+  order_id Int
+  image_url String
+  uploaded_at DateTime
+  status String
+}
+
+model OrderCancel {
+  order_cancel_id Int @id @default(autoincrement())
+  order_id Int
+  reason String
+  canceled_at DateTime
+}
+
+model AdminOrder {
+  admin_order_id Int @id @default(autoincrement())
+  admin_id Int
+  order_id Int
+  action ActionEnum
+  action_time DateTime
+}
+
+enum ActionEnum {
+  konfirmasi_pembayaran
+  kirim_pesanan
+  batalkan_pesanan
 }
