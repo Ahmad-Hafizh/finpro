@@ -17,11 +17,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.3.0
+ * Prisma Client JS version: 6.3.1
  * Query Engine version: acc0b9dd43eb689cbd20c9470515d719db10d0b0
  */
 Prisma.prismaVersion = {
-  client: "6.3.0",
+  client: "6.3.1",
   engine: "acc0b9dd43eb689cbd20c9470515d719db10d0b0"
 }
 
@@ -117,11 +117,192 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
+exports.Prisma.AccountScalarFieldEnum = {
+  accout_id: 'accout_id',
   name: 'name',
   email: 'email',
-  emailVerified: 'emailVerified'
+  password: 'password',
+  role: 'role',
+  isVerified: 'isVerified'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  user_id: 'user_id',
+  account_id: 'account_id',
+  referred_id: 'referred_id',
+  phone: 'phone',
+  pfp_url: 'pfp_url'
+};
+
+exports.Prisma.ReferralScalarFieldEnum = {
+  referral_id: 'referral_id',
+  user_id: 'user_id',
+  referral_code: 'referral_code'
+};
+
+exports.Prisma.AddressScalarFieldEnum = {
+  address_id: 'address_id',
+  account_id: 'account_id',
+  street: 'street',
+  city: 'city',
+  province: 'province',
+  island: 'island',
+  country: 'country'
+};
+
+exports.Prisma.AdminScalarFieldEnum = {
+  admin_id: 'admin_id',
+  account_id: 'account_id',
+  store_id: 'store_id',
+  phone: 'phone',
+  position: 'position'
+};
+
+exports.Prisma.StoreScalarFieldEnum = {
+  store_id: 'store_id',
+  store_name: 'store_name',
+  store_address: 'store_address',
+  city: 'city',
+  lat: 'lat',
+  lng: 'lng'
+};
+
+exports.Prisma.StockScalarFieldEnum = {
+  stock_id: 'stock_id',
+  store_id: 'store_id',
+  product_id: 'product_id',
+  quantity: 'quantity'
+};
+
+exports.Prisma.StockJournalScalarFieldEnum = {
+  stock_journal_id: 'stock_journal_id',
+  store_id: 'store_id',
+  stock_id: 'stock_id',
+  product_id: 'product_id',
+  quantity: 'quantity',
+  type: 'type',
+  notes: 'notes',
+  created_at: 'created_at'
+};
+
+exports.Prisma.ProductScalarFieldEnum = {
+  product_id: 'product_id',
+  product_name: 'product_name',
+  product_price: 'product_price',
+  product_category_id: 'product_category_id'
+};
+
+exports.Prisma.ProductImgScalarFieldEnum = {
+  image_id: 'image_id',
+  image_url: 'image_url',
+  product_id: 'product_id'
+};
+
+exports.Prisma.ProductCategoryScalarFieldEnum = {
+  product_category_id: 'product_category_id',
+  product_category_name: 'product_category_name'
+};
+
+exports.Prisma.VoucherStoreScalarFieldEnum = {
+  voucher_store_id: 'voucher_store_id',
+  voucher_store_code: 'voucher_store_code',
+  voucher_store_amount_percentage: 'voucher_store_amount_percentage',
+  voucher_store_exact_nominal: 'voucher_store_exact_nominal',
+  voucher_store_minimum_buy: 'voucher_store_minimum_buy',
+  voucher_store_maximum_nominal: 'voucher_store_maximum_nominal',
+  voucher_store_startdate: 'voucher_store_startdate',
+  voucher_store_enddate: 'voucher_store_enddate',
+  created_at: 'created_at',
+  admin_responsible: 'admin_responsible',
+  user_id: 'user_id',
+  store_id: 'store_id'
+};
+
+exports.Prisma.VoucherOngkirScalarFieldEnum = {
+  voucher_ongkir_id: 'voucher_ongkir_id',
+  voucher_ongkir_code: 'voucher_ongkir_code',
+  voucher_ongkir_nominal: 'voucher_ongkir_nominal',
+  voucher_ongkir_startdate: 'voucher_ongkir_startdate',
+  voucher_ongkir_enddate: 'voucher_ongkir_enddate',
+  created_at: 'created_at',
+  admin_responsible: 'admin_responsible',
+  store_id: 'store_id'
+};
+
+exports.Prisma.VoucherProductScalarFieldEnum = {
+  voucher_product_id: 'voucher_product_id',
+  voucher_product_code: 'voucher_product_code',
+  voucher_product_nominal: 'voucher_product_nominal',
+  voucher_product_startdate: 'voucher_product_startdate',
+  voucher_product_enddate: 'voucher_product_enddate',
+  created_at: 'created_at',
+  admin_responsible: 'admin_responsible',
+  product_id: 'product_id'
+};
+
+exports.Prisma.DiscountScalarFieldEnum = {
+  discount_id: 'discount_id',
+  discount_product: 'discount_product',
+  discount_amount: 'discount_amount',
+  created_at: 'created_at',
+  discount_startdate: 'discount_startdate',
+  discount_enddate: 'discount_enddate',
+  isActive: 'isActive'
+};
+
+exports.Prisma.CartScalarFieldEnum = {
+  cart_id: 'cart_id',
+  user_id: 'user_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  cart_item_id: 'cart_item_id',
+  cart_id: 'cart_id',
+  product_id: 'product_id',
+  quantity: 'quantity'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  order_id: 'order_id',
+  user_id: 'user_id',
+  store_id: 'store_id',
+  address_id: 'address_id',
+  total_price: 'total_price',
+  status: 'status',
+  order_date: 'order_date'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  order_item_id: 'order_item_id',
+  order_id: 'order_id',
+  product_id: 'product_id',
+  quantity: 'quantity',
+  price: 'price',
+  subtotal: 'subtotal'
+};
+
+exports.Prisma.PaymentProofScalarFieldEnum = {
+  payment_proof_id: 'payment_proof_id',
+  order_id: 'order_id',
+  image_url: 'image_url',
+  uploaded_at: 'uploaded_at',
+  status: 'status'
+};
+
+exports.Prisma.OrderCancelScalarFieldEnum = {
+  order_cancel_id: 'order_cancel_id',
+  order_id: 'order_id',
+  reason: 'reason',
+  canceled_at: 'canceled_at'
+};
+
+exports.Prisma.AdminOrderScalarFieldEnum = {
+  admin_order_id: 'admin_order_id',
+  admin_id: 'admin_id',
+  order_id: 'order_id',
+  action: 'action',
+  action_time: 'action_time'
 };
 
 exports.Prisma.SortOrder = {
@@ -129,20 +310,45 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+exports.Role = exports.$Enums.Role = {
+  user: 'user',
+  admin: 'admin',
+  super_admin: 'super_admin'
 };
 
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email'
+exports.ActionEnum = exports.$Enums.ActionEnum = {
+  konfirmasi_pembayaran: 'konfirmasi_pembayaran',
+  kirim_pesanan: 'kirim_pesanan',
+  batalkan_pesanan: 'batalkan_pesanan'
 };
-
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  Account: 'Account',
+  User: 'User',
+  Referral: 'Referral',
+  Address: 'Address',
+  Admin: 'Admin',
+  Store: 'Store',
+  Stock: 'Stock',
+  StockJournal: 'StockJournal',
+  Product: 'Product',
+  ProductImg: 'ProductImg',
+  ProductCategory: 'ProductCategory',
+  VoucherStore: 'VoucherStore',
+  VoucherOngkir: 'VoucherOngkir',
+  VoucherProduct: 'VoucherProduct',
+  Discount: 'Discount',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
+  Order: 'Order',
+  OrderItem: 'OrderItem',
+  PaymentProof: 'PaymentProof',
+  OrderCancel: 'OrderCancel',
+  AdminOrder: 'AdminOrder'
 };
 
 /**
