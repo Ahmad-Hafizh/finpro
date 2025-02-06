@@ -339,7 +339,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/macbook/Documents/finpro/finpro/packages/database/generated/client",
+      "value": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -348,12 +348,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/macbook/Documents/finpro/finpro/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
