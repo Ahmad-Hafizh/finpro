@@ -1,5 +1,6 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import { prisma } from "../../../packages/database/src/client";
 
 const PORT = 8090;
 class App {
@@ -17,8 +18,8 @@ class App {
   }
 
   private routes() {
-    this.app.get('/', (req: Request, res: Response): any => {
-      return res.status(200).send('test api');
+    this.app.get("/", (req: Request, res: Response): any => {
+      return res.status(200).send("test api");
     });
   }
 
