@@ -36,8 +36,8 @@ model User {
   user_id     Int       @id @default(autoincrement())
   account_id  Int       @unique
   account     Account   @relation(fields: [account_id], references: [account_id])
-  referred_id Int
-  referred    Referral  @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
+  referred_id Int?
+  referred    Referral? @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
   phone       String
   pfp_url     String
   referral    Referral? @relation(name: "UserProfileReferral")
@@ -49,8 +49,8 @@ model User {
 
 model Referral {
   referral_id   Int    @id @default(autoincrement())
-  user_id       Int    @unique
-  user          User   @relation(fields: [user_id], references: [user_id], name: "UserProfileReferral")
+  user_id       Int?   @unique
+  user          User?  @relation(fields: [user_id], references: [user_id], name: "UserProfileReferral")
   referral_code String
   referred      User[] @relation(name: "ReferredReferral")
 

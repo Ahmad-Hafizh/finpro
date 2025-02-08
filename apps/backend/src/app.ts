@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { prisma } from "../../../packages/database/src/client";
+import { CartRouter } from "./routers/cart.router";
 
 const PORT = 8090;
 class App {
@@ -18,9 +19,11 @@ class App {
   }
 
   private routes() {
+    const cartRouter = new CartRouter();
     this.app.get("/", (req: Request, res: Response): any => {
       return res.status(200).send("test api");
     });
+    this.app.use("/cart", cartRouter.getRouter());
   }
 
   public start() {
