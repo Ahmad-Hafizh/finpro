@@ -4601,7 +4601,7 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     user_id: number
     account_id: number
-    referred_id: number
+    referred_id: number | null
     phone: string
     pfp_url: string
     _count: UserCountAggregateOutputType | null
@@ -4632,7 +4632,7 @@ export namespace Prisma {
     phone?: boolean
     pfp_url?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
     referral?: boolean | User$referralArgs<ExtArgs>
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -4646,7 +4646,7 @@ export namespace Prisma {
     phone?: boolean
     pfp_url?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4656,7 +4656,7 @@ export namespace Prisma {
     phone?: boolean
     pfp_url?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -4670,7 +4670,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "account_id" | "referred_id" | "phone" | "pfp_url", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
     referral?: boolean | User$referralArgs<ExtArgs>
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -4678,18 +4678,18 @@ export namespace Prisma {
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
   }
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
-    referred?: boolean | ReferralDefaultArgs<ExtArgs>
+    referred?: boolean | User$referredArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
       account: Prisma.$AccountPayload<ExtArgs>
-      referred: Prisma.$ReferralPayload<ExtArgs>
+      referred: Prisma.$ReferralPayload<ExtArgs> | null
       referral: Prisma.$ReferralPayload<ExtArgs> | null
       cart: Prisma.$CartPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
@@ -4697,7 +4697,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
       account_id: number
-      referred_id: number
+      referred_id: number | null
       phone: string
       pfp_url: string
     }, ExtArgs["result"]["user"]>
@@ -5095,7 +5095,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    referred<T extends ReferralDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReferralDefaultArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    referred<T extends User$referredArgs<ExtArgs> = {}>(args?: Subset<T, User$referredArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     referral<T extends User$referralArgs<ExtArgs> = {}>(args?: Subset<T, User$referralArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     cart<T extends User$cartArgs<ExtArgs> = {}>(args?: Subset<T, User$cartArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
@@ -5529,6 +5529,25 @@ export namespace Prisma {
   }
 
   /**
+   * User.referred
+   */
+  export type User$referredArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    where?: ReferralWhereInput
+  }
+
+  /**
    * User.referral
    */
   export type User$referralArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5773,7 +5792,7 @@ export namespace Prisma {
 
   export type ReferralGroupByOutputType = {
     referral_id: number
-    user_id: number
+    user_id: number | null
     referral_code: string
     _count: ReferralCountAggregateOutputType | null
     _avg: ReferralAvgAggregateOutputType | null
@@ -5800,7 +5819,7 @@ export namespace Prisma {
     referral_id?: boolean
     user_id?: boolean
     referral_code?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
     referred?: boolean | Referral$referredArgs<ExtArgs>
     _count?: boolean | ReferralCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
@@ -5809,14 +5828,14 @@ export namespace Prisma {
     referral_id?: boolean
     user_id?: boolean
     referral_code?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
 
   export type ReferralSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     referral_id?: boolean
     user_id?: boolean
     referral_code?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
 
   export type ReferralSelectScalar = {
@@ -5827,26 +5846,26 @@ export namespace Prisma {
 
   export type ReferralOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"referral_id" | "user_id" | "referral_code", ExtArgs["result"]["referral"]>
   export type ReferralInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
     referred?: boolean | Referral$referredArgs<ExtArgs>
     _count?: boolean | ReferralCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReferralIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
   }
   export type ReferralIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | Referral$userArgs<ExtArgs>
   }
 
   export type $ReferralPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Referral"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
       referred: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       referral_id: number
-      user_id: number
+      user_id: number | null
       referral_code: string
     }, ExtArgs["result"]["referral"]>
     composites: {}
@@ -6242,7 +6261,7 @@ export namespace Prisma {
    */
   export interface Prisma__ReferralClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    user<T extends Referral$userArgs<ExtArgs> = {}>(args?: Subset<T, Referral$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     referred<T extends Referral$referredArgs<ExtArgs> = {}>(args?: Subset<T, Referral$referredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6669,6 +6688,25 @@ export namespace Prisma {
      * Limit how many Referrals to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Referral.user
+   */
+  export type Referral$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -28345,6 +28383,14 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   /**
    * Field references 
    */
@@ -28546,11 +28592,11 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     user_id?: IntFilter<"User"> | number
     account_id?: IntFilter<"User"> | number
-    referred_id?: IntFilter<"User"> | number
+    referred_id?: IntNullableFilter<"User"> | number | null
     phone?: StringFilter<"User"> | string
     pfp_url?: StringFilter<"User"> | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    referred?: XOR<ReferralScalarRelationFilter, ReferralWhereInput>
+    referred?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     referral?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     cart?: CartListRelationFilter
     orders?: OrderListRelationFilter
@@ -28559,7 +28605,7 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     user_id?: SortOrder
     account_id?: SortOrder
-    referred_id?: SortOrder
+    referred_id?: SortOrderInput | SortOrder
     phone?: SortOrder
     pfp_url?: SortOrder
     account?: AccountOrderByWithRelationInput
@@ -28575,11 +28621,11 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    referred_id?: IntFilter<"User"> | number
+    referred_id?: IntNullableFilter<"User"> | number | null
     phone?: StringFilter<"User"> | string
     pfp_url?: StringFilter<"User"> | string
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    referred?: XOR<ReferralScalarRelationFilter, ReferralWhereInput>
+    referred?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     referral?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     cart?: CartListRelationFilter
     orders?: OrderListRelationFilter
@@ -28588,7 +28634,7 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     user_id?: SortOrder
     account_id?: SortOrder
-    referred_id?: SortOrder
+    referred_id?: SortOrderInput | SortOrder
     phone?: SortOrder
     pfp_url?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -28604,7 +28650,7 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     user_id?: IntWithAggregatesFilter<"User"> | number
     account_id?: IntWithAggregatesFilter<"User"> | number
-    referred_id?: IntWithAggregatesFilter<"User"> | number
+    referred_id?: IntNullableWithAggregatesFilter<"User"> | number | null
     phone?: StringWithAggregatesFilter<"User"> | string
     pfp_url?: StringWithAggregatesFilter<"User"> | string
   }
@@ -28614,15 +28660,15 @@ export namespace Prisma {
     OR?: ReferralWhereInput[]
     NOT?: ReferralWhereInput | ReferralWhereInput[]
     referral_id?: IntFilter<"Referral"> | number
-    user_id?: IntFilter<"Referral"> | number
+    user_id?: IntNullableFilter<"Referral"> | number | null
     referral_code?: StringFilter<"Referral"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     referred?: UserListRelationFilter
   }
 
   export type ReferralOrderByWithRelationInput = {
     referral_id?: SortOrder
-    user_id?: SortOrder
+    user_id?: SortOrderInput | SortOrder
     referral_code?: SortOrder
     user?: UserOrderByWithRelationInput
     referred?: UserOrderByRelationAggregateInput
@@ -28635,13 +28681,13 @@ export namespace Prisma {
     OR?: ReferralWhereInput[]
     NOT?: ReferralWhereInput | ReferralWhereInput[]
     referral_code?: StringFilter<"Referral"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     referred?: UserListRelationFilter
   }, "referral_id" | "user_id">
 
   export type ReferralOrderByWithAggregationInput = {
     referral_id?: SortOrder
-    user_id?: SortOrder
+    user_id?: SortOrderInput | SortOrder
     referral_code?: SortOrder
     _count?: ReferralCountOrderByAggregateInput
     _avg?: ReferralAvgOrderByAggregateInput
@@ -28655,7 +28701,7 @@ export namespace Prisma {
     OR?: ReferralScalarWhereWithAggregatesInput[]
     NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
     referral_id?: IntWithAggregatesFilter<"Referral"> | number
-    user_id?: IntWithAggregatesFilter<"Referral"> | number
+    user_id?: IntNullableWithAggregatesFilter<"Referral"> | number | null
     referral_code?: StringWithAggregatesFilter<"Referral"> | string
   }
 
@@ -29940,7 +29986,7 @@ export namespace Prisma {
     phone: string
     pfp_url: string
     account: AccountCreateNestedOneWithoutUser_profileInput
-    referred: ReferralCreateNestedOneWithoutReferredInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -29949,7 +29995,7 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     user_id?: number
     account_id: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
@@ -29961,7 +30007,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutUser_profileNestedInput
-    referred?: ReferralUpdateOneRequiredWithoutReferredNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -29970,7 +30016,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     account_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
@@ -29981,7 +30027,7 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     user_id?: number
     account_id: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
   }
@@ -29994,40 +30040,40 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     account_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReferralCreateInput = {
     referral_code: string
-    user: UserCreateNestedOneWithoutReferralInput
+    user?: UserCreateNestedOneWithoutReferralInput
     referred?: UserCreateNestedManyWithoutReferredInput
   }
 
   export type ReferralUncheckedCreateInput = {
     referral_id?: number
-    user_id: number
+    user_id?: number | null
     referral_code: string
     referred?: UserUncheckedCreateNestedManyWithoutReferredInput
   }
 
   export type ReferralUpdateInput = {
     referral_code?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutReferralNestedInput
+    user?: UserUpdateOneWithoutReferralNestedInput
     referred?: UserUpdateManyWithoutReferredNestedInput
   }
 
   export type ReferralUncheckedUpdateInput = {
     referral_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: NullableIntFieldUpdateOperationsInput | number | null
     referral_code?: StringFieldUpdateOperationsInput | string
     referred?: UserUncheckedUpdateManyWithoutReferredNestedInput
   }
 
   export type ReferralCreateManyInput = {
     referral_id?: number
-    user_id: number
+    user_id?: number | null
     referral_code: string
   }
 
@@ -30037,7 +30083,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateManyInput = {
     referral_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: NullableIntFieldUpdateOperationsInput | number | null
     referral_code?: StringFieldUpdateOperationsInput | string
   }
 
@@ -31331,14 +31377,20 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type AccountScalarRelationFilter = {
     is?: AccountWhereInput
     isNot?: AccountWhereInput
-  }
-
-  export type ReferralScalarRelationFilter = {
-    is?: ReferralWhereInput
-    isNot?: ReferralWhereInput
   }
 
   export type ReferralNullableScalarRelationFilter = {
@@ -31356,6 +31408,11 @@ export namespace Prisma {
     every?: OrderWhereInput
     some?: OrderWhereInput
     none?: OrderWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type CartOrderByRelationAggregateInput = {
@@ -31402,9 +31459,20 @@ export namespace Prisma {
     referred_id?: SortOrder
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type UserListRelationFilter = {
@@ -32048,6 +32116,11 @@ export namespace Prisma {
     discount_amount?: SortOrder
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
   export type CartCountOrderByAggregateInput = {
     cart_id?: SortOrder
     user_id?: SortOrder
@@ -32570,10 +32643,12 @@ export namespace Prisma {
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutUser_profileInput, AccountUpdateWithoutUser_profileInput>, AccountUncheckedUpdateWithoutUser_profileInput>
   }
 
-  export type ReferralUpdateOneRequiredWithoutReferredNestedInput = {
+  export type ReferralUpdateOneWithoutReferredNestedInput = {
     create?: XOR<ReferralCreateWithoutReferredInput, ReferralUncheckedCreateWithoutReferredInput>
     connectOrCreate?: ReferralCreateOrConnectWithoutReferredInput
     upsert?: ReferralUpsertWithoutReferredInput
+    disconnect?: ReferralWhereInput | boolean
+    delete?: ReferralWhereInput | boolean
     connect?: ReferralWhereUniqueInput
     update?: XOR<XOR<ReferralUpdateToOneWithWhereWithoutReferredInput, ReferralUpdateWithoutReferredInput>, ReferralUncheckedUpdateWithoutReferredInput>
   }
@@ -32614,6 +32689,14 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ReferralUncheckedUpdateOneWithoutUserNestedInput = {
@@ -32674,10 +32757,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-  export type UserUpdateOneRequiredWithoutReferralNestedInput = {
+  export type UserUpdateOneWithoutReferralNestedInput = {
     create?: XOR<UserCreateWithoutReferralInput, UserUncheckedCreateWithoutReferralInput>
     connectOrCreate?: UserCreateOrConnectWithoutReferralInput
     upsert?: UserUpsertWithoutReferralInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralInput, UserUpdateWithoutReferralInput>, UserUncheckedUpdateWithoutReferralInput>
   }
@@ -33813,6 +33898,44 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -33892,7 +34015,7 @@ export namespace Prisma {
   export type UserCreateWithoutAccountInput = {
     phone: string
     pfp_url: string
-    referred: ReferralCreateNestedOneWithoutReferredInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -33900,7 +34023,7 @@ export namespace Prisma {
 
   export type UserUncheckedCreateWithoutAccountInput = {
     user_id?: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
@@ -33976,7 +34099,7 @@ export namespace Prisma {
   export type UserUpdateWithoutAccountInput = {
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
-    referred?: ReferralUpdateOneRequiredWithoutReferredNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -33984,7 +34107,7 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateWithoutAccountInput = {
     user_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
@@ -34075,12 +34198,12 @@ export namespace Prisma {
 
   export type ReferralCreateWithoutReferredInput = {
     referral_code: string
-    user: UserCreateNestedOneWithoutReferralInput
+    user?: UserCreateNestedOneWithoutReferralInput
   }
 
   export type ReferralUncheckedCreateWithoutReferredInput = {
     referral_id?: number
-    user_id: number
+    user_id?: number | null
     referral_code: string
   }
 
@@ -34206,12 +34329,12 @@ export namespace Prisma {
 
   export type ReferralUpdateWithoutReferredInput = {
     referral_code?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutReferralNestedInput
+    user?: UserUpdateOneWithoutReferralNestedInput
   }
 
   export type ReferralUncheckedUpdateWithoutReferredInput = {
     referral_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: NullableIntFieldUpdateOperationsInput | number | null
     referral_code?: StringFieldUpdateOperationsInput | string
   }
 
@@ -34295,7 +34418,7 @@ export namespace Prisma {
     phone: string
     pfp_url: string
     account: AccountCreateNestedOneWithoutUser_profileInput
-    referred: ReferralCreateNestedOneWithoutReferredInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -34303,7 +34426,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutReferralInput = {
     user_id?: number
     account_id: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
@@ -34359,7 +34482,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutUser_profileNestedInput
-    referred?: ReferralUpdateOneRequiredWithoutReferredNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -34367,7 +34490,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutReferralInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     account_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
@@ -34396,7 +34519,7 @@ export namespace Prisma {
     NOT?: UserScalarWhereInput | UserScalarWhereInput[]
     user_id?: IntFilter<"User"> | number
     account_id?: IntFilter<"User"> | number
-    referred_id?: IntFilter<"User"> | number
+    referred_id?: IntNullableFilter<"User"> | number | null
     phone?: StringFilter<"User"> | string
     pfp_url?: StringFilter<"User"> | string
   }
@@ -35486,7 +35609,7 @@ export namespace Prisma {
     phone: string
     pfp_url: string
     account: AccountCreateNestedOneWithoutUser_profileInput
-    referred: ReferralCreateNestedOneWithoutReferredInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -35494,7 +35617,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutCartInput = {
     user_id?: number
     account_id: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
@@ -35542,7 +35665,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutUser_profileNestedInput
-    referred?: ReferralUpdateOneRequiredWithoutReferredNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -35550,7 +35673,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutCartInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     account_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
@@ -35669,7 +35792,7 @@ export namespace Prisma {
     phone: string
     pfp_url: string
     account: AccountCreateNestedOneWithoutUser_profileInput
-    referred: ReferralCreateNestedOneWithoutReferredInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
   }
@@ -35677,7 +35800,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutOrdersInput = {
     user_id?: number
     account_id: number
-    referred_id: number
+    referred_id?: number | null
     phone: string
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
@@ -35838,7 +35961,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutUser_profileNestedInput
-    referred?: ReferralUpdateOneRequiredWithoutReferredNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
   }
@@ -35846,7 +35969,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutOrdersInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     account_id?: IntFieldUpdateOperationsInput | number
-    referred_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
