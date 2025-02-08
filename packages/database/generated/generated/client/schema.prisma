@@ -1,0 +1,326 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  output   = "../generated/client"
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Account {
+  account_id   Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  password     String
+  role         Role      @default(user)
+  isVerified   Boolean   @default(false)
+  user_profile User?
+  address      Address[]
+  admin        Admin?
+
+  @@map("account")
+}
+
+enum Role {
+  user
+  admin
+  super_admin
+}
+
+model User {
+  user_id     Int       @id @default(autoincrement())
+  account_id  Int       @unique
+  account     Account   @relation(fields: [account_id], references: [account_id])
+  referred_id Int?
+  referred    Referral? @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
+  phone       String
+  pfp_url     String
+  referral    Referral? @relation(name: "UserProfileReferral")
+  cart        Cart[]
+  orders      Order[]
+
+  @@map("user")
+}
+
+model Referral {
+  referral_id   Int    @id @default(autoincrement())
+  user_id       Int?   @unique
+  user          User?  @relation(fields: [user_id], references: [user_id], name: "UserProfileReferral")
+  referral_code String
+  referred      User[] @relation(name: "ReferredReferral")
+
+  @@map("referral")
+}
+
+model Address {
+  address_id Int     @id @default(autoincrement())
+  account_id Int
+  account    Account @relation(fields: [account_id], references: [account_id])
+  street     String
+  city       String
+  province   String
+  island     String
+  country    String
+  orders     Order[]
+
+  @@map("address")
+}
+
+model Admin {
+  admin_id     Int          @id @default(autoincrement())
+  account_id   Int          @unique
+  account      Account      @relation(fields: [account_id], references: [account_id])
+  store_id     Int
+  store        Store        @relation(fields: [store_id], references: [store_id])
+  phone        String
+  position     String
+  admin_orders AdminOrder[]
+
+  @@map("admin")
+}
+
+model Store {
+  store_id      Int            @id @default(autoincrement())
+  store_name    String         @unique
+  store_address String
+  city          String
+  lat           String
+  lng           String
+  admin         Admin[]
+  stock         Stock[]
+  stock_journal StockJournal[]
+  orders        Order[]
+
+  @@map("store")
+}
+
+model Stock {
+  stock_id      Int            @id @default(autoincrement())
+  store_id      Int
+  store         Store          @relation(fields: [store_id], references: [store_id])
+  product_id    Int            @unique
+  product       Product        @relation(fields: [product_id], references: [product_id])
+  quantity      Int
+  stock_journal StockJournal[]
+
+  @@map("stock")
+}
+
+model StockJournal {
+  stock_journal_id Int      @id @default(autoincrement())
+  store_id         Int
+  store            Store    @relation(fields: [store_id], references: [store_id])
+  stock_id         Int
+  stock            Stock    @relation(fields: [stock_id], references: [stock_id])
+  product_id       String   @unique
+  quantity         Int
+  type             String
+  notes            String
+  created_at       DateTime
+
+  @@map("stock_journal")
+}
+
+enum StockType {
+  in
+  out
+  transfer
+}
+
+model Product {
+  product_id          Int             @id @default(autoincrement())
+  product_name        String          @unique
+  product_price       Int
+  product_category_id Int
+  product_category    ProductCategory @relation(fields: [product_category_id], references: [product_category_id])
+  stock               Stock[]
+  product_img         ProductImg[]
+  cart_items          CartItem[]
+  order_items         OrderItem[]
+
+  @@map("product")
+}
+
+model ProductImg {
+  image_id   Int     @id @default(autoincrement())
+  image_url  String
+  product_id Int
+  product    Product @relation(fields: [product_id], references: [product_id])
+
+  @@map("product_img")
+}
+
+model ProductCategory {
+  product_category_id   Int       @id @default(autoincrement())
+  product_category_name String    @unique
+  product               Product[]
+
+  @@map("product_category")
+}
+
+model VoucherStore {
+  voucher_store_id                Int      @id @default(autoincrement())
+  voucher_store_code              String   @unique
+  voucher_store_amount_percentage Int
+  voucher_store_exact_nominal     Int
+  voucher_store_minimum_buy       Int
+  voucher_store_maximum_nominal   Int
+  voucher_store_startdate         DateTime
+  voucher_store_enddate           DateTime
+  created_at                      DateTime
+
+  // relation
+  admin_responsible Int
+  user_id           Int
+  store_id          Int
+
+  @@map("voucher_store")
+}
+
+model VoucherOngkir {
+  voucher_ongkir_id        Int      @id @default(autoincrement())
+  voucher_ongkir_code      String   @unique
+  voucher_ongkir_nominal   Int
+  voucher_ongkir_startdate DateTime
+  voucher_ongkir_enddate   DateTime
+  created_at               DateTime
+
+  // relation
+  admin_responsible Int
+  store_id          Int
+
+  @@map("voucher_ongkir")
+}
+
+model VoucherProduct {
+  voucher_product_id        Int      @id @default(autoincrement())
+  voucher_product_code      String   @unique
+  voucher_product_nominal   Int
+  voucher_product_startdate DateTime
+  voucher_product_enddate   DateTime
+  created_at                DateTime
+
+  // relation
+  admin_responsible Int
+  product_id        Int
+
+  @@map("voucher_product")
+}
+
+model Discount {
+  discount_id        Int      @id @default(autoincrement())
+  discount_product   String
+  discount_amount    Int
+  created_at         DateTime
+  discount_startdate DateTime
+  discount_enddate   DateTime
+  isActive           Boolean
+
+  @@map("discount")
+}
+
+model Cart {
+  cart_id    Int        @id @default(autoincrement())
+  user_id    Int
+  user       User       @relation(fields: [user_id], references: [user_id])
+  created_at DateTime
+  cart_items CartItem[]
+
+  @@map("cart")
+}
+
+model CartItem {
+  cart_item_id Int     @id @default(autoincrement())
+  cart_id      Int
+  cart         Cart    @relation(fields: [cart_id], references: [cart_id])
+  product_id   Int
+  product      Product @relation(fields: [product_id], references: [product_id])
+  quantity     Int
+}
+
+model Order {
+  order_id      Int           @id @default(autoincrement())
+  user_id       Int
+  user          User          @relation(fields: [user_id], references: [user_id])
+  store_id      Int
+  store         Store         @relation(fields: [store_id], references: [store_id])
+  address_id    Int
+  address       Address       @relation(fields: [address_id], references: [address_id])
+  total_price   Int
+  status        OrderStatus
+  order_date    DateTime
+  order_items   OrderItem[]
+  payment_proof PaymentProof?
+  order_cancel  OrderCancel?
+  admin_orders  AdminOrder[]
+}
+
+model OrderItem {
+  order_item_id Int     @id @default(autoincrement())
+  order_id      Int
+  order         Order   @relation(fields: [order_id], references: [order_id])
+  product_id    Int
+  product       Product @relation(fields: [product_id], references: [product_id])
+  quantity      Int
+  price         Int
+  subtotal      Int
+
+  @@map("order_item")
+}
+
+model PaymentProof {
+  payment_proof_id Int           @id @default(autoincrement())
+  order_id         Int           @unique
+  order            Order         @relation(fields: [order_id], references: [order_id])
+  image_url        String
+  uploaded_at      DateTime
+  status           PaymentStatus
+
+  @@map("payment_proof")
+}
+
+model OrderCancel {
+  order_cancel_id Int      @id @default(autoincrement())
+  order_id        Int      @unique
+  order           Order    @relation(fields: [order_id], references: [order_id])
+  reason          String
+  canceled_at     DateTime
+}
+
+model AdminOrder {
+  admin_order_id Int        @id @default(autoincrement())
+  admin_id       Int
+  admin          Admin      @relation(fields: [admin_id], references: [admin_id])
+  order_id       Int
+  order          Order      @relation(fields: [order_id], references: [order_id])
+  action         ActionEnum
+  action_time    DateTime
+
+  @@map("admin_order")
+}
+
+enum ActionEnum {
+  konfirmasi_pembayaran
+  kirim_pesanan
+  batalkan_pesanan
+}
+
+enum OrderStatus {
+  menunggu_pembayaran
+  menunggu_konfirmasi
+  diproses
+  dikirim
+  pesanan_dikonfirmasi
+  dibatalkan
+}
+
+enum PaymentStatus {
+  pending
+  approved
+  rejected
+}
