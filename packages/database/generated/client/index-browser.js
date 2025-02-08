@@ -214,7 +214,6 @@ exports.Prisma.VoucherStoreScalarFieldEnum = {
   voucher_store_enddate: 'voucher_store_enddate',
   created_at: 'created_at',
   admin_responsible: 'admin_responsible',
-  user_id: 'user_id',
   store_id: 'store_id'
 };
 
