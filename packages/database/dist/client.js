@@ -5926,7 +5926,7 @@ var require_client = __commonJS({
       },
       "relativeEnvPaths": {
         "rootEnvPath": null,
-        "schemaEnvPath": "../../../../.env"
+        "schemaEnvPath": "../../.env"
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.3.1",
@@ -5952,8 +5952,8 @@ var require_client = __commonJS({
     config2.dirname = __dirname;
     if (!fs2.existsSync(path.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
-        "packages/database/generated/client",
-        "database/generated/client"
+        "generated/client",
+        "client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
         return fs2.existsSync(path.join(process.cwd(), altPath, "schema.prisma"));
@@ -5974,9 +5974,9 @@ var require_client = __commonJS({
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
     path.join(__dirname, "query_engine-windows.dll.node");
-    path.join(process.cwd(), "packages/database/generated/client/query_engine-windows.dll.node");
+    path.join(process.cwd(), "generated/client/query_engine-windows.dll.node");
     path.join(__dirname, "schema.prisma");
-    path.join(process.cwd(), "packages/database/generated/client/schema.prisma");
+    path.join(process.cwd(), "generated/client/schema.prisma");
   }
 });
 
