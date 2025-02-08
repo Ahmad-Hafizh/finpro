@@ -118,7 +118,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.AccountScalarFieldEnum = {
-  accout_id: 'accout_id',
+  account_id: 'account_id',
   name: 'name',
   email: 'email',
   password: 'password',
@@ -318,6 +318,21 @@ exports.Role = exports.$Enums.Role = {
   user: 'user',
   admin: 'admin',
   super_admin: 'super_admin'
+};
+
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  menunggu_pembayaran: 'menunggu_pembayaran',
+  menunggu_konfirmasi: 'menunggu_konfirmasi',
+  diproses: 'diproses',
+  dikirim: 'dikirim',
+  pesanan_dikonfirmasi: 'pesanan_dikonfirmasi',
+  dibatalkan: 'dibatalkan'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected'
 };
 
 exports.ActionEnum = exports.$Enums.ActionEnum = {

@@ -1,6 +1,6 @@
-import express, { Application, Request, Response } from "express";
-import cors from "cors";
-import { prisma } from "../../../packages/database/src/client";
+import express, { Application, Request, Response } from 'express';
+import cors from 'cors';
+import AccountRouter from './routers/account.router';
 
 const PORT = 8090;
 class App {
@@ -18,9 +18,12 @@ class App {
   }
 
   private routes() {
-    this.app.get("/", (req: Request, res: Response): any => {
-      return res.status(200).send("test api");
+    this.app.get('/', (req: Request, res: Response): any => {
+      return res.status(200).send('test api');
     });
+
+    const accountRouter = new AccountRouter();
+    this.app.use('/account', accountRouter.getRouter());
   }
 
   public start() {
