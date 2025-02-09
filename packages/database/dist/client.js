@@ -5925,7 +5925,7 @@ var require_client = __commonJS({
         "isCustomOutput": true
       },
       "relativeEnvPaths": {
-        "rootEnvPath": "../../.env",
+        "rootEnvPath": null,
         "schemaEnvPath": "../../.env"
       },
       "relativePath": "../../prisma",
