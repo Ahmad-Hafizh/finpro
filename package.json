@@ -26,7 +26,8 @@
   },
   "name": "with-prisma",
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "latest",
+    "react-icons": "^5.4.0"
   },
   "packageManager": "npm@10.8.3",
   "workspaces": [

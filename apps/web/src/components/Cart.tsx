@@ -1,0 +1,279 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+interface ProductImg {
+  url: string;
+}
+
+interface Product {
+  product_id: number;
+  product_name: string;
+  product_price: number;
+  product_img?: ProductImg[];
+}
+
+interface CartItem {
+  cart_item_id: number;
+  product_id: number;
+  quantity: number;
+  product: Product;
+  subtotal: number;
+}
+interface CartResponse {
+  items: CartItem[];
+  total: number;
+}
+
+const Cart: React.FC = () => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartTotal, setCartTotal] = useState<number>(0);
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [cartCount, setCartCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchCartItems = async () => {
+    try {
+      const res = await fetch("http://localhost:8090/cart/items");
+      const data: CartResponse = await res.json();
+      if (res.ok) {
+        setCartItems(data.items);
+        setCartTotal(data.total);
+        const initialQuantities: { [key: number]: number } = {};
+        data.items.forEach((item: CartItem) => {
+          initialQuantities[item.cart_item_id] = item.quantity;
+        });
+        setQuantities(initialQuantities);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+    setLoading(false);
+  };
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await fetch("http://localhost:8090/cart/count");
+      const data = await res.json();
+      if (res.ok) {
+        setCartCount(data.count);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+    fetchCartCount();
+  }, []);
+
+  const handleUpdateQuantity = async (
+    cart_item_id: number,
+    newQuantity: number
+  ): Promise<boolean> => {
+    try {
+      const res = await fetch(`http://localhost:8090/cart/${cart_item_id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(errorData.error || "Failed to update quantity");
+        return false;
+      }
+
+      await fetchCartItems();
+      await fetchCartCount();
+      return true;
+    } catch (error) {
+      console.error("Update error:", error);
+      alert("Update error: " + error);
+      return false;
+    }
+  };
+
+  const handleDeleteItem = async (cart_item_id: number) => {
+    try {
+      const res = await fetch(`http://localhost:8090/cart/${cart_item_id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchCartItems();
+        fetchCartCount();
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#80ED99]"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <ShoppingCart className="w-8 h-8 text-[#80ED99]" />
+          <h1 className="text-2xl font-semibold text-black">
+            Your Cart ({cartCount} items)
+          </h1>
+        </div>
+
+        {cartItems.length === 0 ? (
+          <Card className="text-center p-8">
+            <CardContent>
+              <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p className="text-lg text-gray-600">Your cart is empty</p>
+              <Button className="mt-4 bg-[#80ED99] hover:bg-[#60cd79] text-black">
+                Start Shopping
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {cartItems.map((item) => (
+              <Card key={item.cart_item_id} className="overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="w-full md:w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
+                      {item.product.product_img &&
+                      item.product.product_img.length > 0 ? (
+                        <img
+                          src={item.product.product_img[0].url}
+                          alt={item.product.product_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                          <ShoppingCart className="w-8 h-8 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-grow">
+                      <h3 className="text-lg font-medium mb-2">
+                        {item.product.product_name}
+                      </h3>
+
+                      <div className="mb-2">
+                        <p className="text-gray-600">
+                          Price: Rp{" "}
+                          {item.product.product_price.toLocaleString()}
+                        </p>
+                        <p className="text-gray-600">
+                          Subtotal: Rp {item.subtotal.toLocaleString()}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center border rounded-lg overflow-hidden">
+                          <button
+                            onClick={async () => {
+                              const prevQty = quantities[item.cart_item_id];
+                              const newQty = Math.max(1, prevQty - 1);
+
+                              setQuantities({
+                                ...quantities,
+                                [item.cart_item_id]: newQty,
+                              });
+                              const success = await handleUpdateQuantity(
+                                item.cart_item_id,
+                                newQty
+                              );
+                              if (!success) {
+                                setQuantities({
+                                  ...quantities,
+                                  [item.cart_item_id]: prevQty,
+                                });
+                              }
+                            }}
+                            className="p-2 hover:bg-gray-100"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+
+                          <Input
+                            type="number"
+                            min="1"
+                            value={quantities[item.cart_item_id]}
+                            onChange={(e) => {
+                              const newQty = parseInt(e.target.value) || 1;
+                              setQuantities({
+                                ...quantities,
+                                [item.cart_item_id]: newQty,
+                              });
+                            }}
+                            className="w-16 text-center border-0 focus:ring-0"
+                          />
+                          <button
+                            onClick={async () => {
+                              const prevQty = quantities[item.cart_item_id];
+                              const newQty = prevQty + 1;
+
+                              setQuantities({
+                                ...quantities,
+                                [item.cart_item_id]: newQty,
+                              });
+                              const success = await handleUpdateQuantity(
+                                item.cart_item_id,
+                                newQty
+                              );
+                              if (!success) {
+                                // Kalau stok tidak cukup
+                                setQuantities({
+                                  ...quantities,
+                                  [item.cart_item_id]: prevQty,
+                                });
+                              }
+                            }}
+                            className="p-2 hover:bg-gray-100"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteItem(item.cart_item_id)}
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            <div className="mt-8 space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-medium">Total:</span>
+                  <span className="text-lg font-bold">
+                    Rp {cartTotal.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              <Button className="w-full md:w-auto bg-[#80ED99] hover:bg-[#60cd79] text-black font-medium">
+                Proceed to Checkout
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Cart;
