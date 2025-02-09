@@ -4,7 +4,7 @@ import HeaderDashboard from "../components/header";
 import { StoreAdmin, columns } from "./column";
 import { DataTable } from "./data-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import PaginationTable from "./components/Pagination";
+import PaginationTable from "../components/Pagination";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -41,7 +41,7 @@ const userPage = () => {
     <>
       <HeaderDashboard pagename="User Management" />
       <div className="flex flex-col p-5 h-full w-full gap-5">
-        <div className="informasi rounded-lg bg-slate-100 h-1/5  w-full flex">
+        <div className="informasi rounded-lg bg-gradient-to-r from-green-300 to-green-200 h-1/5  w-full flex">
           <div className="profile flex flex-col justify-center items-start px-20 h-full w-full">
             <h2 className="text-2xl font-bold">Welcome, Name!</h2>
             <h2 className="text-lg">Manage or see user information here.</h2>
