@@ -2883,11 +2883,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     cart: number
     orders: number
+    voucher_store: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cart?: boolean | UserCountOutputTypeCountCartArgs
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
+    voucher_store?: boolean | UserCountOutputTypeCountVoucher_storeArgs
   }
 
   // Custom InputTypes
@@ -2913,6 +2915,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVoucher_storeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherStoreWhereInput
   }
 
 
@@ -2984,10 +2993,16 @@ export namespace Prisma {
 
   export type AdminCountOutputType = {
     admin_orders: number
+    voucher_product: number
+    voucher_ongkir: number
+    voucher_store: number
   }
 
   export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin_orders?: boolean | AdminCountOutputTypeCountAdmin_ordersArgs
+    voucher_product?: boolean | AdminCountOutputTypeCountVoucher_productArgs
+    voucher_ongkir?: boolean | AdminCountOutputTypeCountVoucher_ongkirArgs
+    voucher_store?: boolean | AdminCountOutputTypeCountVoucher_storeArgs
   }
 
   // Custom InputTypes
@@ -3008,6 +3023,27 @@ export namespace Prisma {
     where?: AdminOrderWhereInput
   }
 
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountVoucher_productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherProductWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountVoucher_ongkirArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherOngkirWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountVoucher_storeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherStoreWhereInput
+  }
+
 
   /**
    * Count Type StoreCountOutputType
@@ -3018,6 +3054,8 @@ export namespace Prisma {
     stock: number
     stock_journal: number
     orders: number
+    voucher_ongkir: number
+    voucher_stores: number
   }
 
   export type StoreCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3025,6 +3063,8 @@ export namespace Prisma {
     stock?: boolean | StoreCountOutputTypeCountStockArgs
     stock_journal?: boolean | StoreCountOutputTypeCountStock_journalArgs
     orders?: boolean | StoreCountOutputTypeCountOrdersArgs
+    voucher_ongkir?: boolean | StoreCountOutputTypeCountVoucher_ongkirArgs
+    voucher_stores?: boolean | StoreCountOutputTypeCountVoucher_storesArgs
   }
 
   // Custom InputTypes
@@ -3064,6 +3104,20 @@ export namespace Prisma {
    */
   export type StoreCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountVoucher_ongkirArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherOngkirWhereInput
+  }
+
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountVoucher_storesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherStoreWhereInput
   }
 
 
@@ -3107,6 +3161,7 @@ export namespace Prisma {
     product_img: number
     cart_items: number
     order_items: number
+    voucher: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3114,6 +3169,7 @@ export namespace Prisma {
     product_img?: boolean | ProductCountOutputTypeCountProduct_imgArgs
     cart_items?: boolean | ProductCountOutputTypeCountCart_itemsArgs
     order_items?: boolean | ProductCountOutputTypeCountOrder_itemsArgs
+    voucher?: boolean | ProductCountOutputTypeCountVoucherArgs
   }
 
   // Custom InputTypes
@@ -3155,6 +3211,13 @@ export namespace Prisma {
     where?: OrderItemWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountVoucherArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VoucherProductWhereInput
+  }
+
 
   /**
    * Count Type ProductCategoryCountOutputType
@@ -3184,6 +3247,37 @@ export namespace Prisma {
    */
   export type ProductCategoryCountOutputTypeCountProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductWhereInput
+  }
+
+
+  /**
+   * Count Type VoucherStoreCountOutputType
+   */
+
+  export type VoucherStoreCountOutputType = {
+    users: number
+  }
+
+  export type VoucherStoreCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | VoucherStoreCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VoucherStoreCountOutputType without action
+   */
+  export type VoucherStoreCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherStoreCountOutputType
+     */
+    select?: VoucherStoreCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VoucherStoreCountOutputType without action
+   */
+  export type VoucherStoreCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
 
@@ -4636,6 +4730,7 @@ export namespace Prisma {
     referral?: boolean | User$referralArgs<ExtArgs>
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
+    voucher_store?: boolean | User$voucher_storeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4674,6 +4769,7 @@ export namespace Prisma {
     referral?: boolean | User$referralArgs<ExtArgs>
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
+    voucher_store?: boolean | User$voucher_storeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4693,6 +4789,7 @@ export namespace Prisma {
       referral: Prisma.$ReferralPayload<ExtArgs> | null
       cart: Prisma.$CartPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      voucher_store: Prisma.$VoucherStorePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
@@ -5099,6 +5196,7 @@ export namespace Prisma {
     referral<T extends User$referralArgs<ExtArgs> = {}>(args?: Subset<T, User$referralArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     cart<T extends User$cartArgs<ExtArgs> = {}>(args?: Subset<T, User$cartArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_store<T extends User$voucher_storeArgs<ExtArgs> = {}>(args?: Subset<T, User$voucher_storeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherStorePayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5612,6 +5710,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * User.voucher_store
+   */
+  export type User$voucher_storeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherStore
+     */
+    select?: VoucherStoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherStore
+     */
+    omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    where?: VoucherStoreWhereInput
+    orderBy?: VoucherStoreOrderByWithRelationInput | VoucherStoreOrderByWithRelationInput[]
+    cursor?: VoucherStoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherStoreScalarFieldEnum | VoucherStoreScalarFieldEnum[]
   }
 
   /**
@@ -8113,6 +8235,9 @@ export namespace Prisma {
     account?: boolean | AccountDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
     admin_orders?: boolean | Admin$admin_ordersArgs<ExtArgs>
+    voucher_product?: boolean | Admin$voucher_productArgs<ExtArgs>
+    voucher_ongkir?: boolean | Admin$voucher_ongkirArgs<ExtArgs>
+    voucher_store?: boolean | Admin$voucher_storeArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -8149,6 +8274,9 @@ export namespace Prisma {
     account?: boolean | AccountDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
     admin_orders?: boolean | Admin$admin_ordersArgs<ExtArgs>
+    voucher_product?: boolean | Admin$voucher_productArgs<ExtArgs>
+    voucher_ongkir?: boolean | Admin$voucher_ongkirArgs<ExtArgs>
+    voucher_store?: boolean | Admin$voucher_storeArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8166,6 +8294,9 @@ export namespace Prisma {
       account: Prisma.$AccountPayload<ExtArgs>
       store: Prisma.$StorePayload<ExtArgs>
       admin_orders: Prisma.$AdminOrderPayload<ExtArgs>[]
+      voucher_product: Prisma.$VoucherProductPayload<ExtArgs>[]
+      voucher_ongkir: Prisma.$VoucherOngkirPayload<ExtArgs>[]
+      voucher_store: Prisma.$VoucherStorePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       admin_id: number
@@ -8570,6 +8701,9 @@ export namespace Prisma {
     account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     admin_orders<T extends Admin$admin_ordersArgs<ExtArgs> = {}>(args?: Subset<T, Admin$admin_ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminOrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_product<T extends Admin$voucher_productArgs<ExtArgs> = {}>(args?: Subset<T, Admin$voucher_productArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherProductPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_ongkir<T extends Admin$voucher_ongkirArgs<ExtArgs> = {}>(args?: Subset<T, Admin$voucher_ongkirArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherOngkirPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_store<T extends Admin$voucher_storeArgs<ExtArgs> = {}>(args?: Subset<T, Admin$voucher_storeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherStorePayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9024,6 +9158,78 @@ export namespace Prisma {
   }
 
   /**
+   * Admin.voucher_product
+   */
+  export type Admin$voucher_productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherProduct
+     */
+    select?: VoucherProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherProduct
+     */
+    omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    where?: VoucherProductWhereInput
+    orderBy?: VoucherProductOrderByWithRelationInput | VoucherProductOrderByWithRelationInput[]
+    cursor?: VoucherProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherProductScalarFieldEnum | VoucherProductScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.voucher_ongkir
+   */
+  export type Admin$voucher_ongkirArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherOngkir
+     */
+    select?: VoucherOngkirSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherOngkir
+     */
+    omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    where?: VoucherOngkirWhereInput
+    orderBy?: VoucherOngkirOrderByWithRelationInput | VoucherOngkirOrderByWithRelationInput[]
+    cursor?: VoucherOngkirWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherOngkirScalarFieldEnum | VoucherOngkirScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.voucher_store
+   */
+  export type Admin$voucher_storeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherStore
+     */
+    select?: VoucherStoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherStore
+     */
+    omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    where?: VoucherStoreWhereInput
+    orderBy?: VoucherStoreOrderByWithRelationInput | VoucherStoreOrderByWithRelationInput[]
+    cursor?: VoucherStoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherStoreScalarFieldEnum | VoucherStoreScalarFieldEnum[]
+  }
+
+  /**
    * Admin without action
    */
   export type AdminDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9252,6 +9458,8 @@ export namespace Prisma {
     stock?: boolean | Store$stockArgs<ExtArgs>
     stock_journal?: boolean | Store$stock_journalArgs<ExtArgs>
     orders?: boolean | Store$ordersArgs<ExtArgs>
+    voucher_ongkir?: boolean | Store$voucher_ongkirArgs<ExtArgs>
+    voucher_stores?: boolean | Store$voucher_storesArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["store"]>
 
@@ -9288,6 +9496,8 @@ export namespace Prisma {
     stock?: boolean | Store$stockArgs<ExtArgs>
     stock_journal?: boolean | Store$stock_journalArgs<ExtArgs>
     orders?: boolean | Store$ordersArgs<ExtArgs>
+    voucher_ongkir?: boolean | Store$voucher_ongkirArgs<ExtArgs>
+    voucher_stores?: boolean | Store$voucher_storesArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type StoreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9300,6 +9510,8 @@ export namespace Prisma {
       stock: Prisma.$StockPayload<ExtArgs>[]
       stock_journal: Prisma.$StockJournalPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      voucher_ongkir: Prisma.$VoucherOngkirPayload<ExtArgs>[]
+      voucher_stores: Prisma.$VoucherStorePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       store_id: number
@@ -9706,6 +9918,8 @@ export namespace Prisma {
     stock<T extends Store$stockArgs<ExtArgs> = {}>(args?: Subset<T, Store$stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     stock_journal<T extends Store$stock_journalArgs<ExtArgs> = {}>(args?: Subset<T, Store$stock_journalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockJournalPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     orders<T extends Store$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Store$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_ongkir<T extends Store$voucher_ongkirArgs<ExtArgs> = {}>(args?: Subset<T, Store$voucher_ongkirArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherOngkirPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher_stores<T extends Store$voucher_storesArgs<ExtArgs> = {}>(args?: Subset<T, Store$voucher_storesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherStorePayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10222,6 +10436,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * Store.voucher_ongkir
+   */
+  export type Store$voucher_ongkirArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherOngkir
+     */
+    select?: VoucherOngkirSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherOngkir
+     */
+    omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    where?: VoucherOngkirWhereInput
+    orderBy?: VoucherOngkirOrderByWithRelationInput | VoucherOngkirOrderByWithRelationInput[]
+    cursor?: VoucherOngkirWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherOngkirScalarFieldEnum | VoucherOngkirScalarFieldEnum[]
+  }
+
+  /**
+   * Store.voucher_stores
+   */
+  export type Store$voucher_storesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherStore
+     */
+    select?: VoucherStoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherStore
+     */
+    omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    where?: VoucherStoreWhereInput
+    orderBy?: VoucherStoreOrderByWithRelationInput | VoucherStoreOrderByWithRelationInput[]
+    cursor?: VoucherStoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherStoreScalarFieldEnum | VoucherStoreScalarFieldEnum[]
   }
 
   /**
@@ -12726,6 +12988,7 @@ export namespace Prisma {
     product_img?: boolean | Product$product_imgArgs<ExtArgs>
     cart_items?: boolean | Product$cart_itemsArgs<ExtArgs>
     order_items?: boolean | Product$order_itemsArgs<ExtArgs>
+    voucher?: boolean | Product$voucherArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -12759,6 +13022,7 @@ export namespace Prisma {
     product_img?: boolean | Product$product_imgArgs<ExtArgs>
     cart_items?: boolean | Product$cart_itemsArgs<ExtArgs>
     order_items?: boolean | Product$order_itemsArgs<ExtArgs>
+    voucher?: boolean | Product$voucherArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12776,6 +13040,7 @@ export namespace Prisma {
       product_img: Prisma.$ProductImgPayload<ExtArgs>[]
       cart_items: Prisma.$CartItemPayload<ExtArgs>[]
       order_items: Prisma.$OrderItemPayload<ExtArgs>[]
+      voucher: Prisma.$VoucherProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       product_id: number
@@ -13181,6 +13446,7 @@ export namespace Prisma {
     product_img<T extends Product$product_imgArgs<ExtArgs> = {}>(args?: Subset<T, Product$product_imgArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductImgPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     cart_items<T extends Product$cart_itemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$cart_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     order_items<T extends Product$order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    voucher<T extends Product$voucherArgs<ExtArgs> = {}>(args?: Subset<T, Product$voucherArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherProductPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13703,6 +13969,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * Product.voucher
+   */
+  export type Product$voucherArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VoucherProduct
+     */
+    select?: VoucherProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VoucherProduct
+     */
+    omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    where?: VoucherProductWhereInput
+    orderBy?: VoucherProductOrderByWithRelationInput | VoucherProductOrderByWithRelationInput[]
+    cursor?: VoucherProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VoucherProductScalarFieldEnum | VoucherProductScalarFieldEnum[]
   }
 
   /**
@@ -15878,7 +16168,6 @@ export namespace Prisma {
     voucher_store_minimum_buy: number | null
     voucher_store_maximum_nominal: number | null
     admin_responsible: number | null
-    user_id: number | null
     store_id: number | null
   }
 
@@ -15889,7 +16178,6 @@ export namespace Prisma {
     voucher_store_minimum_buy: number | null
     voucher_store_maximum_nominal: number | null
     admin_responsible: number | null
-    user_id: number | null
     store_id: number | null
   }
 
@@ -15904,7 +16192,6 @@ export namespace Prisma {
     voucher_store_enddate: Date | null
     created_at: Date | null
     admin_responsible: number | null
-    user_id: number | null
     store_id: number | null
   }
 
@@ -15919,7 +16206,6 @@ export namespace Prisma {
     voucher_store_enddate: Date | null
     created_at: Date | null
     admin_responsible: number | null
-    user_id: number | null
     store_id: number | null
   }
 
@@ -15934,7 +16220,6 @@ export namespace Prisma {
     voucher_store_enddate: number
     created_at: number
     admin_responsible: number
-    user_id: number
     store_id: number
     _all: number
   }
@@ -15947,7 +16232,6 @@ export namespace Prisma {
     voucher_store_minimum_buy?: true
     voucher_store_maximum_nominal?: true
     admin_responsible?: true
-    user_id?: true
     store_id?: true
   }
 
@@ -15958,7 +16242,6 @@ export namespace Prisma {
     voucher_store_minimum_buy?: true
     voucher_store_maximum_nominal?: true
     admin_responsible?: true
-    user_id?: true
     store_id?: true
   }
 
@@ -15973,7 +16256,6 @@ export namespace Prisma {
     voucher_store_enddate?: true
     created_at?: true
     admin_responsible?: true
-    user_id?: true
     store_id?: true
   }
 
@@ -15988,7 +16270,6 @@ export namespace Prisma {
     voucher_store_enddate?: true
     created_at?: true
     admin_responsible?: true
-    user_id?: true
     store_id?: true
   }
 
@@ -16003,7 +16284,6 @@ export namespace Prisma {
     voucher_store_enddate?: true
     created_at?: true
     admin_responsible?: true
-    user_id?: true
     store_id?: true
     _all?: true
   }
@@ -16105,7 +16385,6 @@ export namespace Prisma {
     voucher_store_enddate: Date
     created_at: Date
     admin_responsible: number
-    user_id: number
     store_id: number
     _count: VoucherStoreCountAggregateOutputType | null
     _avg: VoucherStoreAvgAggregateOutputType | null
@@ -16139,8 +16418,11 @@ export namespace Prisma {
     voucher_store_enddate?: boolean
     created_at?: boolean
     admin_responsible?: boolean
-    user_id?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    users?: boolean | VoucherStore$usersArgs<ExtArgs>
+    _count?: boolean | VoucherStoreCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherStore"]>
 
   export type VoucherStoreSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16154,8 +16436,9 @@ export namespace Prisma {
     voucher_store_enddate?: boolean
     created_at?: boolean
     admin_responsible?: boolean
-    user_id?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherStore"]>
 
   export type VoucherStoreSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16169,8 +16452,9 @@ export namespace Prisma {
     voucher_store_enddate?: boolean
     created_at?: boolean
     admin_responsible?: boolean
-    user_id?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherStore"]>
 
   export type VoucherStoreSelectScalar = {
@@ -16184,15 +16468,32 @@ export namespace Prisma {
     voucher_store_enddate?: boolean
     created_at?: boolean
     admin_responsible?: boolean
-    user_id?: boolean
     store_id?: boolean
   }
 
-  export type VoucherStoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"voucher_store_id" | "voucher_store_code" | "voucher_store_amount_percentage" | "voucher_store_exact_nominal" | "voucher_store_minimum_buy" | "voucher_store_maximum_nominal" | "voucher_store_startdate" | "voucher_store_enddate" | "created_at" | "admin_responsible" | "user_id" | "store_id", ExtArgs["result"]["voucherStore"]>
+  export type VoucherStoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"voucher_store_id" | "voucher_store_code" | "voucher_store_amount_percentage" | "voucher_store_exact_nominal" | "voucher_store_minimum_buy" | "voucher_store_maximum_nominal" | "voucher_store_startdate" | "voucher_store_enddate" | "created_at" | "admin_responsible" | "store_id", ExtArgs["result"]["voucherStore"]>
+  export type VoucherStoreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    users?: boolean | VoucherStore$usersArgs<ExtArgs>
+    _count?: boolean | VoucherStoreCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type VoucherStoreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+  export type VoucherStoreIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
 
   export type $VoucherStorePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VoucherStore"
-    objects: {}
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs>
+      store: Prisma.$StorePayload<ExtArgs>
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       voucher_store_id: number
       voucher_store_code: string
@@ -16204,7 +16505,6 @@ export namespace Prisma {
       voucher_store_enddate: Date
       created_at: Date
       admin_responsible: number
-      user_id: number
       store_id: number
     }, ExtArgs["result"]["voucherStore"]>
     composites: {}
@@ -16600,6 +16900,9 @@ export namespace Prisma {
    */
   export interface Prisma__VoucherStoreClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    users<T extends VoucherStore$usersArgs<ExtArgs> = {}>(args?: Subset<T, VoucherStore$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16639,7 +16942,6 @@ export namespace Prisma {
     readonly voucher_store_enddate: FieldRef<"VoucherStore", 'DateTime'>
     readonly created_at: FieldRef<"VoucherStore", 'DateTime'>
     readonly admin_responsible: FieldRef<"VoucherStore", 'Int'>
-    readonly user_id: FieldRef<"VoucherStore", 'Int'>
     readonly store_id: FieldRef<"VoucherStore", 'Int'>
   }
     
@@ -16657,6 +16959,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherStore
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
     /**
      * Filter, which VoucherStore to fetch.
      */
@@ -16676,6 +16982,10 @@ export namespace Prisma {
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherStore to fetch.
      */
     where: VoucherStoreWhereUniqueInput
@@ -16693,6 +17003,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherStore
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
     /**
      * Filter, which VoucherStore to fetch.
      */
@@ -16742,6 +17056,10 @@ export namespace Prisma {
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherStore to fetch.
      */
     where?: VoucherStoreWhereInput
@@ -16790,6 +17108,10 @@ export namespace Prisma {
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherStores to fetch.
      */
     where?: VoucherStoreWhereInput
@@ -16833,6 +17155,10 @@ export namespace Prisma {
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    /**
      * The data needed to create a VoucherStore.
      */
     data: XOR<VoucherStoreCreateInput, VoucherStoreUncheckedCreateInput>
@@ -16866,6 +17192,10 @@ export namespace Prisma {
      */
     data: VoucherStoreCreateManyInput | VoucherStoreCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16880,6 +17210,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherStore
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
     /**
      * The data needed to update a VoucherStore.
      */
@@ -16932,6 +17266,10 @@ export namespace Prisma {
      * Limit how many VoucherStores to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16946,6 +17284,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherStore
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
     /**
      * The filter to search for the VoucherStore to update in case it exists.
      */
@@ -16973,6 +17315,10 @@ export namespace Prisma {
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
+    /**
      * Filter which VoucherStore to delete.
      */
     where: VoucherStoreWhereUniqueInput
@@ -16993,6 +17339,30 @@ export namespace Prisma {
   }
 
   /**
+   * VoucherStore.users
+   */
+  export type VoucherStore$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
    * VoucherStore without action
    */
   export type VoucherStoreDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17004,6 +17374,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherStore
      */
     omit?: VoucherStoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherStoreInclude<ExtArgs> | null
   }
 
 
@@ -17241,6 +17615,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherOngkir"]>
 
   export type VoucherOngkirSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17252,6 +17628,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherOngkir"]>
 
   export type VoucherOngkirSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17263,6 +17641,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     store_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherOngkir"]>
 
   export type VoucherOngkirSelectScalar = {
@@ -17277,10 +17657,25 @@ export namespace Prisma {
   }
 
   export type VoucherOngkirOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"voucher_ongkir_id" | "voucher_ongkir_code" | "voucher_ongkir_nominal" | "voucher_ongkir_startdate" | "voucher_ongkir_enddate" | "created_at" | "admin_responsible" | "store_id", ExtArgs["result"]["voucherOngkir"]>
+  export type VoucherOngkirInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+  export type VoucherOngkirIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+  export type VoucherOngkirIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
 
   export type $VoucherOngkirPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VoucherOngkir"
-    objects: {}
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs>
+      store: Prisma.$StorePayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       voucher_ongkir_id: number
       voucher_ongkir_code: string
@@ -17684,6 +18079,8 @@ export namespace Prisma {
    */
   export interface Prisma__VoucherOngkirClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17738,6 +18135,10 @@ export namespace Prisma {
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherOngkir to fetch.
      */
     where: VoucherOngkirWhereUniqueInput
@@ -17756,6 +18157,10 @@ export namespace Prisma {
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherOngkir to fetch.
      */
     where: VoucherOngkirWhereUniqueInput
@@ -17773,6 +18178,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherOngkir
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
     /**
      * Filter, which VoucherOngkir to fetch.
      */
@@ -17822,6 +18231,10 @@ export namespace Prisma {
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherOngkir to fetch.
      */
     where?: VoucherOngkirWhereInput
@@ -17870,6 +18283,10 @@ export namespace Prisma {
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherOngkirs to fetch.
      */
     where?: VoucherOngkirWhereInput
@@ -17913,6 +18330,10 @@ export namespace Prisma {
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
+    /**
      * The data needed to create a VoucherOngkir.
      */
     data: XOR<VoucherOngkirCreateInput, VoucherOngkirUncheckedCreateInput>
@@ -17946,6 +18367,10 @@ export namespace Prisma {
      */
     data: VoucherOngkirCreateManyInput | VoucherOngkirCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -17960,6 +18385,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherOngkir
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
     /**
      * The data needed to update a VoucherOngkir.
      */
@@ -18012,6 +18441,10 @@ export namespace Prisma {
      * Limit how many VoucherOngkirs to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -18026,6 +18459,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherOngkir
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
     /**
      * The filter to search for the VoucherOngkir to update in case it exists.
      */
@@ -18052,6 +18489,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherOngkir
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
     /**
      * Filter which VoucherOngkir to delete.
      */
@@ -18084,6 +18525,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherOngkir
      */
     omit?: VoucherOngkirOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherOngkirInclude<ExtArgs> | null
   }
 
 
@@ -18321,6 +18766,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     product_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherProduct"]>
 
   export type VoucherProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18332,6 +18779,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     product_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherProduct"]>
 
   export type VoucherProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18343,6 +18792,8 @@ export namespace Prisma {
     created_at?: boolean
     admin_responsible?: boolean
     product_id?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["voucherProduct"]>
 
   export type VoucherProductSelectScalar = {
@@ -18357,10 +18808,25 @@ export namespace Prisma {
   }
 
   export type VoucherProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"voucher_product_id" | "voucher_product_code" | "voucher_product_nominal" | "voucher_product_startdate" | "voucher_product_enddate" | "created_at" | "admin_responsible" | "product_id", ExtArgs["result"]["voucherProduct"]>
+  export type VoucherProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type VoucherProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type VoucherProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
 
   export type $VoucherProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VoucherProduct"
-    objects: {}
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       voucher_product_id: number
       voucher_product_code: string
@@ -18764,6 +19230,8 @@ export namespace Prisma {
    */
   export interface Prisma__VoucherProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18818,6 +19286,10 @@ export namespace Prisma {
      */
     omit?: VoucherProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherProduct to fetch.
      */
     where: VoucherProductWhereUniqueInput
@@ -18836,6 +19308,10 @@ export namespace Prisma {
      */
     omit?: VoucherProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherProduct to fetch.
      */
     where: VoucherProductWhereUniqueInput
@@ -18853,6 +19329,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherProduct
      */
     omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
     /**
      * Filter, which VoucherProduct to fetch.
      */
@@ -18902,6 +19382,10 @@ export namespace Prisma {
      */
     omit?: VoucherProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherProduct to fetch.
      */
     where?: VoucherProductWhereInput
@@ -18950,6 +19434,10 @@ export namespace Prisma {
      */
     omit?: VoucherProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    /**
      * Filter, which VoucherProducts to fetch.
      */
     where?: VoucherProductWhereInput
@@ -18993,6 +19481,10 @@ export namespace Prisma {
      */
     omit?: VoucherProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
+    /**
      * The data needed to create a VoucherProduct.
      */
     data: XOR<VoucherProductCreateInput, VoucherProductUncheckedCreateInput>
@@ -19026,6 +19518,10 @@ export namespace Prisma {
      */
     data: VoucherProductCreateManyInput | VoucherProductCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -19040,6 +19536,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherProduct
      */
     omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
     /**
      * The data needed to update a VoucherProduct.
      */
@@ -19092,6 +19592,10 @@ export namespace Prisma {
      * Limit how many VoucherProducts to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -19106,6 +19610,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherProduct
      */
     omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
     /**
      * The filter to search for the VoucherProduct to update in case it exists.
      */
@@ -19132,6 +19640,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherProduct
      */
     omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
     /**
      * Filter which VoucherProduct to delete.
      */
@@ -19164,6 +19676,10 @@ export namespace Prisma {
      * Omit specific fields from the VoucherProduct
      */
     omit?: VoucherProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VoucherProductInclude<ExtArgs> | null
   }
 
 
@@ -28243,7 +28759,6 @@ export namespace Prisma {
     voucher_store_enddate: 'voucher_store_enddate',
     created_at: 'created_at',
     admin_responsible: 'admin_responsible',
-    user_id: 'user_id',
     store_id: 'store_id'
   };
 
@@ -28600,6 +29115,7 @@ export namespace Prisma {
     referral?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     cart?: CartListRelationFilter
     orders?: OrderListRelationFilter
+    voucher_store?: VoucherStoreListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -28613,6 +29129,7 @@ export namespace Prisma {
     referral?: ReferralOrderByWithRelationInput
     cart?: CartOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
+    voucher_store?: VoucherStoreOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -28629,6 +29146,7 @@ export namespace Prisma {
     referral?: XOR<ReferralNullableScalarRelationFilter, ReferralWhereInput> | null
     cart?: CartListRelationFilter
     orders?: OrderListRelationFilter
+    voucher_store?: VoucherStoreListRelationFilter
   }, "user_id" | "account_id">
 
   export type UserOrderByWithAggregationInput = {
@@ -28787,6 +29305,9 @@ export namespace Prisma {
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
     admin_orders?: AdminOrderListRelationFilter
+    voucher_product?: VoucherProductListRelationFilter
+    voucher_ongkir?: VoucherOngkirListRelationFilter
+    voucher_store?: VoucherStoreListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -28798,6 +29319,9 @@ export namespace Prisma {
     account?: AccountOrderByWithRelationInput
     store?: StoreOrderByWithRelationInput
     admin_orders?: AdminOrderOrderByRelationAggregateInput
+    voucher_product?: VoucherProductOrderByRelationAggregateInput
+    voucher_ongkir?: VoucherOngkirOrderByRelationAggregateInput
+    voucher_store?: VoucherStoreOrderByRelationAggregateInput
   }
 
   export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -28812,6 +29336,9 @@ export namespace Prisma {
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
     admin_orders?: AdminOrderListRelationFilter
+    voucher_product?: VoucherProductListRelationFilter
+    voucher_ongkir?: VoucherOngkirListRelationFilter
+    voucher_store?: VoucherStoreListRelationFilter
   }, "admin_id" | "account_id">
 
   export type AdminOrderByWithAggregationInput = {
@@ -28852,6 +29379,8 @@ export namespace Prisma {
     stock?: StockListRelationFilter
     stock_journal?: StockJournalListRelationFilter
     orders?: OrderListRelationFilter
+    voucher_ongkir?: VoucherOngkirListRelationFilter
+    voucher_stores?: VoucherStoreListRelationFilter
   }
 
   export type StoreOrderByWithRelationInput = {
@@ -28865,6 +29394,8 @@ export namespace Prisma {
     stock?: StockOrderByRelationAggregateInput
     stock_journal?: StockJournalOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
+    voucher_ongkir?: VoucherOngkirOrderByRelationAggregateInput
+    voucher_stores?: VoucherStoreOrderByRelationAggregateInput
   }
 
   export type StoreWhereUniqueInput = Prisma.AtLeast<{
@@ -28881,6 +29412,8 @@ export namespace Prisma {
     stock?: StockListRelationFilter
     stock_journal?: StockJournalListRelationFilter
     orders?: OrderListRelationFilter
+    voucher_ongkir?: VoucherOngkirListRelationFilter
+    voucher_stores?: VoucherStoreListRelationFilter
   }, "store_id" | "store_name">
 
   export type StoreOrderByWithAggregationInput = {
@@ -29055,6 +29588,7 @@ export namespace Prisma {
     product_img?: ProductImgListRelationFilter
     cart_items?: CartItemListRelationFilter
     order_items?: OrderItemListRelationFilter
+    voucher?: VoucherProductListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -29067,6 +29601,7 @@ export namespace Prisma {
     product_img?: ProductImgOrderByRelationAggregateInput
     cart_items?: CartItemOrderByRelationAggregateInput
     order_items?: OrderItemOrderByRelationAggregateInput
+    voucher?: VoucherProductOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -29082,6 +29617,7 @@ export namespace Prisma {
     product_img?: ProductImgListRelationFilter
     cart_items?: CartItemListRelationFilter
     order_items?: OrderItemListRelationFilter
+    voucher?: VoucherProductListRelationFilter
   }, "product_id" | "product_name">
 
   export type ProductOrderByWithAggregationInput = {
@@ -29209,8 +29745,10 @@ export namespace Prisma {
     voucher_store_enddate?: DateTimeFilter<"VoucherStore"> | Date | string
     created_at?: DateTimeFilter<"VoucherStore"> | Date | string
     admin_responsible?: IntFilter<"VoucherStore"> | number
-    user_id?: IntFilter<"VoucherStore"> | number
     store_id?: IntFilter<"VoucherStore"> | number
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    users?: UserListRelationFilter
   }
 
   export type VoucherStoreOrderByWithRelationInput = {
@@ -29224,8 +29762,10 @@ export namespace Prisma {
     voucher_store_enddate?: SortOrder
     created_at?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    store?: StoreOrderByWithRelationInput
+    users?: UserOrderByRelationAggregateInput
   }
 
   export type VoucherStoreWhereUniqueInput = Prisma.AtLeast<{
@@ -29242,8 +29782,10 @@ export namespace Prisma {
     voucher_store_enddate?: DateTimeFilter<"VoucherStore"> | Date | string
     created_at?: DateTimeFilter<"VoucherStore"> | Date | string
     admin_responsible?: IntFilter<"VoucherStore"> | number
-    user_id?: IntFilter<"VoucherStore"> | number
     store_id?: IntFilter<"VoucherStore"> | number
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    users?: UserListRelationFilter
   }, "voucher_store_id" | "voucher_store_code">
 
   export type VoucherStoreOrderByWithAggregationInput = {
@@ -29257,7 +29799,6 @@ export namespace Prisma {
     voucher_store_enddate?: SortOrder
     created_at?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
     _count?: VoucherStoreCountOrderByAggregateInput
     _avg?: VoucherStoreAvgOrderByAggregateInput
@@ -29280,7 +29821,6 @@ export namespace Prisma {
     voucher_store_enddate?: DateTimeWithAggregatesFilter<"VoucherStore"> | Date | string
     created_at?: DateTimeWithAggregatesFilter<"VoucherStore"> | Date | string
     admin_responsible?: IntWithAggregatesFilter<"VoucherStore"> | number
-    user_id?: IntWithAggregatesFilter<"VoucherStore"> | number
     store_id?: IntWithAggregatesFilter<"VoucherStore"> | number
   }
 
@@ -29296,6 +29836,8 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"VoucherOngkir"> | Date | string
     admin_responsible?: IntFilter<"VoucherOngkir"> | number
     store_id?: IntFilter<"VoucherOngkir"> | number
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
   }
 
   export type VoucherOngkirOrderByWithRelationInput = {
@@ -29307,11 +29849,14 @@ export namespace Prisma {
     created_at?: SortOrder
     admin_responsible?: SortOrder
     store_id?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    store?: StoreOrderByWithRelationInput
   }
 
   export type VoucherOngkirWhereUniqueInput = Prisma.AtLeast<{
     voucher_ongkir_id?: number
     voucher_ongkir_code?: string
+    store_id?: number
     AND?: VoucherOngkirWhereInput | VoucherOngkirWhereInput[]
     OR?: VoucherOngkirWhereInput[]
     NOT?: VoucherOngkirWhereInput | VoucherOngkirWhereInput[]
@@ -29320,8 +29865,9 @@ export namespace Prisma {
     voucher_ongkir_enddate?: DateTimeFilter<"VoucherOngkir"> | Date | string
     created_at?: DateTimeFilter<"VoucherOngkir"> | Date | string
     admin_responsible?: IntFilter<"VoucherOngkir"> | number
-    store_id?: IntFilter<"VoucherOngkir"> | number
-  }, "voucher_ongkir_id" | "voucher_ongkir_code">
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+  }, "voucher_ongkir_id" | "voucher_ongkir_code" | "store_id">
 
   export type VoucherOngkirOrderByWithAggregationInput = {
     voucher_ongkir_id?: SortOrder
@@ -29365,6 +29911,8 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"VoucherProduct"> | Date | string
     admin_responsible?: IntFilter<"VoucherProduct"> | number
     product_id?: IntFilter<"VoucherProduct"> | number
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }
 
   export type VoucherProductOrderByWithRelationInput = {
@@ -29376,6 +29924,8 @@ export namespace Prisma {
     created_at?: SortOrder
     admin_responsible?: SortOrder
     product_id?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
   }
 
   export type VoucherProductWhereUniqueInput = Prisma.AtLeast<{
@@ -29390,6 +29940,8 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"VoucherProduct"> | Date | string
     admin_responsible?: IntFilter<"VoucherProduct"> | number
     product_id?: IntFilter<"VoucherProduct"> | number
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }, "voucher_product_id" | "voucher_product_code">
 
   export type VoucherProductOrderByWithAggregationInput = {
@@ -29990,6 +30542,7 @@ export namespace Prisma {
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -30001,6 +30554,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserUpdateInput = {
@@ -30011,6 +30565,7 @@ export namespace Prisma {
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30022,6 +30577,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -30163,6 +30719,9 @@ export namespace Prisma {
     account: AccountCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -30172,6 +30731,9 @@ export namespace Prisma {
     phone: string
     position: string
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUpdateInput = {
@@ -30180,6 +30742,9 @@ export namespace Prisma {
     account?: AccountUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -30189,6 +30754,9 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -30222,6 +30790,8 @@ export namespace Prisma {
     stock?: StockCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
     orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateInput = {
@@ -30235,6 +30805,8 @@ export namespace Prisma {
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUpdateInput = {
@@ -30247,6 +30819,8 @@ export namespace Prisma {
     stock?: StockUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
     orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateInput = {
@@ -30260,6 +30834,8 @@ export namespace Prisma {
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreCreateManyInput = {
@@ -30416,6 +30992,7 @@ export namespace Prisma {
     product_img?: ProductImgCreateNestedManyWithoutProductInput
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -30427,6 +31004,7 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -30437,6 +31015,7 @@ export namespace Prisma {
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -30448,6 +31027,7 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -30552,9 +31132,9 @@ export namespace Prisma {
     voucher_store_startdate: Date | string
     voucher_store_enddate: Date | string
     created_at: Date | string
-    admin_responsible: number
-    user_id: number
-    store_id: number
+    admin: AdminCreateNestedOneWithoutVoucher_storeInput
+    store: StoreCreateNestedOneWithoutVoucher_storesInput
+    users?: UserCreateNestedManyWithoutVoucher_storeInput
   }
 
   export type VoucherStoreUncheckedCreateInput = {
@@ -30568,8 +31148,8 @@ export namespace Prisma {
     voucher_store_enddate: Date | string
     created_at: Date | string
     admin_responsible: number
-    user_id: number
     store_id: number
+    users?: UserUncheckedCreateNestedManyWithoutVoucher_storeInput
   }
 
   export type VoucherStoreUpdateInput = {
@@ -30581,9 +31161,9 @@ export namespace Prisma {
     voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    admin?: AdminUpdateOneRequiredWithoutVoucher_storeNestedInput
+    store?: StoreUpdateOneRequiredWithoutVoucher_storesNestedInput
+    users?: UserUpdateManyWithoutVoucher_storeNestedInput
   }
 
   export type VoucherStoreUncheckedUpdateInput = {
@@ -30597,8 +31177,8 @@ export namespace Prisma {
     voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     admin_responsible?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     store_id?: IntFieldUpdateOperationsInput | number
+    users?: UserUncheckedUpdateManyWithoutVoucher_storeNestedInput
   }
 
   export type VoucherStoreCreateManyInput = {
@@ -30612,7 +31192,6 @@ export namespace Prisma {
     voucher_store_enddate: Date | string
     created_at: Date | string
     admin_responsible: number
-    user_id: number
     store_id: number
   }
 
@@ -30625,9 +31204,6 @@ export namespace Prisma {
     voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type VoucherStoreUncheckedUpdateManyInput = {
@@ -30641,7 +31217,6 @@ export namespace Prisma {
     voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     admin_responsible?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     store_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -30651,8 +31226,8 @@ export namespace Prisma {
     voucher_ongkir_startdate: Date | string
     voucher_ongkir_enddate: Date | string
     created_at: Date | string
-    admin_responsible: number
-    store_id: number
+    admin: AdminCreateNestedOneWithoutVoucher_ongkirInput
+    store: StoreCreateNestedOneWithoutVoucher_ongkirInput
   }
 
   export type VoucherOngkirUncheckedCreateInput = {
@@ -30672,8 +31247,8 @@ export namespace Prisma {
     voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    admin?: AdminUpdateOneRequiredWithoutVoucher_ongkirNestedInput
+    store?: StoreUpdateOneRequiredWithoutVoucher_ongkirNestedInput
   }
 
   export type VoucherOngkirUncheckedUpdateInput = {
@@ -30704,8 +31279,6 @@ export namespace Prisma {
     voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type VoucherOngkirUncheckedUpdateManyInput = {
@@ -30725,8 +31298,8 @@ export namespace Prisma {
     voucher_product_startdate: Date | string
     voucher_product_enddate: Date | string
     created_at: Date | string
-    admin_responsible: number
-    product_id: number
+    admin: AdminCreateNestedOneWithoutVoucher_productInput
+    product: ProductCreateNestedOneWithoutVoucherInput
   }
 
   export type VoucherProductUncheckedCreateInput = {
@@ -30746,8 +31319,8 @@ export namespace Prisma {
     voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    product_id?: IntFieldUpdateOperationsInput | number
+    admin?: AdminUpdateOneRequiredWithoutVoucher_productNestedInput
+    product?: ProductUpdateOneRequiredWithoutVoucherNestedInput
   }
 
   export type VoucherProductUncheckedUpdateInput = {
@@ -30778,8 +31351,6 @@ export namespace Prisma {
     voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
     voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin_responsible?: IntFieldUpdateOperationsInput | number
-    product_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type VoucherProductUncheckedUpdateManyInput = {
@@ -31410,6 +31981,12 @@ export namespace Prisma {
     none?: OrderWhereInput
   }
 
+  export type VoucherStoreListRelationFilter = {
+    every?: VoucherStoreWhereInput
+    some?: VoucherStoreWhereInput
+    none?: VoucherStoreWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -31420,6 +31997,10 @@ export namespace Prisma {
   }
 
   export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VoucherStoreOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31564,7 +32145,27 @@ export namespace Prisma {
     none?: AdminOrderWhereInput
   }
 
+  export type VoucherProductListRelationFilter = {
+    every?: VoucherProductWhereInput
+    some?: VoucherProductWhereInput
+    none?: VoucherProductWhereInput
+  }
+
+  export type VoucherOngkirListRelationFilter = {
+    every?: VoucherOngkirWhereInput
+    some?: VoucherOngkirWhereInput
+    none?: VoucherOngkirWhereInput
+  }
+
   export type AdminOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VoucherProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VoucherOngkirOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31915,6 +32516,11 @@ export namespace Prisma {
     product_category_id?: SortOrder
   }
 
+  export type AdminScalarRelationFilter = {
+    is?: AdminWhereInput
+    isNot?: AdminWhereInput
+  }
+
   export type VoucherStoreCountOrderByAggregateInput = {
     voucher_store_id?: SortOrder
     voucher_store_code?: SortOrder
@@ -31926,7 +32532,6 @@ export namespace Prisma {
     voucher_store_enddate?: SortOrder
     created_at?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
   }
 
@@ -31937,7 +32542,6 @@ export namespace Prisma {
     voucher_store_minimum_buy?: SortOrder
     voucher_store_maximum_nominal?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
   }
 
@@ -31952,7 +32556,6 @@ export namespace Prisma {
     voucher_store_enddate?: SortOrder
     created_at?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
   }
 
@@ -31967,7 +32570,6 @@ export namespace Prisma {
     voucher_store_enddate?: SortOrder
     created_at?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
   }
 
@@ -31978,7 +32580,6 @@ export namespace Prisma {
     voucher_store_minimum_buy?: SortOrder
     voucher_store_maximum_nominal?: SortOrder
     admin_responsible?: SortOrder
-    user_id?: SortOrder
     store_id?: SortOrder
   }
 
@@ -32406,11 +33007,6 @@ export namespace Prisma {
     not?: NestedEnumActionEnumFilter<$PrismaModel> | $Enums.ActionEnum
   }
 
-  export type AdminScalarRelationFilter = {
-    is?: AdminWhereInput
-    isNot?: AdminWhereInput
-  }
-
   export type AdminOrderCountOrderByAggregateInput = {
     admin_order_id?: SortOrder
     admin_id?: SortOrder
@@ -32615,6 +33211,12 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type VoucherStoreCreateNestedManyWithoutUsersInput = {
+    create?: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput> | VoucherStoreCreateWithoutUsersInput[] | VoucherStoreUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutUsersInput | VoucherStoreCreateOrConnectWithoutUsersInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+  }
+
   export type ReferralUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput>
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput
@@ -32633,6 +33235,12 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
     createMany?: OrderCreateManyUserInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type VoucherStoreUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput> | VoucherStoreCreateWithoutUsersInput[] | VoucherStoreUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutUsersInput | VoucherStoreCreateOrConnectWithoutUsersInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
   }
 
   export type AccountUpdateOneRequiredWithoutUser_profileNestedInput = {
@@ -32691,6 +33299,19 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type VoucherStoreUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput> | VoucherStoreCreateWithoutUsersInput[] | VoucherStoreUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutUsersInput | VoucherStoreCreateOrConnectWithoutUsersInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutUsersInput | VoucherStoreUpsertWithWhereUniqueWithoutUsersInput[]
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutUsersInput | VoucherStoreUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutUsersInput | VoucherStoreUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -32735,6 +33356,19 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput> | VoucherStoreCreateWithoutUsersInput[] | VoucherStoreUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutUsersInput | VoucherStoreCreateOrConnectWithoutUsersInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutUsersInput | VoucherStoreUpsertWithWhereUniqueWithoutUsersInput[]
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutUsersInput | VoucherStoreUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutUsersInput | VoucherStoreUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutReferralInput = {
@@ -32870,11 +33504,53 @@ export namespace Prisma {
     connect?: AdminOrderWhereUniqueInput | AdminOrderWhereUniqueInput[]
   }
 
+  export type VoucherProductCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput> | VoucherProductCreateWithoutAdminInput[] | VoucherProductUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutAdminInput | VoucherProductCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherProductCreateManyAdminInputEnvelope
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+  }
+
+  export type VoucherOngkirCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput> | VoucherOngkirCreateWithoutAdminInput[] | VoucherOngkirUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutAdminInput | VoucherOngkirCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherOngkirCreateManyAdminInputEnvelope
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+  }
+
+  export type VoucherStoreCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput> | VoucherStoreCreateWithoutAdminInput[] | VoucherStoreUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutAdminInput | VoucherStoreCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherStoreCreateManyAdminInputEnvelope
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+  }
+
   export type AdminOrderUncheckedCreateNestedManyWithoutAdminInput = {
     create?: XOR<AdminOrderCreateWithoutAdminInput, AdminOrderUncheckedCreateWithoutAdminInput> | AdminOrderCreateWithoutAdminInput[] | AdminOrderUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: AdminOrderCreateOrConnectWithoutAdminInput | AdminOrderCreateOrConnectWithoutAdminInput[]
     createMany?: AdminOrderCreateManyAdminInputEnvelope
     connect?: AdminOrderWhereUniqueInput | AdminOrderWhereUniqueInput[]
+  }
+
+  export type VoucherProductUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput> | VoucherProductCreateWithoutAdminInput[] | VoucherProductUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutAdminInput | VoucherProductCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherProductCreateManyAdminInputEnvelope
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+  }
+
+  export type VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput> | VoucherOngkirCreateWithoutAdminInput[] | VoucherOngkirUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutAdminInput | VoucherOngkirCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherOngkirCreateManyAdminInputEnvelope
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+  }
+
+  export type VoucherStoreUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput> | VoucherStoreCreateWithoutAdminInput[] | VoucherStoreUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutAdminInput | VoucherStoreCreateOrConnectWithoutAdminInput[]
+    createMany?: VoucherStoreCreateManyAdminInputEnvelope
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
   }
 
   export type AccountUpdateOneRequiredWithoutAdminNestedInput = {
@@ -32907,6 +33583,48 @@ export namespace Prisma {
     deleteMany?: AdminOrderScalarWhereInput | AdminOrderScalarWhereInput[]
   }
 
+  export type VoucherProductUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput> | VoucherProductCreateWithoutAdminInput[] | VoucherProductUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutAdminInput | VoucherProductCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherProductUpsertWithWhereUniqueWithoutAdminInput | VoucherProductUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherProductCreateManyAdminInputEnvelope
+    set?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    disconnect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    delete?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    update?: VoucherProductUpdateWithWhereUniqueWithoutAdminInput | VoucherProductUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherProductUpdateManyWithWhereWithoutAdminInput | VoucherProductUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+  }
+
+  export type VoucherOngkirUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput> | VoucherOngkirCreateWithoutAdminInput[] | VoucherOngkirUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutAdminInput | VoucherOngkirCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherOngkirUpsertWithWhereUniqueWithoutAdminInput | VoucherOngkirUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherOngkirCreateManyAdminInputEnvelope
+    set?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    disconnect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    delete?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    update?: VoucherOngkirUpdateWithWhereUniqueWithoutAdminInput | VoucherOngkirUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherOngkirUpdateManyWithWhereWithoutAdminInput | VoucherOngkirUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+  }
+
+  export type VoucherStoreUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput> | VoucherStoreCreateWithoutAdminInput[] | VoucherStoreUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutAdminInput | VoucherStoreCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutAdminInput | VoucherStoreUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherStoreCreateManyAdminInputEnvelope
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutAdminInput | VoucherStoreUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutAdminInput | VoucherStoreUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
+  }
+
   export type AdminOrderUncheckedUpdateManyWithoutAdminNestedInput = {
     create?: XOR<AdminOrderCreateWithoutAdminInput, AdminOrderUncheckedCreateWithoutAdminInput> | AdminOrderCreateWithoutAdminInput[] | AdminOrderUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: AdminOrderCreateOrConnectWithoutAdminInput | AdminOrderCreateOrConnectWithoutAdminInput[]
@@ -32919,6 +33637,48 @@ export namespace Prisma {
     update?: AdminOrderUpdateWithWhereUniqueWithoutAdminInput | AdminOrderUpdateWithWhereUniqueWithoutAdminInput[]
     updateMany?: AdminOrderUpdateManyWithWhereWithoutAdminInput | AdminOrderUpdateManyWithWhereWithoutAdminInput[]
     deleteMany?: AdminOrderScalarWhereInput | AdminOrderScalarWhereInput[]
+  }
+
+  export type VoucherProductUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput> | VoucherProductCreateWithoutAdminInput[] | VoucherProductUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutAdminInput | VoucherProductCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherProductUpsertWithWhereUniqueWithoutAdminInput | VoucherProductUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherProductCreateManyAdminInputEnvelope
+    set?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    disconnect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    delete?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    update?: VoucherProductUpdateWithWhereUniqueWithoutAdminInput | VoucherProductUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherProductUpdateManyWithWhereWithoutAdminInput | VoucherProductUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+  }
+
+  export type VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput> | VoucherOngkirCreateWithoutAdminInput[] | VoucherOngkirUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutAdminInput | VoucherOngkirCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherOngkirUpsertWithWhereUniqueWithoutAdminInput | VoucherOngkirUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherOngkirCreateManyAdminInputEnvelope
+    set?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    disconnect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    delete?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    update?: VoucherOngkirUpdateWithWhereUniqueWithoutAdminInput | VoucherOngkirUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherOngkirUpdateManyWithWhereWithoutAdminInput | VoucherOngkirUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput> | VoucherStoreCreateWithoutAdminInput[] | VoucherStoreUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutAdminInput | VoucherStoreCreateOrConnectWithoutAdminInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutAdminInput | VoucherStoreUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VoucherStoreCreateManyAdminInputEnvelope
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutAdminInput | VoucherStoreUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutAdminInput | VoucherStoreUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
   }
 
   export type AdminCreateNestedManyWithoutStoreInput = {
@@ -32949,6 +33709,20 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type VoucherOngkirCreateNestedManyWithoutStoreInput = {
+    create?: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput> | VoucherOngkirCreateWithoutStoreInput[] | VoucherOngkirUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutStoreInput | VoucherOngkirCreateOrConnectWithoutStoreInput[]
+    createMany?: VoucherOngkirCreateManyStoreInputEnvelope
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+  }
+
+  export type VoucherStoreCreateNestedManyWithoutStoreInput = {
+    create?: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput> | VoucherStoreCreateWithoutStoreInput[] | VoucherStoreUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutStoreInput | VoucherStoreCreateOrConnectWithoutStoreInput[]
+    createMany?: VoucherStoreCreateManyStoreInputEnvelope
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+  }
+
   export type AdminUncheckedCreateNestedManyWithoutStoreInput = {
     create?: XOR<AdminCreateWithoutStoreInput, AdminUncheckedCreateWithoutStoreInput> | AdminCreateWithoutStoreInput[] | AdminUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: AdminCreateOrConnectWithoutStoreInput | AdminCreateOrConnectWithoutStoreInput[]
@@ -32975,6 +33749,20 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutStoreInput | OrderCreateOrConnectWithoutStoreInput[]
     createMany?: OrderCreateManyStoreInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput> | VoucherOngkirCreateWithoutStoreInput[] | VoucherOngkirUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutStoreInput | VoucherOngkirCreateOrConnectWithoutStoreInput[]
+    createMany?: VoucherOngkirCreateManyStoreInputEnvelope
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+  }
+
+  export type VoucherStoreUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput> | VoucherStoreCreateWithoutStoreInput[] | VoucherStoreUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutStoreInput | VoucherStoreCreateOrConnectWithoutStoreInput[]
+    createMany?: VoucherStoreCreateManyStoreInputEnvelope
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
   }
 
   export type AdminUpdateManyWithoutStoreNestedInput = {
@@ -33033,6 +33821,34 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type VoucherOngkirUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput> | VoucherOngkirCreateWithoutStoreInput[] | VoucherOngkirUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutStoreInput | VoucherOngkirCreateOrConnectWithoutStoreInput[]
+    upsert?: VoucherOngkirUpsertWithWhereUniqueWithoutStoreInput | VoucherOngkirUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: VoucherOngkirCreateManyStoreInputEnvelope
+    set?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    disconnect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    delete?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    update?: VoucherOngkirUpdateWithWhereUniqueWithoutStoreInput | VoucherOngkirUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: VoucherOngkirUpdateManyWithWhereWithoutStoreInput | VoucherOngkirUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+  }
+
+  export type VoucherStoreUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput> | VoucherStoreCreateWithoutStoreInput[] | VoucherStoreUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutStoreInput | VoucherStoreCreateOrConnectWithoutStoreInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutStoreInput | VoucherStoreUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: VoucherStoreCreateManyStoreInputEnvelope
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutStoreInput | VoucherStoreUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutStoreInput | VoucherStoreUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
+  }
+
   export type AdminUncheckedUpdateManyWithoutStoreNestedInput = {
     create?: XOR<AdminCreateWithoutStoreInput, AdminUncheckedCreateWithoutStoreInput> | AdminCreateWithoutStoreInput[] | AdminUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: AdminCreateOrConnectWithoutStoreInput | AdminCreateOrConnectWithoutStoreInput[]
@@ -33087,6 +33903,34 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutStoreInput | OrderUpdateWithWhereUniqueWithoutStoreInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutStoreInput | OrderUpdateManyWithWhereWithoutStoreInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput> | VoucherOngkirCreateWithoutStoreInput[] | VoucherOngkirUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherOngkirCreateOrConnectWithoutStoreInput | VoucherOngkirCreateOrConnectWithoutStoreInput[]
+    upsert?: VoucherOngkirUpsertWithWhereUniqueWithoutStoreInput | VoucherOngkirUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: VoucherOngkirCreateManyStoreInputEnvelope
+    set?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    disconnect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    delete?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    connect?: VoucherOngkirWhereUniqueInput | VoucherOngkirWhereUniqueInput[]
+    update?: VoucherOngkirUpdateWithWhereUniqueWithoutStoreInput | VoucherOngkirUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: VoucherOngkirUpdateManyWithWhereWithoutStoreInput | VoucherOngkirUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput> | VoucherStoreCreateWithoutStoreInput[] | VoucherStoreUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: VoucherStoreCreateOrConnectWithoutStoreInput | VoucherStoreCreateOrConnectWithoutStoreInput[]
+    upsert?: VoucherStoreUpsertWithWhereUniqueWithoutStoreInput | VoucherStoreUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: VoucherStoreCreateManyStoreInputEnvelope
+    set?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    disconnect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    delete?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
+    update?: VoucherStoreUpdateWithWhereUniqueWithoutStoreInput | VoucherStoreUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: VoucherStoreUpdateManyWithWhereWithoutStoreInput | VoucherStoreUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
   }
 
   export type StoreCreateNestedOneWithoutStockInput = {
@@ -33225,6 +34069,13 @@ export namespace Prisma {
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
+  export type VoucherProductCreateNestedManyWithoutProductInput = {
+    create?: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput> | VoucherProductCreateWithoutProductInput[] | VoucherProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutProductInput | VoucherProductCreateOrConnectWithoutProductInput[]
+    createMany?: VoucherProductCreateManyProductInputEnvelope
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+  }
+
   export type StockUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
     connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
@@ -33251,6 +34102,13 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
     createMany?: OrderItemCreateManyProductInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type VoucherProductUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput> | VoucherProductCreateWithoutProductInput[] | VoucherProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutProductInput | VoucherProductCreateOrConnectWithoutProductInput[]
+    createMany?: VoucherProductCreateManyProductInputEnvelope
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
   }
 
   export type ProductCategoryUpdateOneRequiredWithoutProductNestedInput = {
@@ -33317,6 +34175,20 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type VoucherProductUpdateManyWithoutProductNestedInput = {
+    create?: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput> | VoucherProductCreateWithoutProductInput[] | VoucherProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutProductInput | VoucherProductCreateOrConnectWithoutProductInput[]
+    upsert?: VoucherProductUpsertWithWhereUniqueWithoutProductInput | VoucherProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: VoucherProductCreateManyProductInputEnvelope
+    set?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    disconnect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    delete?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    update?: VoucherProductUpdateWithWhereUniqueWithoutProductInput | VoucherProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: VoucherProductUpdateManyWithWhereWithoutProductInput | VoucherProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+  }
+
   export type StockUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
     connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
@@ -33373,6 +34245,20 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type VoucherProductUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput> | VoucherProductCreateWithoutProductInput[] | VoucherProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: VoucherProductCreateOrConnectWithoutProductInput | VoucherProductCreateOrConnectWithoutProductInput[]
+    upsert?: VoucherProductUpsertWithWhereUniqueWithoutProductInput | VoucherProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: VoucherProductCreateManyProductInputEnvelope
+    set?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    disconnect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    delete?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    connect?: VoucherProductWhereUniqueInput | VoucherProductWhereUniqueInput[]
+    update?: VoucherProductUpdateWithWhereUniqueWithoutProductInput | VoucherProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: VoucherProductUpdateManyWithWhereWithoutProductInput | VoucherProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+  }
+
   export type ProductCreateNestedOneWithoutProduct_imgInput = {
     create?: XOR<ProductCreateWithoutProduct_imgInput, ProductUncheckedCreateWithoutProduct_imgInput>
     connectOrCreate?: ProductCreateOrConnectWithoutProduct_imgInput
@@ -33427,6 +34313,128 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutProduct_categoryInput | ProductUpdateWithWhereUniqueWithoutProduct_categoryInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutProduct_categoryInput | ProductUpdateManyWithWhereWithoutProduct_categoryInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type AdminCreateNestedOneWithoutVoucher_storeInput = {
+    create?: XOR<AdminCreateWithoutVoucher_storeInput, AdminUncheckedCreateWithoutVoucher_storeInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_storeInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type StoreCreateNestedOneWithoutVoucher_storesInput = {
+    create?: XOR<StoreCreateWithoutVoucher_storesInput, StoreUncheckedCreateWithoutVoucher_storesInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutVoucher_storesInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutVoucher_storeInput = {
+    create?: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput> | UserCreateWithoutVoucher_storeInput[] | UserUncheckedCreateWithoutVoucher_storeInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutVoucher_storeInput | UserCreateOrConnectWithoutVoucher_storeInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutVoucher_storeInput = {
+    create?: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput> | UserCreateWithoutVoucher_storeInput[] | UserUncheckedCreateWithoutVoucher_storeInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutVoucher_storeInput | UserCreateOrConnectWithoutVoucher_storeInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type AdminUpdateOneRequiredWithoutVoucher_storeNestedInput = {
+    create?: XOR<AdminCreateWithoutVoucher_storeInput, AdminUncheckedCreateWithoutVoucher_storeInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_storeInput
+    upsert?: AdminUpsertWithoutVoucher_storeInput
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutVoucher_storeInput, AdminUpdateWithoutVoucher_storeInput>, AdminUncheckedUpdateWithoutVoucher_storeInput>
+  }
+
+  export type StoreUpdateOneRequiredWithoutVoucher_storesNestedInput = {
+    create?: XOR<StoreCreateWithoutVoucher_storesInput, StoreUncheckedCreateWithoutVoucher_storesInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutVoucher_storesInput
+    upsert?: StoreUpsertWithoutVoucher_storesInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutVoucher_storesInput, StoreUpdateWithoutVoucher_storesInput>, StoreUncheckedUpdateWithoutVoucher_storesInput>
+  }
+
+  export type UserUpdateManyWithoutVoucher_storeNestedInput = {
+    create?: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput> | UserCreateWithoutVoucher_storeInput[] | UserUncheckedCreateWithoutVoucher_storeInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutVoucher_storeInput | UserCreateOrConnectWithoutVoucher_storeInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutVoucher_storeInput | UserUpsertWithWhereUniqueWithoutVoucher_storeInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutVoucher_storeInput | UserUpdateWithWhereUniqueWithoutVoucher_storeInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutVoucher_storeInput | UserUpdateManyWithWhereWithoutVoucher_storeInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutVoucher_storeNestedInput = {
+    create?: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput> | UserCreateWithoutVoucher_storeInput[] | UserUncheckedCreateWithoutVoucher_storeInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutVoucher_storeInput | UserCreateOrConnectWithoutVoucher_storeInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutVoucher_storeInput | UserUpsertWithWhereUniqueWithoutVoucher_storeInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutVoucher_storeInput | UserUpdateWithWhereUniqueWithoutVoucher_storeInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutVoucher_storeInput | UserUpdateManyWithWhereWithoutVoucher_storeInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type AdminCreateNestedOneWithoutVoucher_ongkirInput = {
+    create?: XOR<AdminCreateWithoutVoucher_ongkirInput, AdminUncheckedCreateWithoutVoucher_ongkirInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_ongkirInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type StoreCreateNestedOneWithoutVoucher_ongkirInput = {
+    create?: XOR<StoreCreateWithoutVoucher_ongkirInput, StoreUncheckedCreateWithoutVoucher_ongkirInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutVoucher_ongkirInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type AdminUpdateOneRequiredWithoutVoucher_ongkirNestedInput = {
+    create?: XOR<AdminCreateWithoutVoucher_ongkirInput, AdminUncheckedCreateWithoutVoucher_ongkirInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_ongkirInput
+    upsert?: AdminUpsertWithoutVoucher_ongkirInput
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutVoucher_ongkirInput, AdminUpdateWithoutVoucher_ongkirInput>, AdminUncheckedUpdateWithoutVoucher_ongkirInput>
+  }
+
+  export type StoreUpdateOneRequiredWithoutVoucher_ongkirNestedInput = {
+    create?: XOR<StoreCreateWithoutVoucher_ongkirInput, StoreUncheckedCreateWithoutVoucher_ongkirInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutVoucher_ongkirInput
+    upsert?: StoreUpsertWithoutVoucher_ongkirInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutVoucher_ongkirInput, StoreUpdateWithoutVoucher_ongkirInput>, StoreUncheckedUpdateWithoutVoucher_ongkirInput>
+  }
+
+  export type AdminCreateNestedOneWithoutVoucher_productInput = {
+    create?: XOR<AdminCreateWithoutVoucher_productInput, AdminUncheckedCreateWithoutVoucher_productInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_productInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutVoucherInput = {
+    create?: XOR<ProductCreateWithoutVoucherInput, ProductUncheckedCreateWithoutVoucherInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutVoucherInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type AdminUpdateOneRequiredWithoutVoucher_productNestedInput = {
+    create?: XOR<AdminCreateWithoutVoucher_productInput, AdminUncheckedCreateWithoutVoucher_productInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVoucher_productInput
+    upsert?: AdminUpsertWithoutVoucher_productInput
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutVoucher_productInput, AdminUpdateWithoutVoucher_productInput>, AdminUncheckedUpdateWithoutVoucher_productInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutVoucherNestedInput = {
+    create?: XOR<ProductCreateWithoutVoucherInput, ProductUncheckedCreateWithoutVoucherInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutVoucherInput
+    upsert?: ProductUpsertWithoutVoucherInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutVoucherInput, ProductUpdateWithoutVoucherInput>, ProductUncheckedUpdateWithoutVoucherInput>
   }
 
   export type UserCreateNestedOneWithoutCartInput = {
@@ -34019,6 +35027,7 @@ export namespace Prisma {
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutAccountInput = {
@@ -34029,6 +35038,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutAccountInput = {
@@ -34070,6 +35080,9 @@ export namespace Prisma {
     position: string
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutAccountInput = {
@@ -34078,6 +35091,9 @@ export namespace Prisma {
     phone: string
     position: string
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutAccountInput = {
@@ -34103,6 +35119,7 @@ export namespace Prisma {
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountInput = {
@@ -34113,6 +35130,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type AddressUpsertWithWhereUniqueWithoutAccountInput = {
@@ -34160,6 +35178,9 @@ export namespace Prisma {
     position?: StringFieldUpdateOperationsInput | string
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutAccountInput = {
@@ -34168,6 +35189,9 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountCreateWithoutUser_profileInput = {
@@ -34282,6 +35306,38 @@ export namespace Prisma {
   export type OrderCreateManyUserInputEnvelope = {
     data: OrderCreateManyUserInput | OrderCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type VoucherStoreCreateWithoutUsersInput = {
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    admin: AdminCreateNestedOneWithoutVoucher_storeInput
+    store: StoreCreateNestedOneWithoutVoucher_storesInput
+  }
+
+  export type VoucherStoreUncheckedCreateWithoutUsersInput = {
+    voucher_store_id?: number
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+    store_id: number
+  }
+
+  export type VoucherStoreCreateOrConnectWithoutUsersInput = {
+    where: VoucherStoreWhereUniqueInput
+    create: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput>
   }
 
   export type AccountUpsertWithoutUser_profileInput = {
@@ -34414,6 +35470,39 @@ export namespace Prisma {
     order_date?: DateTimeFilter<"Order"> | Date | string
   }
 
+  export type VoucherStoreUpsertWithWhereUniqueWithoutUsersInput = {
+    where: VoucherStoreWhereUniqueInput
+    update: XOR<VoucherStoreUpdateWithoutUsersInput, VoucherStoreUncheckedUpdateWithoutUsersInput>
+    create: XOR<VoucherStoreCreateWithoutUsersInput, VoucherStoreUncheckedCreateWithoutUsersInput>
+  }
+
+  export type VoucherStoreUpdateWithWhereUniqueWithoutUsersInput = {
+    where: VoucherStoreWhereUniqueInput
+    data: XOR<VoucherStoreUpdateWithoutUsersInput, VoucherStoreUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type VoucherStoreUpdateManyWithWhereWithoutUsersInput = {
+    where: VoucherStoreScalarWhereInput
+    data: XOR<VoucherStoreUpdateManyMutationInput, VoucherStoreUncheckedUpdateManyWithoutUsersInput>
+  }
+
+  export type VoucherStoreScalarWhereInput = {
+    AND?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
+    OR?: VoucherStoreScalarWhereInput[]
+    NOT?: VoucherStoreScalarWhereInput | VoucherStoreScalarWhereInput[]
+    voucher_store_id?: IntFilter<"VoucherStore"> | number
+    voucher_store_code?: StringFilter<"VoucherStore"> | string
+    voucher_store_amount_percentage?: IntFilter<"VoucherStore"> | number
+    voucher_store_exact_nominal?: IntFilter<"VoucherStore"> | number
+    voucher_store_minimum_buy?: IntFilter<"VoucherStore"> | number
+    voucher_store_maximum_nominal?: IntFilter<"VoucherStore"> | number
+    voucher_store_startdate?: DateTimeFilter<"VoucherStore"> | Date | string
+    voucher_store_enddate?: DateTimeFilter<"VoucherStore"> | Date | string
+    created_at?: DateTimeFilter<"VoucherStore"> | Date | string
+    admin_responsible?: IntFilter<"VoucherStore"> | number
+    store_id?: IntFilter<"VoucherStore"> | number
+  }
+
   export type UserCreateWithoutReferralInput = {
     phone: string
     pfp_url: string
@@ -34421,6 +35510,7 @@ export namespace Prisma {
     referred?: ReferralCreateNestedOneWithoutReferredInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutReferralInput = {
@@ -34431,6 +35521,7 @@ export namespace Prisma {
     pfp_url: string
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutReferralInput = {
@@ -34445,6 +35536,7 @@ export namespace Prisma {
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutReferredInput = {
@@ -34455,6 +35547,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutReferredInput = {
@@ -34485,6 +35578,7 @@ export namespace Prisma {
     referred?: ReferralUpdateOneWithoutReferredNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferralInput = {
@@ -34495,6 +35589,7 @@ export namespace Prisma {
     pfp_url?: StringFieldUpdateOperationsInput | string
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutReferredInput = {
@@ -34668,6 +35763,8 @@ export namespace Prisma {
     stock?: StockCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
     orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutAdminInput = {
@@ -34680,6 +35777,8 @@ export namespace Prisma {
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutAdminInput = {
@@ -34707,6 +35806,101 @@ export namespace Prisma {
 
   export type AdminOrderCreateManyAdminInputEnvelope = {
     data: AdminOrderCreateManyAdminInput | AdminOrderCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoucherProductCreateWithoutAdminInput = {
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    product: ProductCreateNestedOneWithoutVoucherInput
+  }
+
+  export type VoucherProductUncheckedCreateWithoutAdminInput = {
+    voucher_product_id?: number
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    product_id: number
+  }
+
+  export type VoucherProductCreateOrConnectWithoutAdminInput = {
+    where: VoucherProductWhereUniqueInput
+    create: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherProductCreateManyAdminInputEnvelope = {
+    data: VoucherProductCreateManyAdminInput | VoucherProductCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoucherOngkirCreateWithoutAdminInput = {
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    store: StoreCreateNestedOneWithoutVoucher_ongkirInput
+  }
+
+  export type VoucherOngkirUncheckedCreateWithoutAdminInput = {
+    voucher_ongkir_id?: number
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    store_id: number
+  }
+
+  export type VoucherOngkirCreateOrConnectWithoutAdminInput = {
+    where: VoucherOngkirWhereUniqueInput
+    create: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherOngkirCreateManyAdminInputEnvelope = {
+    data: VoucherOngkirCreateManyAdminInput | VoucherOngkirCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoucherStoreCreateWithoutAdminInput = {
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    store: StoreCreateNestedOneWithoutVoucher_storesInput
+    users?: UserCreateNestedManyWithoutVoucher_storeInput
+  }
+
+  export type VoucherStoreUncheckedCreateWithoutAdminInput = {
+    voucher_store_id?: number
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    store_id: number
+    users?: UserUncheckedCreateNestedManyWithoutVoucher_storeInput
+  }
+
+  export type VoucherStoreCreateOrConnectWithoutAdminInput = {
+    where: VoucherStoreWhereUniqueInput
+    create: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherStoreCreateManyAdminInputEnvelope = {
+    data: VoucherStoreCreateManyAdminInput | VoucherStoreCreateManyAdminInput[]
     skipDuplicates?: boolean
   }
 
@@ -34762,6 +35956,8 @@ export namespace Prisma {
     stock?: StockUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
     orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutAdminInput = {
@@ -34774,6 +35970,8 @@ export namespace Prisma {
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type AdminOrderUpsertWithWhereUniqueWithoutAdminInput = {
@@ -34803,11 +36001,90 @@ export namespace Prisma {
     action_time?: DateTimeFilter<"AdminOrder"> | Date | string
   }
 
+  export type VoucherProductUpsertWithWhereUniqueWithoutAdminInput = {
+    where: VoucherProductWhereUniqueInput
+    update: XOR<VoucherProductUpdateWithoutAdminInput, VoucherProductUncheckedUpdateWithoutAdminInput>
+    create: XOR<VoucherProductCreateWithoutAdminInput, VoucherProductUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherProductUpdateWithWhereUniqueWithoutAdminInput = {
+    where: VoucherProductWhereUniqueInput
+    data: XOR<VoucherProductUpdateWithoutAdminInput, VoucherProductUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type VoucherProductUpdateManyWithWhereWithoutAdminInput = {
+    where: VoucherProductScalarWhereInput
+    data: XOR<VoucherProductUpdateManyMutationInput, VoucherProductUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type VoucherProductScalarWhereInput = {
+    AND?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+    OR?: VoucherProductScalarWhereInput[]
+    NOT?: VoucherProductScalarWhereInput | VoucherProductScalarWhereInput[]
+    voucher_product_id?: IntFilter<"VoucherProduct"> | number
+    voucher_product_code?: StringFilter<"VoucherProduct"> | string
+    voucher_product_nominal?: IntFilter<"VoucherProduct"> | number
+    voucher_product_startdate?: DateTimeFilter<"VoucherProduct"> | Date | string
+    voucher_product_enddate?: DateTimeFilter<"VoucherProduct"> | Date | string
+    created_at?: DateTimeFilter<"VoucherProduct"> | Date | string
+    admin_responsible?: IntFilter<"VoucherProduct"> | number
+    product_id?: IntFilter<"VoucherProduct"> | number
+  }
+
+  export type VoucherOngkirUpsertWithWhereUniqueWithoutAdminInput = {
+    where: VoucherOngkirWhereUniqueInput
+    update: XOR<VoucherOngkirUpdateWithoutAdminInput, VoucherOngkirUncheckedUpdateWithoutAdminInput>
+    create: XOR<VoucherOngkirCreateWithoutAdminInput, VoucherOngkirUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherOngkirUpdateWithWhereUniqueWithoutAdminInput = {
+    where: VoucherOngkirWhereUniqueInput
+    data: XOR<VoucherOngkirUpdateWithoutAdminInput, VoucherOngkirUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type VoucherOngkirUpdateManyWithWhereWithoutAdminInput = {
+    where: VoucherOngkirScalarWhereInput
+    data: XOR<VoucherOngkirUpdateManyMutationInput, VoucherOngkirUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type VoucherOngkirScalarWhereInput = {
+    AND?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+    OR?: VoucherOngkirScalarWhereInput[]
+    NOT?: VoucherOngkirScalarWhereInput | VoucherOngkirScalarWhereInput[]
+    voucher_ongkir_id?: IntFilter<"VoucherOngkir"> | number
+    voucher_ongkir_code?: StringFilter<"VoucherOngkir"> | string
+    voucher_ongkir_nominal?: IntFilter<"VoucherOngkir"> | number
+    voucher_ongkir_startdate?: DateTimeFilter<"VoucherOngkir"> | Date | string
+    voucher_ongkir_enddate?: DateTimeFilter<"VoucherOngkir"> | Date | string
+    created_at?: DateTimeFilter<"VoucherOngkir"> | Date | string
+    admin_responsible?: IntFilter<"VoucherOngkir"> | number
+    store_id?: IntFilter<"VoucherOngkir"> | number
+  }
+
+  export type VoucherStoreUpsertWithWhereUniqueWithoutAdminInput = {
+    where: VoucherStoreWhereUniqueInput
+    update: XOR<VoucherStoreUpdateWithoutAdminInput, VoucherStoreUncheckedUpdateWithoutAdminInput>
+    create: XOR<VoucherStoreCreateWithoutAdminInput, VoucherStoreUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VoucherStoreUpdateWithWhereUniqueWithoutAdminInput = {
+    where: VoucherStoreWhereUniqueInput
+    data: XOR<VoucherStoreUpdateWithoutAdminInput, VoucherStoreUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type VoucherStoreUpdateManyWithWhereWithoutAdminInput = {
+    where: VoucherStoreScalarWhereInput
+    data: XOR<VoucherStoreUpdateManyMutationInput, VoucherStoreUncheckedUpdateManyWithoutAdminInput>
+  }
+
   export type AdminCreateWithoutStoreInput = {
     phone: string
     position: string
     account: AccountCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutStoreInput = {
@@ -34816,6 +36093,9 @@ export namespace Prisma {
     phone: string
     position: string
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutStoreInput = {
@@ -34912,6 +36192,72 @@ export namespace Prisma {
 
   export type OrderCreateManyStoreInputEnvelope = {
     data: OrderCreateManyStoreInput | OrderCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoucherOngkirCreateWithoutStoreInput = {
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    admin: AdminCreateNestedOneWithoutVoucher_ongkirInput
+  }
+
+  export type VoucherOngkirUncheckedCreateWithoutStoreInput = {
+    voucher_ongkir_id?: number
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+  }
+
+  export type VoucherOngkirCreateOrConnectWithoutStoreInput = {
+    where: VoucherOngkirWhereUniqueInput
+    create: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput>
+  }
+
+  export type VoucherOngkirCreateManyStoreInputEnvelope = {
+    data: VoucherOngkirCreateManyStoreInput | VoucherOngkirCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VoucherStoreCreateWithoutStoreInput = {
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    admin: AdminCreateNestedOneWithoutVoucher_storeInput
+    users?: UserCreateNestedManyWithoutVoucher_storeInput
+  }
+
+  export type VoucherStoreUncheckedCreateWithoutStoreInput = {
+    voucher_store_id?: number
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+    users?: UserUncheckedCreateNestedManyWithoutVoucher_storeInput
+  }
+
+  export type VoucherStoreCreateOrConnectWithoutStoreInput = {
+    where: VoucherStoreWhereUniqueInput
+    create: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput>
+  }
+
+  export type VoucherStoreCreateManyStoreInputEnvelope = {
+    data: VoucherStoreCreateManyStoreInput | VoucherStoreCreateManyStoreInput[]
     skipDuplicates?: boolean
   }
 
@@ -35014,6 +36360,38 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutStoreInput>
   }
 
+  export type VoucherOngkirUpsertWithWhereUniqueWithoutStoreInput = {
+    where: VoucherOngkirWhereUniqueInput
+    update: XOR<VoucherOngkirUpdateWithoutStoreInput, VoucherOngkirUncheckedUpdateWithoutStoreInput>
+    create: XOR<VoucherOngkirCreateWithoutStoreInput, VoucherOngkirUncheckedCreateWithoutStoreInput>
+  }
+
+  export type VoucherOngkirUpdateWithWhereUniqueWithoutStoreInput = {
+    where: VoucherOngkirWhereUniqueInput
+    data: XOR<VoucherOngkirUpdateWithoutStoreInput, VoucherOngkirUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type VoucherOngkirUpdateManyWithWhereWithoutStoreInput = {
+    where: VoucherOngkirScalarWhereInput
+    data: XOR<VoucherOngkirUpdateManyMutationInput, VoucherOngkirUncheckedUpdateManyWithoutStoreInput>
+  }
+
+  export type VoucherStoreUpsertWithWhereUniqueWithoutStoreInput = {
+    where: VoucherStoreWhereUniqueInput
+    update: XOR<VoucherStoreUpdateWithoutStoreInput, VoucherStoreUncheckedUpdateWithoutStoreInput>
+    create: XOR<VoucherStoreCreateWithoutStoreInput, VoucherStoreUncheckedCreateWithoutStoreInput>
+  }
+
+  export type VoucherStoreUpdateWithWhereUniqueWithoutStoreInput = {
+    where: VoucherStoreWhereUniqueInput
+    data: XOR<VoucherStoreUpdateWithoutStoreInput, VoucherStoreUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type VoucherStoreUpdateManyWithWhereWithoutStoreInput = {
+    where: VoucherStoreScalarWhereInput
+    data: XOR<VoucherStoreUpdateManyMutationInput, VoucherStoreUncheckedUpdateManyWithoutStoreInput>
+  }
+
   export type StoreCreateWithoutStockInput = {
     store_name: string
     store_address: string
@@ -35023,6 +36401,8 @@ export namespace Prisma {
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
     orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutStockInput = {
@@ -35035,6 +36415,8 @@ export namespace Prisma {
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutStockInput = {
@@ -35049,6 +36431,7 @@ export namespace Prisma {
     product_img?: ProductImgCreateNestedManyWithoutProductInput
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockInput = {
@@ -35059,6 +36442,7 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockInput = {
@@ -35115,6 +36499,8 @@ export namespace Prisma {
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
     orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutStockInput = {
@@ -35127,6 +36513,8 @@ export namespace Prisma {
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type ProductUpsertWithoutStockInput = {
@@ -35147,6 +36535,7 @@ export namespace Prisma {
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockInput = {
@@ -35157,6 +36546,7 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type StockJournalUpsertWithWhereUniqueWithoutStockInput = {
@@ -35184,6 +36574,8 @@ export namespace Prisma {
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
     orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutStock_journalInput = {
@@ -35196,6 +36588,8 @@ export namespace Prisma {
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutStock_journalInput = {
@@ -35241,6 +36635,8 @@ export namespace Prisma {
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
     orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutStock_journalInput = {
@@ -35253,6 +36649,8 @@ export namespace Prisma {
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StockUpsertWithoutStock_journalInput = {
@@ -35381,6 +36779,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VoucherProductCreateWithoutProductInput = {
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    admin: AdminCreateNestedOneWithoutVoucher_productInput
+  }
+
+  export type VoucherProductUncheckedCreateWithoutProductInput = {
+    voucher_product_id?: number
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+  }
+
+  export type VoucherProductCreateOrConnectWithoutProductInput = {
+    where: VoucherProductWhereUniqueInput
+    create: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type VoucherProductCreateManyProductInputEnvelope = {
+    data: VoucherProductCreateManyProductInput | VoucherProductCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductCategoryUpsertWithoutProductInput = {
     update: XOR<ProductCategoryUpdateWithoutProductInput, ProductCategoryUncheckedUpdateWithoutProductInput>
     create: XOR<ProductCategoryCreateWithoutProductInput, ProductCategoryUncheckedCreateWithoutProductInput>
@@ -35496,6 +36923,22 @@ export namespace Prisma {
     subtotal?: IntFilter<"OrderItem"> | number
   }
 
+  export type VoucherProductUpsertWithWhereUniqueWithoutProductInput = {
+    where: VoucherProductWhereUniqueInput
+    update: XOR<VoucherProductUpdateWithoutProductInput, VoucherProductUncheckedUpdateWithoutProductInput>
+    create: XOR<VoucherProductCreateWithoutProductInput, VoucherProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type VoucherProductUpdateWithWhereUniqueWithoutProductInput = {
+    where: VoucherProductWhereUniqueInput
+    data: XOR<VoucherProductUpdateWithoutProductInput, VoucherProductUncheckedUpdateWithoutProductInput>
+  }
+
+  export type VoucherProductUpdateManyWithWhereWithoutProductInput = {
+    where: VoucherProductScalarWhereInput
+    data: XOR<VoucherProductUpdateManyMutationInput, VoucherProductUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutProduct_imgInput = {
     product_name: string
     product_price: number
@@ -35503,6 +36946,7 @@ export namespace Prisma {
     stock?: StockCreateNestedManyWithoutProductInput
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutProduct_imgInput = {
@@ -35513,6 +36957,7 @@ export namespace Prisma {
     stock?: StockUncheckedCreateNestedManyWithoutProductInput
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutProduct_imgInput = {
@@ -35538,6 +36983,7 @@ export namespace Prisma {
     stock?: StockUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutProduct_imgInput = {
@@ -35548,6 +36994,7 @@ export namespace Prisma {
     stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutProduct_categoryInput = {
@@ -35557,6 +37004,7 @@ export namespace Prisma {
     product_img?: ProductImgCreateNestedManyWithoutProductInput
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutProduct_categoryInput = {
@@ -35567,6 +37015,7 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutProduct_categoryInput = {
@@ -35605,6 +37054,420 @@ export namespace Prisma {
     product_category_id?: IntFilter<"Product"> | number
   }
 
+  export type AdminCreateWithoutVoucher_storeInput = {
+    phone: string
+    position: string
+    account: AccountCreateNestedOneWithoutAdminInput
+    store: StoreCreateNestedOneWithoutAdminInput
+    admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutVoucher_storeInput = {
+    admin_id?: number
+    account_id: number
+    store_id: number
+    phone: string
+    position: string
+    admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutVoucher_storeInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutVoucher_storeInput, AdminUncheckedCreateWithoutVoucher_storeInput>
+  }
+
+  export type StoreCreateWithoutVoucher_storesInput = {
+    store_name: string
+    store_address: string
+    city: string
+    lat: string
+    lng: string
+    admin?: AdminCreateNestedManyWithoutStoreInput
+    stock?: StockCreateNestedManyWithoutStoreInput
+    stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
+    orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutVoucher_storesInput = {
+    store_id?: number
+    store_name: string
+    store_address: string
+    city: string
+    lat: string
+    lng: string
+    admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
+    stock?: StockUncheckedCreateNestedManyWithoutStoreInput
+    stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
+    orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutVoucher_storesInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutVoucher_storesInput, StoreUncheckedCreateWithoutVoucher_storesInput>
+  }
+
+  export type UserCreateWithoutVoucher_storeInput = {
+    phone: string
+    pfp_url: string
+    account: AccountCreateNestedOneWithoutUser_profileInput
+    referred?: ReferralCreateNestedOneWithoutReferredInput
+    referral?: ReferralCreateNestedOneWithoutUserInput
+    cart?: CartCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutVoucher_storeInput = {
+    user_id?: number
+    account_id: number
+    referred_id?: number | null
+    phone: string
+    pfp_url: string
+    referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
+    cart?: CartUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutVoucher_storeInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput>
+  }
+
+  export type AdminUpsertWithoutVoucher_storeInput = {
+    update: XOR<AdminUpdateWithoutVoucher_storeInput, AdminUncheckedUpdateWithoutVoucher_storeInput>
+    create: XOR<AdminCreateWithoutVoucher_storeInput, AdminUncheckedCreateWithoutVoucher_storeInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutVoucher_storeInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutVoucher_storeInput, AdminUncheckedUpdateWithoutVoucher_storeInput>
+  }
+
+  export type AdminUpdateWithoutVoucher_storeInput = {
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutVoucher_storeInput = {
+    admin_id?: IntFieldUpdateOperationsInput | number
+    account_id?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type StoreUpsertWithoutVoucher_storesInput = {
+    update: XOR<StoreUpdateWithoutVoucher_storesInput, StoreUncheckedUpdateWithoutVoucher_storesInput>
+    create: XOR<StoreCreateWithoutVoucher_storesInput, StoreUncheckedCreateWithoutVoucher_storesInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutVoucher_storesInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutVoucher_storesInput, StoreUncheckedUpdateWithoutVoucher_storesInput>
+  }
+
+  export type StoreUpdateWithoutVoucher_storesInput = {
+    store_name?: StringFieldUpdateOperationsInput | string
+    store_address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    admin?: AdminUpdateManyWithoutStoreNestedInput
+    stock?: StockUpdateManyWithoutStoreNestedInput
+    stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
+    orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutVoucher_storesInput = {
+    store_id?: IntFieldUpdateOperationsInput | number
+    store_name?: StringFieldUpdateOperationsInput | string
+    store_address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
+    stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
+    stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutVoucher_storeInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutVoucher_storeInput, UserUncheckedUpdateWithoutVoucher_storeInput>
+    create: XOR<UserCreateWithoutVoucher_storeInput, UserUncheckedCreateWithoutVoucher_storeInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutVoucher_storeInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutVoucher_storeInput, UserUncheckedUpdateWithoutVoucher_storeInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutVoucher_storeInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutVoucher_storeInput>
+  }
+
+  export type AdminCreateWithoutVoucher_ongkirInput = {
+    phone: string
+    position: string
+    account: AccountCreateNestedOneWithoutAdminInput
+    store: StoreCreateNestedOneWithoutAdminInput
+    admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutVoucher_ongkirInput = {
+    admin_id?: number
+    account_id: number
+    store_id: number
+    phone: string
+    position: string
+    admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutVoucher_ongkirInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutVoucher_ongkirInput, AdminUncheckedCreateWithoutVoucher_ongkirInput>
+  }
+
+  export type StoreCreateWithoutVoucher_ongkirInput = {
+    store_name: string
+    store_address: string
+    city: string
+    lat: string
+    lng: string
+    admin?: AdminCreateNestedManyWithoutStoreInput
+    stock?: StockCreateNestedManyWithoutStoreInput
+    stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
+    orders?: OrderCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutVoucher_ongkirInput = {
+    store_id?: number
+    store_name: string
+    store_address: string
+    city: string
+    lat: string
+    lng: string
+    admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
+    stock?: StockUncheckedCreateNestedManyWithoutStoreInput
+    stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
+    orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutVoucher_ongkirInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutVoucher_ongkirInput, StoreUncheckedCreateWithoutVoucher_ongkirInput>
+  }
+
+  export type AdminUpsertWithoutVoucher_ongkirInput = {
+    update: XOR<AdminUpdateWithoutVoucher_ongkirInput, AdminUncheckedUpdateWithoutVoucher_ongkirInput>
+    create: XOR<AdminCreateWithoutVoucher_ongkirInput, AdminUncheckedCreateWithoutVoucher_ongkirInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutVoucher_ongkirInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutVoucher_ongkirInput, AdminUncheckedUpdateWithoutVoucher_ongkirInput>
+  }
+
+  export type AdminUpdateWithoutVoucher_ongkirInput = {
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutVoucher_ongkirInput = {
+    admin_id?: IntFieldUpdateOperationsInput | number
+    account_id?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type StoreUpsertWithoutVoucher_ongkirInput = {
+    update: XOR<StoreUpdateWithoutVoucher_ongkirInput, StoreUncheckedUpdateWithoutVoucher_ongkirInput>
+    create: XOR<StoreCreateWithoutVoucher_ongkirInput, StoreUncheckedCreateWithoutVoucher_ongkirInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutVoucher_ongkirInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutVoucher_ongkirInput, StoreUncheckedUpdateWithoutVoucher_ongkirInput>
+  }
+
+  export type StoreUpdateWithoutVoucher_ongkirInput = {
+    store_name?: StringFieldUpdateOperationsInput | string
+    store_address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    admin?: AdminUpdateManyWithoutStoreNestedInput
+    stock?: StockUpdateManyWithoutStoreNestedInput
+    stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
+    orders?: OrderUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutVoucher_ongkirInput = {
+    store_id?: IntFieldUpdateOperationsInput | number
+    store_name?: StringFieldUpdateOperationsInput | string
+    store_address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
+    stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
+    stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
+  export type AdminCreateWithoutVoucher_productInput = {
+    phone: string
+    position: string
+    account: AccountCreateNestedOneWithoutAdminInput
+    store: StoreCreateNestedOneWithoutAdminInput
+    admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutVoucher_productInput = {
+    admin_id?: number
+    account_id: number
+    store_id: number
+    phone: string
+    position: string
+    admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutVoucher_productInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutVoucher_productInput, AdminUncheckedCreateWithoutVoucher_productInput>
+  }
+
+  export type ProductCreateWithoutVoucherInput = {
+    product_name: string
+    product_price: number
+    product_category: ProductCategoryCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
+    product_img?: ProductImgCreateNestedManyWithoutProductInput
+    cart_items?: CartItemCreateNestedManyWithoutProductInput
+    order_items?: OrderItemCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutVoucherInput = {
+    product_id?: number
+    product_name: string
+    product_price: number
+    product_category_id: number
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
+    product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
+    cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutVoucherInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutVoucherInput, ProductUncheckedCreateWithoutVoucherInput>
+  }
+
+  export type AdminUpsertWithoutVoucher_productInput = {
+    update: XOR<AdminUpdateWithoutVoucher_productInput, AdminUncheckedUpdateWithoutVoucher_productInput>
+    create: XOR<AdminCreateWithoutVoucher_productInput, AdminUncheckedCreateWithoutVoucher_productInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutVoucher_productInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutVoucher_productInput, AdminUncheckedUpdateWithoutVoucher_productInput>
+  }
+
+  export type AdminUpdateWithoutVoucher_productInput = {
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutVoucher_productInput = {
+    admin_id?: IntFieldUpdateOperationsInput | number
+    account_id?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+    phone?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type ProductUpsertWithoutVoucherInput = {
+    update: XOR<ProductUpdateWithoutVoucherInput, ProductUncheckedUpdateWithoutVoucherInput>
+    create: XOR<ProductCreateWithoutVoucherInput, ProductUncheckedCreateWithoutVoucherInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutVoucherInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutVoucherInput, ProductUncheckedUpdateWithoutVoucherInput>
+  }
+
+  export type ProductUpdateWithoutVoucherInput = {
+    product_name?: StringFieldUpdateOperationsInput | string
+    product_price?: IntFieldUpdateOperationsInput | number
+    product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
+    product_img?: ProductImgUpdateManyWithoutProductNestedInput
+    cart_items?: CartItemUpdateManyWithoutProductNestedInput
+    order_items?: OrderItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutVoucherInput = {
+    product_id?: IntFieldUpdateOperationsInput | number
+    product_name?: StringFieldUpdateOperationsInput | string
+    product_price?: IntFieldUpdateOperationsInput | number
+    product_category_id?: IntFieldUpdateOperationsInput | number
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
+    product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
+    cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
   export type UserCreateWithoutCartInput = {
     phone: string
     pfp_url: string
@@ -35612,6 +37475,7 @@ export namespace Prisma {
     referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -35622,6 +37486,7 @@ export namespace Prisma {
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
@@ -35668,6 +37533,7 @@ export namespace Prisma {
     referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -35678,6 +37544,7 @@ export namespace Prisma {
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -35719,6 +37586,7 @@ export namespace Prisma {
     stock?: StockCreateNestedManyWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCart_itemsInput = {
@@ -35729,6 +37597,7 @@ export namespace Prisma {
     stock?: StockUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCart_itemsInput = {
@@ -35776,6 +37645,7 @@ export namespace Prisma {
     stock?: StockUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCart_itemsInput = {
@@ -35786,6 +37656,7 @@ export namespace Prisma {
     stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutOrdersInput = {
@@ -35795,6 +37666,7 @@ export namespace Prisma {
     referred?: ReferralCreateNestedOneWithoutReferredInput
     referral?: ReferralCreateNestedOneWithoutUserInput
     cart?: CartCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -35805,6 +37677,7 @@ export namespace Prisma {
     pfp_url: string
     referral?: ReferralUncheckedCreateNestedOneWithoutUserInput
     cart?: CartUncheckedCreateNestedManyWithoutUserInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -35821,6 +37694,8 @@ export namespace Prisma {
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutOrdersInput = {
@@ -35833,6 +37708,8 @@ export namespace Prisma {
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutStoreInput
+    voucher_stores?: VoucherStoreUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutOrdersInput = {
@@ -35964,6 +37841,7 @@ export namespace Prisma {
     referred?: ReferralUpdateOneWithoutReferredNestedInput
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -35974,6 +37852,7 @@ export namespace Prisma {
     pfp_url?: StringFieldUpdateOperationsInput | string
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type StoreUpsertWithoutOrdersInput = {
@@ -35996,6 +37875,8 @@ export namespace Prisma {
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutOrdersInput = {
@@ -36008,6 +37889,8 @@ export namespace Prisma {
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutStoreNestedInput
+    voucher_stores?: VoucherStoreUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -36155,6 +38038,7 @@ export namespace Prisma {
     stock?: StockCreateNestedManyWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
     cart_items?: CartItemCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrder_itemsInput = {
@@ -36165,6 +38049,7 @@ export namespace Prisma {
     stock?: StockUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrder_itemsInput = {
@@ -36226,6 +38111,7 @@ export namespace Prisma {
     stock?: StockUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrder_itemsInput = {
@@ -36236,6 +38122,7 @@ export namespace Prisma {
     stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutPayment_proofInput = {
@@ -36375,6 +38262,9 @@ export namespace Prisma {
     position: string
     account: AccountCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
+    voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutAdmin_ordersInput = {
@@ -36383,6 +38273,9 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
+    voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
+    voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutAdmin_ordersInput = {
@@ -36436,6 +38329,9 @@ export namespace Prisma {
     position?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutAdmin_ordersInput = {
@@ -36444,6 +38340,9 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type OrderUpsertWithoutAdmin_ordersInput = {
@@ -36583,6 +38482,47 @@ export namespace Prisma {
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VoucherStoreUpdateWithoutUsersInput = {
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutVoucher_storeNestedInput
+    store?: StoreUpdateOneRequiredWithoutVoucher_storesNestedInput
+  }
+
+  export type VoucherStoreUncheckedUpdateWithoutUsersInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutUsersInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+  }
+
   export type UserCreateManyReferredInput = {
     user_id?: number
     account_id: number
@@ -36597,6 +38537,7 @@ export namespace Prisma {
     referral?: ReferralUpdateOneWithoutUserNestedInput
     cart?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredInput = {
@@ -36607,6 +38548,7 @@ export namespace Prisma {
     referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
     cart?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutReferredInput = {
@@ -36666,6 +38608,39 @@ export namespace Prisma {
     action_time: Date | string
   }
 
+  export type VoucherProductCreateManyAdminInput = {
+    voucher_product_id?: number
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    product_id: number
+  }
+
+  export type VoucherOngkirCreateManyAdminInput = {
+    voucher_ongkir_id?: number
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    store_id: number
+  }
+
+  export type VoucherStoreCreateManyAdminInput = {
+    voucher_store_id?: number
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    store_id: number
+  }
+
   export type AdminOrderUpdateWithoutAdminInput = {
     action?: EnumActionEnumFieldUpdateOperationsInput | $Enums.ActionEnum
     action_time?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36684,6 +38659,104 @@ export namespace Prisma {
     order_id?: IntFieldUpdateOperationsInput | number
     action?: EnumActionEnumFieldUpdateOperationsInput | $Enums.ActionEnum
     action_time?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VoucherProductUpdateWithoutAdminInput = {
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutVoucherNestedInput
+  }
+
+  export type VoucherProductUncheckedUpdateWithoutAdminInput = {
+    voucher_product_id?: IntFieldUpdateOperationsInput | number
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    product_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherProductUncheckedUpdateManyWithoutAdminInput = {
+    voucher_product_id?: IntFieldUpdateOperationsInput | number
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    product_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherOngkirUpdateWithoutAdminInput = {
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutVoucher_ongkirNestedInput
+  }
+
+  export type VoucherOngkirUncheckedUpdateWithoutAdminInput = {
+    voucher_ongkir_id?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherOngkirUncheckedUpdateManyWithoutAdminInput = {
+    voucher_ongkir_id?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherStoreUpdateWithoutAdminInput = {
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutVoucher_storesNestedInput
+    users?: UserUpdateManyWithoutVoucher_storeNestedInput
+  }
+
+  export type VoucherStoreUncheckedUpdateWithoutAdminInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store_id?: IntFieldUpdateOperationsInput | number
+    users?: UserUncheckedUpdateManyWithoutVoucher_storeNestedInput
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutAdminInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type AdminCreateManyStoreInput = {
@@ -36718,11 +38791,37 @@ export namespace Prisma {
     order_date: Date | string
   }
 
+  export type VoucherOngkirCreateManyStoreInput = {
+    voucher_ongkir_id?: number
+    voucher_ongkir_code: string
+    voucher_ongkir_nominal: number
+    voucher_ongkir_startdate: Date | string
+    voucher_ongkir_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+  }
+
+  export type VoucherStoreCreateManyStoreInput = {
+    voucher_store_id?: number
+    voucher_store_code: string
+    voucher_store_amount_percentage: number
+    voucher_store_exact_nominal: number
+    voucher_store_minimum_buy: number
+    voucher_store_maximum_nominal: number
+    voucher_store_startdate: Date | string
+    voucher_store_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
+  }
+
   export type AdminUpdateWithoutStoreInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutStoreInput = {
@@ -36731,6 +38830,9 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
+    voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateManyWithoutStoreInput = {
@@ -36822,6 +38924,75 @@ export namespace Prisma {
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VoucherOngkirUpdateWithoutStoreInput = {
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutVoucher_ongkirNestedInput
+  }
+
+  export type VoucherOngkirUncheckedUpdateWithoutStoreInput = {
+    voucher_ongkir_id?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherOngkirUncheckedUpdateManyWithoutStoreInput = {
+    voucher_ongkir_id?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_code?: StringFieldUpdateOperationsInput | string
+    voucher_ongkir_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_ongkir_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_ongkir_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherStoreUpdateWithoutStoreInput = {
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutVoucher_storeNestedInput
+    users?: UserUpdateManyWithoutVoucher_storeNestedInput
+  }
+
+  export type VoucherStoreUncheckedUpdateWithoutStoreInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+    users?: UserUncheckedUpdateManyWithoutVoucher_storeNestedInput
+  }
+
+  export type VoucherStoreUncheckedUpdateManyWithoutStoreInput = {
+    voucher_store_id?: IntFieldUpdateOperationsInput | number
+    voucher_store_code?: StringFieldUpdateOperationsInput | string
+    voucher_store_amount_percentage?: IntFieldUpdateOperationsInput | number
+    voucher_store_exact_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_minimum_buy?: IntFieldUpdateOperationsInput | number
+    voucher_store_maximum_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_store_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_store_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+  }
+
   export type StockJournalCreateManyStockInput = {
     stock_journal_id?: number
     store_id: number
@@ -36884,6 +39055,16 @@ export namespace Prisma {
     quantity: number
     price: number
     subtotal: number
+  }
+
+  export type VoucherProductCreateManyProductInput = {
+    voucher_product_id?: number
+    voucher_product_code: string
+    voucher_product_nominal: number
+    voucher_product_startdate: Date | string
+    voucher_product_enddate: Date | string
+    created_at: Date | string
+    admin_responsible: number
   }
 
   export type StockUpdateWithoutProductInput = {
@@ -36959,6 +39140,35 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
   }
 
+  export type VoucherProductUpdateWithoutProductInput = {
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutVoucher_productNestedInput
+  }
+
+  export type VoucherProductUncheckedUpdateWithoutProductInput = {
+    voucher_product_id?: IntFieldUpdateOperationsInput | number
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type VoucherProductUncheckedUpdateManyWithoutProductInput = {
+    voucher_product_id?: IntFieldUpdateOperationsInput | number
+    voucher_product_code?: StringFieldUpdateOperationsInput | string
+    voucher_product_nominal?: IntFieldUpdateOperationsInput | number
+    voucher_product_startdate?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucher_product_enddate?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin_responsible?: IntFieldUpdateOperationsInput | number
+  }
+
   export type ProductCreateManyProduct_categoryInput = {
     product_id?: number
     product_name: string
@@ -36972,6 +39182,7 @@ export namespace Prisma {
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutProduct_categoryInput = {
@@ -36982,12 +39193,42 @@ export namespace Prisma {
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutProduct_categoryInput = {
     product_id?: IntFieldUpdateOperationsInput | number
     product_name?: StringFieldUpdateOperationsInput | string
     product_price?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserUpdateWithoutVoucher_storeInput = {
+    phone?: StringFieldUpdateOperationsInput | string
+    pfp_url?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneRequiredWithoutUser_profileNestedInput
+    referred?: ReferralUpdateOneWithoutReferredNestedInput
+    referral?: ReferralUpdateOneWithoutUserNestedInput
+    cart?: CartUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVoucher_storeInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    account_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: StringFieldUpdateOperationsInput | string
+    pfp_url?: StringFieldUpdateOperationsInput | string
+    referral?: ReferralUncheckedUpdateOneWithoutUserNestedInput
+    cart?: CartUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutVoucher_storeInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    account_id?: IntFieldUpdateOperationsInput | number
+    referred_id?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: StringFieldUpdateOperationsInput | string
+    pfp_url?: StringFieldUpdateOperationsInput | string
   }
 
   export type CartItemCreateManyCartInput = {
