@@ -29,7 +29,7 @@ export class CartController {
         });
       }
 
-      // check apakah ada cartt
+      // check apakah ada cart
       let cart = await prisma.cart.findFirst({
         where: { user_id: 1 },
         include: { cart_items: true },
@@ -64,7 +64,7 @@ export class CartController {
       });
 
       if (existingCartItem) {
-        // update quantity alau ada product
+        // update quantity Kalau ada product
         const updatedCartItem = await prisma.cartItem.update({
           where: { cart_item_id: existingCartItem.cart_item_id },
           data: { quantity: existingCartItem.quantity + quantity },
@@ -113,7 +113,10 @@ export class CartController {
           cart_items: {
             include: {
               product: {
-                include: {
+                select: {
+                  product_id: true,
+                  product_name: true,
+                  product_price: true,
                   product_img: true,
                 },
               },
@@ -126,13 +129,20 @@ export class CartController {
         return res.status(200).json({ items: [] });
       }
 
-      res.status(200).json({ items: cart.cart_items });
+      const itemsWithTotal = cart.cart_items.map((item) => ({
+        ...item,
+        subtotal: item.quantity * item.product.product_price,
+      }));
+
+      res.status(200).json({
+        items: itemsWithTotal,
+        total: itemsWithTotal.reduce((sum, item) => sum + item.subtotal, 0),
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "gagal mendapatkan item" });
     }
   }
-
   // update cart item quantity
   async updateCartItem(req: Request, res: Response): Promise<any> {
     const { cart_item_id } = req.params;
