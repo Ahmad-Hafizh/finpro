@@ -1,6 +1,8 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import AccountRouter from './routers/account.router';
+import { prisma } from '../../../packages/database/src/client';
+import { CartRouter } from './routers/cart.router';
+import { AccountRouter } from './routers/account.router';
 
 const PORT = 8090;
 class App {
@@ -24,6 +26,9 @@ class App {
 
     const accountRouter = new AccountRouter();
     this.app.use('/account', accountRouter.getRouter());
+
+    const cartRouter = new CartRouter();
+    this.app.use('/cart', cartRouter.getRouter());
   }
 
   public start() {
