@@ -4,30 +4,31 @@ import { FaRegCalendarAlt } from 'react-icons/fa';
 import { MdOutlineShoppingBag } from 'react-icons/md';
 import { FiPackage } from 'react-icons/fi';
 import { MdOutlineAccountCircle } from 'react-icons/md';
+import Link from 'next/link';
 
 const Botbar = () => {
   return (
-    <div className="fixed md:hidden bottom-0 flex border-t px-[5%] py-4 justify-between w-full border-black ">
-      <div className="flex flex-col items-center justify-end gap-1">
-        <BiHomeSmile className="text-3xl" />
-        <p className="text-sm">home</p>
-      </div>
-      <div className="flex flex-col items-center justify-start gap-1">
-        <FaRegCalendarAlt className="text-3xl" />
-        <p className="text-sm">activity</p>
-      </div>
-      <div className="flex flex-col items-center justify-start gap-1">
-        <MdOutlineShoppingBag className="text-3xl" />
-        <p className="text-sm">shop</p>
-      </div>
-      <div className="flex flex-col items-center justify-start gap-1">
-        <FiPackage className="text-3xl" />
-        <p className="text-sm">order</p>
-      </div>
-      <div className="flex flex-col items-center justify-start gap-1">
-        <MdOutlineAccountCircle className="text-3xl" />
-        <p className="text-sm">setting</p>
-      </div>
+    <div className="fixed md:hidden bottom-0 h-20 flex px-[5%] py-4 justify-between items-center w-full bg-gray-200 rounded-t-xl ">
+      <Link href="/" className="flex flex-col items-center justify-end gap-1">
+        <BiHomeSmile className="text-3xl text-gray-400" />
+        {/* <p className="text-sm text-gray-400">home</p> */}
+      </Link>
+      <Link href="/cart" className="flex flex-col items-center justify-start gap-1">
+        <FaRegCalendarAlt className="text-3xl text-gray-400" />
+        {/* <p className="text-sm text-gray-400">activity</p> */}
+      </Link>
+      <Link href="/katalog" className="flex flex-col items-center justify-start gap-1">
+        <MdOutlineShoppingBag className="text-3xl text-gray-400" />
+        {/* <p className="text-sm text-gray-400">shop</p> */}
+      </Link>
+      <Link href="/order" className="flex flex-col items-center justify-start gap-1">
+        <FiPackage className="text-3xl text-gray-400" />
+        {/* <p className="text-sm text-gray-400">order</p> */}
+      </Link>
+      <Link href="setting" className="flex flex-col items-center justify-start gap-1">
+        <MdOutlineAccountCircle className="text-3xl text-gray-400" />
+        {/* <p className="text-sm text-gray-400">setting</p> */}
+      </Link>
     </div>
   );
 };
