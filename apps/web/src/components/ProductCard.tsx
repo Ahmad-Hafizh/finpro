@@ -27,6 +27,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       });
       const data = await res.json();
       if (res.ok) {
+        console.log("Product added, dispatching cartUpdated event");
+        window.dispatchEvent(new Event("cartUpdated"));
         alert("Product added to cart!");
       } else {
         alert(`Error: ${data.error}`);
