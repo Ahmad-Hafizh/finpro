@@ -5905,7 +5905,7 @@ var require_client = __commonJS({
           "value": "prisma-client-js"
         },
         "output": {
-          "value": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\generated\\client",
+          "value": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\generated\\client",
           "fromEnvVar": null
         },
         "config": {
@@ -5919,7 +5919,7 @@ var require_client = __commonJS({
           }
         ],
         "previewFeatures": [],
-        "sourceFilePath": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\prisma\\schema.prisma",
+        "sourceFilePath": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\prisma\\schema.prisma",
         "isCustomOutput": true
       },
       "relativeEnvPaths": {
