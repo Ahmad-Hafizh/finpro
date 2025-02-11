@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Navbar />
-        <div className="w-full h-full my-20">{children}</div>
+        <div className="w-full h-full">{children}</div>
         <Botbar />
       </body>
     </html>

@@ -1,14 +1,24 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import { IoCartOutline } from 'react-icons/io5';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import Link from 'next/link';
 import { BiHomeSmile } from 'react-icons/bi';
 import { FiPackage } from 'react-icons/fi';
 import { Search } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
+  const pathName = usePathname();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (pathName == '/') {
+      setIsVisible(true);
+    }
+  }, [pathName]);
   return (
-    <div className="w-full h-20 border-b px-[5%] fixed top-0 z-50 bg-white">
+    <div className={`${isVisible ? 'block' : 'hidden'} w-full h-20 border-b px-[5%] fixed top-0 z-50 bg-white`}>
       <div className="flex justify-between items-center h-full gap-4">
         <div>
           <BiHomeSmile className="hidden md:flex text-3xl" />
