@@ -1,34 +1,43 @@
-// INI HANYA CONTOH
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+import { fetchCartCount } from "@/store/cartSlice";
+import { useCart } from "@/contexts/CartContext";
 
-const TestNavbar: React.FC = () => {
-  const [cartCount, setCartCount] = useState<number>(0);
+const TestingNavbar: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const cartCount = useSelector((state: RootState) => state.cart.count);
+  const { cartVersion } = useCart();
 
-  const fetchCartCount = async () => {
-    try {
-      const res = await fetch("http://localhost:8090/cart/count");
-      const data = await res.json();
-      if (res.ok) {
-        console.log("Fetched cart count:", data.count);
-        setCartCount(data.count);
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       dispatch(fetchCartCount());
+  //     }, 3000);
 
+  //     return () => clearInterval(interval);
+  //   }, [dispatch]);
+
+  //   useEffect(() => {
+  //     dispatch(fetchCartCount());
+  //   }, [cartVersion, dispatch]);
+
+  // update cartVersion
   useEffect(() => {
-    fetchCartCount();
-    const handleCartUpdated = () => {
-      console.log("Received cartUpdated event in navbar");
-      fetchCartCount();
+    dispatch(fetchCartCount());
+  }, [cartVersion, dispatch]);
+
+  // update tab
+  useEffect(() => {
+    const handleFocus = () => {
+      dispatch(fetchCartCount());
     };
-    window.addEventListener("cartUpdated", handleCartUpdated);
-    return () => window.removeEventListener("cartUpdated", handleCartUpdated);
-  }, []);
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [dispatch]);
 
   return (
     <nav>
@@ -46,4 +55,4 @@ const TestNavbar: React.FC = () => {
   );
 };
 
-export default TestNavbar;
+export default TestingNavbar;

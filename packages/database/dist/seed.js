@@ -5921,7 +5921,7 @@ var require_client = __commonJS({
           "value": "prisma-client-js"
         },
         "output": {
-          "value": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\generated\\client",
+          "value": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\generated\\client",
           "fromEnvVar": null
         },
         "config": {
@@ -5935,12 +5935,11 @@ var require_client = __commonJS({
           }
         ],
         "previewFeatures": [],
-        "sourceFilePath": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\prisma\\schema.prisma",
+        "sourceFilePath": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\prisma\\schema.prisma",
         "isCustomOutput": true
       },
       "relativeEnvPaths": {
-        "rootEnvPath": null,
-        "schemaEnvPath": "../../.env"
+        "rootEnvPath": null
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.3.1",
@@ -5966,8 +5965,8 @@ var require_client = __commonJS({
     config2.dirname = __dirname;
     if (!fs2.existsSync(path.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
-        "generated/client",
-        "client"
+        "packages/database/generated/client",
+        "database/generated/client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
         return fs2.existsSync(path.join(process.cwd(), altPath, "schema.prisma"));
@@ -5988,9 +5987,9 @@ var require_client = __commonJS({
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
     path.join(__dirname, "query_engine-windows.dll.node");
-    path.join(process.cwd(), "generated/client/query_engine-windows.dll.node");
+    path.join(process.cwd(), "packages/database/generated/client/query_engine-windows.dll.node");
     path.join(__dirname, "schema.prisma");
-    path.join(process.cwd(), "generated/client/schema.prisma");
+    path.join(process.cwd(), "packages/database/generated/client/schema.prisma");
   }
 });
 
