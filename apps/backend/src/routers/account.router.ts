@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { AccountController } from '../controllers/account.controller';
-import { verifyToken } from '../middleware/verifyToken';
+import { Router } from "express";
+import { AccountController } from "../controllers/account.controller";
+import { verifyToken } from "../middleware/verifyToken";
 
 export class AccountRouter {
   private route: Router;
@@ -13,15 +13,16 @@ export class AccountRouter {
   }
 
   private initializeRoutes() {
-    this.route.post('/sign-up', this.accountController.signUp);
-    this.route.get('/verify', verifyToken, this.accountController.verifyEmailsetPassword);
-<<<<<<< HEAD
+    this.route.post("/sign-up", this.accountController.signUp);
+    this.route.get(
+      "/verify",
+      verifyToken,
+      this.accountController.verifyEmailsetPassword
+    );
 
-    this.route.post('/sing-in', this.accountController.signIn);
-    this.route.post('/forgot-password', this.accountController.forgotPassword);
-    this.route.post('/recover-password', this.accountController.resetPassword);
-=======
->>>>>>> main
+    this.route.post("/sing-in", this.accountController.signIn);
+    this.route.post("/forgot-password", this.accountController.forgotPassword);
+    this.route.post("/recover-password", this.accountController.resetPassword);
   }
 
   public getRouter() {

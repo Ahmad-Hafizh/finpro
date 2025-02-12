@@ -358,7 +358,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\generated\\client",
+      "value": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -372,12 +372,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\packages\\database\\prisma\\schema.prisma",
+    "sourceFilePath": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.3.1",
