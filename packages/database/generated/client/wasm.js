@@ -117,18 +117,34 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.AccountScalarFieldEnum = {
-  account_id: 'account_id',
+exports.Prisma.UserScalarFieldEnum = {
+  user_id: 'user_id',
   name: 'name',
   email: 'email',
   password: 'password',
   role: 'role',
-  isVerified: 'isVerified'
+  emailVerified: 'emailVerified',
+  updateAt: 'updateAt'
 };
 
-exports.Prisma.UserScalarFieldEnum = {
+exports.Prisma.AccountScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  provider: 'provider',
+  providerAccountId: 'providerAccountId',
+  refresh_token: 'refresh_token',
+  access_token: 'access_token',
+  expires_at: 'expires_at',
+  token_type: 'token_type',
+  scope: 'scope',
+  id_token: 'id_token',
+  session_state: 'session_state',
+  userId: 'userId'
+};
+
+exports.Prisma.ProfileScalarFieldEnum = {
+  profile_id: 'profile_id',
   user_id: 'user_id',
-  account_id: 'account_id',
   referred_id: 'referred_id',
   phone: 'phone',
   pfp_url: 'pfp_url'
@@ -136,13 +152,13 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.ReferralScalarFieldEnum = {
   referral_id: 'referral_id',
-  user_id: 'user_id',
+  profile_id: 'profile_id',
   referral_code: 'referral_code'
 };
 
 exports.Prisma.AddressScalarFieldEnum = {
   address_id: 'address_id',
-  account_id: 'account_id',
+  profile_id: 'profile_id',
   street: 'street',
   city: 'city',
   province: 'province',
@@ -152,7 +168,7 @@ exports.Prisma.AddressScalarFieldEnum = {
 
 exports.Prisma.AdminScalarFieldEnum = {
   admin_id: 'admin_id',
-  account_id: 'account_id',
+  user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
   position: 'position'
@@ -251,7 +267,7 @@ exports.Prisma.DiscountScalarFieldEnum = {
 
 exports.Prisma.CartScalarFieldEnum = {
   cart_id: 'cart_id',
-  user_id: 'user_id',
+  profile_id: 'profile_id',
   created_at: 'created_at'
 };
 
@@ -264,7 +280,7 @@ exports.Prisma.CartItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   order_id: 'order_id',
-  user_id: 'user_id',
+  profile_id: 'profile_id',
   store_id: 'store_id',
   address_id: 'address_id',
   total_price: 'total_price',
@@ -346,8 +362,9 @@ exports.ActionEnum = exports.$Enums.ActionEnum = {
 };
 
 exports.Prisma.ModelName = {
-  Account: 'Account',
   User: 'User',
+  Account: 'Account',
+  Profile: 'Profile',
   Referral: 'Referral',
   Address: 'Address',
   Admin: 'Admin',
