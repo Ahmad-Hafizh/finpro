@@ -12,18 +12,19 @@ datasource db {
 }
 
 model User {
-  user_id       Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  password      String
-  role          Role      @default(user)
+  id            String    @id @default(cuid()) @map("user_id")
+  name          String?
+  email         String?   @unique
   emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  role          Role      @default(user)
   updateAt      DateTime  @updatedAt
+  accounts      Account[]
   profile       Profile?
   admin         Admin?
-  account       Account?
 
-  @@map("account")
+  @@map("users")
 }
 
 enum Role {
@@ -33,7 +34,7 @@ enum Role {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(cuid()) @map("account_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -45,8 +46,8 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  userId Int  @unique @map("user_id")
-  user   User @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -54,8 +55,8 @@ model Account {
 
 model Profile {
   profile_id    Int            @id @default(autoincrement())
-  user_id       Int            @unique
-  user          User           @relation(fields: [user_id], references: [user_id])
+  user_id       String         @unique
+  user          User           @relation(fields: [user_id], references: [id])
   referred_id   Int?
   referred      Referral?      @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
   phone         String?
@@ -66,7 +67,7 @@ model Profile {
   voucher_store VoucherStore[] @relation("UserVouchers")
   Address       Address[]
 
-  @@map("user")
+  @@map("profile")
 }
 
 model Referral {
@@ -95,8 +96,8 @@ model Address {
 
 model Admin {
   admin_id        Int              @id @default(autoincrement())
-  user_id         Int              @unique
-  user            User             @relation(fields: [user_id], references: [user_id])
+  user_id         String           @unique
+  user            User             @relation(fields: [user_id], references: [id])
   store_id        Int
   store           Store            @relation(fields: [store_id], references: [store_id])
   phone           String
