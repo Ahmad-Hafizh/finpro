@@ -117,18 +117,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.UserScalarFieldEnum = {
-  user_id: 'user_id',
-  name: 'name',
-  email: 'email',
-  password: 'password',
-  role: 'role',
-  emailVerified: 'emailVerified',
-  updateAt: 'updateAt'
-};
-
 exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
   type: 'type',
   provider: 'provider',
   providerAccountId: 'providerAccountId',
@@ -139,39 +128,32 @@ exports.Prisma.AccountScalarFieldEnum = {
   scope: 'scope',
   id_token: 'id_token',
   session_state: 'session_state',
-  userId: 'userId'
-};
-
-exports.Prisma.ProfileScalarFieldEnum = {
-  profile_id: 'profile_id',
-  user_id: 'user_id',
-  referred_id: 'referred_id',
-  phone: 'phone',
-  pfp_url: 'pfp_url'
+  userId: 'userId',
+  account_id: 'account_id'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
   referral_id: 'referral_id',
-  profile_id: 'profile_id',
-  referral_code: 'referral_code'
+  referral_code: 'referral_code',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.AddressScalarFieldEnum = {
   address_id: 'address_id',
-  profile_id: 'profile_id',
   street: 'street',
   city: 'city',
   province: 'province',
   island: 'island',
-  country: 'country'
+  country: 'country',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
   admin_id: 'admin_id',
-  user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
-  position: 'position'
+  position: 'position',
+  user_id: 'user_id'
 };
 
 exports.Prisma.StoreScalarFieldEnum = {
@@ -267,8 +249,8 @@ exports.Prisma.DiscountScalarFieldEnum = {
 
 exports.Prisma.CartScalarFieldEnum = {
   cart_id: 'cart_id',
-  profile_id: 'profile_id',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.CartItemScalarFieldEnum = {
@@ -280,12 +262,12 @@ exports.Prisma.CartItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   order_id: 'order_id',
-  profile_id: 'profile_id',
   store_id: 'store_id',
   address_id: 'address_id',
   total_price: 'total_price',
   status: 'status',
-  order_date: 'order_date'
+  order_date: 'order_date',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -320,6 +302,25 @@ exports.Prisma.AdminOrderScalarFieldEnum = {
   action_time: 'action_time'
 };
 
+exports.Prisma.ProfileScalarFieldEnum = {
+  profile_id: 'profile_id',
+  user_id: 'user_id',
+  referred_id: 'referred_id',
+  phone: 'phone',
+  pfp_url: 'pfp_url'
+};
+
+exports.Prisma.UsersScalarFieldEnum = {
+  user_id: 'user_id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  image: 'image',
+  role: 'role',
+  email_verified: 'email_verified',
+  updateAt: 'updateAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -334,12 +335,6 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.Role = exports.$Enums.Role = {
-  user: 'user',
-  admin: 'admin',
-  super_admin: 'super_admin'
-};
-
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   menunggu_pembayaran: 'menunggu_pembayaran',
   menunggu_konfirmasi: 'menunggu_konfirmasi',
@@ -361,10 +356,14 @@ exports.ActionEnum = exports.$Enums.ActionEnum = {
   batalkan_pesanan: 'batalkan_pesanan'
 };
 
+exports.Role = exports.$Enums.Role = {
+  user: 'user',
+  admin: 'admin',
+  super_admin: 'super_admin'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User',
   Account: 'Account',
-  Profile: 'Profile',
   Referral: 'Referral',
   Address: 'Address',
   Admin: 'Admin',
@@ -384,7 +383,9 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   PaymentProof: 'PaymentProof',
   OrderCancel: 'OrderCancel',
-  AdminOrder: 'AdminOrder'
+  AdminOrder: 'AdminOrder',
+  profile: 'profile',
+  users: 'users'
 };
 
 /**
