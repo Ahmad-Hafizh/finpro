@@ -15,6 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { callAPI } from "@/config/axios";
 
 const signUpSchema = z.object({
   name: z
@@ -33,8 +34,16 @@ const SignUpPage = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    try {
+      const response = await callAPI.post("/account/sign-up", {
+        name: values.name,
+        email: values.email,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex h-screen w-full items-center justify-center">

@@ -38,8 +38,8 @@ model User {
   account       Account        @relation(fields: [account_id], references: [account_id])
   referred_id   Int?
   referred      Referral?      @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
-  phone         String
-  pfp_url       String
+  phone         String?
+  pfp_url       String?
   referral      Referral?      @relation(name: "UserProfileReferral")
   cart          Cart[]
   orders        Order[]

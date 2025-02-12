@@ -15,7 +15,7 @@ export class CartController {
 
       if (!user || !user.account.isVerified) {
         return res.status(403).json({
-          error: "user tidak ditemukan atau belum diverifikasi",
+          error: "user not found or not verified",
         });
       }
 
@@ -25,7 +25,7 @@ export class CartController {
 
       if (!stock || stock.quantity < quantity) {
         return res.status(400).json({
-          error: "stok produk tidak cukup",
+          error: "insufficient product",
         });
       }
 
@@ -52,7 +52,7 @@ export class CartController {
       }
 
       if (!cart) {
-        return res.status(500).json({ error: "gagal membuat cart" });
+        return res.status(500).json({ error: "failed to create cart" });
       }
 
       // cek apakah ada product
@@ -84,7 +84,7 @@ export class CartController {
       res.status(201).json(newCartItem);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "gagal menambahkan ke cart" });
+      res.status(500).json({ error: "failed to add to cart" });
     }
   }
 
@@ -100,7 +100,7 @@ export class CartController {
       res.status(200).json({ count: itemCount });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "gagal mendapatkan item count" });
+      res.status(500).json({ error: "failed to get item count" });
     }
   }
 
@@ -118,6 +118,15 @@ export class CartController {
                   product_name: true,
                   product_price: true,
                   product_img: true,
+                  stock: {
+                    include: {
+                      store: {
+                        select: {
+                          store_name: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -129,10 +138,17 @@ export class CartController {
         return res.status(200).json({ items: [] });
       }
 
-      const itemsWithTotal = cart.cart_items.map((item) => ({
-        ...item,
-        subtotal: item.quantity * item.product.product_price,
-      }));
+      const itemsWithTotal = cart.cart_items.map((item) => {
+        const storeName =
+          item.product.stock && item.product.stock.length > 0
+            ? item.product.stock[0].store.store_name
+            : null;
+        return {
+          ...item,
+          subtotal: item.quantity * item.product.product_price,
+          store_name: storeName,
+        };
+      });
 
       res.status(200).json({
         items: itemsWithTotal,
@@ -140,9 +156,10 @@ export class CartController {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "gagal mendapatkan item" });
+      res.status(500).json({ error: "failed to get item" });
     }
   }
+
   // update cart item quantity
   async updateCartItem(req: Request, res: Response): Promise<any> {
     const { cart_item_id } = req.params;
@@ -151,7 +168,7 @@ export class CartController {
     try {
       if (quantity < 1) {
         return res.status(400).json({
-          error: "Quantity harus lebih dari 0",
+          error: "quantity should be more than 0",
         });
       }
 
@@ -161,7 +178,7 @@ export class CartController {
       });
 
       if (!cartItem) {
-        return res.status(404).json({ error: "item tidak ada" });
+        return res.status(404).json({ error: "item doesnt exist" });
       }
 
       const stock = await prisma.stock.findFirst({
@@ -169,7 +186,7 @@ export class CartController {
       });
 
       if (!stock || stock.quantity < quantity) {
-        return res.status(400).json({ error: "stok tidak cukup" });
+        return res.status(400).json({ error: "insufficient product" });
       }
 
       // Update cart item
@@ -181,7 +198,7 @@ export class CartController {
       res.status(200).json(updatedCartItem);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "gagal mengupdate item" });
+      res.status(500).json({ error: "failed to update item" });
     }
   }
 
@@ -194,10 +211,10 @@ export class CartController {
         where: { cart_item_id: parseInt(cart_item_id) },
       });
 
-      res.status(200).json({ message: "item berhasil dihapus" });
+      res.status(200).json({ message: "item deleted successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "gagal menghapus item" });
+      res.status(500).json({ error: "failed to delete item" });
     }
   }
 }
