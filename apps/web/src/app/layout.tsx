@@ -5,6 +5,7 @@ import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import ReduxProvider from "@/components/ReduxProvider";
 import { CartProvider } from "@/contexts/CartContext";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+
         <ReduxProvider>
           <CartProvider>
             <Navbar />
@@ -37,6 +39,7 @@ export default function RootLayout({
             <Botbar />
           </CartProvider>
         </ReduxProvider>
+
       </body>
     </html>
   );
