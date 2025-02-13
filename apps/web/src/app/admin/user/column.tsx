@@ -12,20 +12,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 
 export type StoreAdmin = {
-  id: number;
-  name: string;
-  store: string;
+  admin_id: number;
+  account_id: number;
+  store_id: number;
   phone: string;
+  position: string;
+  account: {
+    account_id: number;
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    isVerified: boolean;
+  };
 };
 
 export const columns = (
@@ -34,7 +35,7 @@ export const columns = (
   setOpenDialog: (open: boolean) => void
 ): ColumnDef<StoreAdmin>[] => [
   {
-    accessorKey: "name",
+    accessorKey: "account.name",
     header: ({ column }) => {
       return (
         <Button
@@ -49,7 +50,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "store",
+    accessorKey: "store_id",
     header: ({ column }) => {
       return (
         <Button
@@ -57,7 +58,7 @@ export const columns = (
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Store
+          Store Id
           <AiOutlineSortAscending />{" "}
         </Button>
       );
@@ -84,13 +85,15 @@ export const columns = (
       const storeAdmin = row.original;
 
       const onHandleEdit = () => {
-        setAdminId(storeAdmin.id);
+        console.log("SRTOREADMN,", storeAdmin);
+        setAdminId(storeAdmin.admin_id);
+        console.log("Ini store admin: ", storeAdmin.admin_id);
         setAction("Edit");
         setOpenDialog(true);
       };
 
       const onHandleDelete = () => {
-        setAdminId(storeAdmin.id);
+        setAdminId(storeAdmin.admin_id);
         setAction("Delete");
         setOpenDialog(true);
       };

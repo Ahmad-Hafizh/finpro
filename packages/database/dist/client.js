@@ -5923,7 +5923,7 @@ var require_client = __commonJS({
           "value": "prisma-client-js"
         },
         "output": {
-          "value": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\generated\\client",
+          "value": "/Users/macbook/Documents/finpro-jcwd0412/finpro/packages/database/generated/client",
           "fromEnvVar": null
         },
         "config": {
@@ -5932,16 +5932,17 @@ var require_client = __commonJS({
         "binaryTargets": [
           {
             "fromEnvVar": null,
-            "value": "windows",
+            "value": "darwin-arm64",
             "native": true
           }
         ],
         "previewFeatures": [],
-        "sourceFilePath": "E:\\CODE\\finpro-alv\\finpro\\packages\\database\\prisma\\schema.prisma",
+        "sourceFilePath": "/Users/macbook/Documents/finpro-jcwd0412/finpro/packages/database/prisma/schema.prisma",
         "isCustomOutput": true
       },
       "relativeEnvPaths": {
-        "rootEnvPath": null
+        "rootEnvPath": null,
+        "schemaEnvPath": "../../.env"
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.3.1",
@@ -5967,8 +5968,8 @@ var require_client = __commonJS({
     config2.dirname = __dirname;
     if (!fs2.existsSync(path.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
-        "packages/database/generated/client",
-        "database/generated/client"
+        "generated/client",
+        "client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
         return fs2.existsSync(path.join(process.cwd(), altPath, "schema.prisma"));
@@ -5988,10 +5989,10 @@ var require_client = __commonJS({
     var PrismaClient2 = getPrismaClient2(config2);
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
-    path.join(__dirname, "query_engine-windows.dll.node");
-    path.join(process.cwd(), "packages/database/generated/client/query_engine-windows.dll.node");
+    path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+    path.join(process.cwd(), "generated/client/libquery_engine-darwin-arm64.dylib.node");
     path.join(__dirname, "schema.prisma");
-    path.join(process.cwd(), "packages/database/generated/client/schema.prisma");
+    path.join(process.cwd(), "generated/client/schema.prisma");
   }
 });
 
