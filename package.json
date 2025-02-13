@@ -26,8 +26,10 @@
   },
   "name": "with-prisma",
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "latest",
     "axios": "^1.7.9",
+    "next-auth": "^5.0.0-beta.25",
     "react-icons": "^5.4.0"
   },
   "packageManager": "npm@10.8.3",

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-import Navbar from "@/components/global/navbar";
-import Botbar from "@/components/global/botbar";
-
-import { Toaster } from "@/components/ui/toaster";
+import Botbar from "@/components/global/BottomBar";
+import Navbar from "@/components/global/Nav";
+import ReduxProvider from "@/components/ReduxProvider";
+import { CartProvider } from "@/contexts/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +31,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
-        <Toaster />
-        <Botbar />
+
+        <ReduxProvider>
+          <CartProvider>
+            <Navbar />
+            <div className="w-full h-full my-20">{children}</div>
+            <Botbar />
+          </CartProvider>
+        </ReduxProvider>
+
       </body>
     </html>
   );
