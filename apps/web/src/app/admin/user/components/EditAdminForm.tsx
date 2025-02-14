@@ -21,24 +21,36 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { call } from "@/app/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  phone: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email(`Email must contain '@'`),
-  store: z.string(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  store: z.string().optional(),
+  position: z
+    .string()
+    .min(2, {
+      message: "Position must be at least 2 characters.",
+    })
+    .optional()
+    .or(z.literal("")),
 });
 
 interface EditAdminFormProps {
-  storeData: any[];
+  adminData: any[];
+  setOpenDialog: (open: boolean) => void;
 }
 
-const EditAdminForm = ({ storeData }: EditAdminFormProps) => {
+const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
+  const { toast } = useToast();
+  const [admin, setAdmin] = useState<any>([]);
+
+  useEffect(() => {
+    setAdmin(adminData);
+  }, [adminData]);
+
   const dummyData = [
     {
       store_id: 1,
@@ -91,23 +103,46 @@ const EditAdminForm = ({ storeData }: EditAdminFormProps) => {
       store_address: "707 Spruce Ter",
     },
   ];
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      phone: "",
-      email: "",
       store: "",
+      position: "",
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    const updatedValues = {
+      admin_id: admin.admin_id,
+      account_id: admin.account_id,
+      store_id: parseInt(values.store as string) || admin.store_id,
+      position: values.position || admin.position,
+    };
+    submitApi(updatedValues);
+    console.log("Payload Edit:", updatedValues);
   }
+
+  const submitApi = async (updatedValues: any) => {
+    try {
+      const submit = await call.patch("/admin", updatedValues);
+      console.log("INI SUBMIT", submit);
+      if (submit.data.isSuccess) {
+        toast({
+          title: "Success",
+          description: "Updating Admin Success",
+          className: "bg-gradient-to-r from-green-300 to-green-200",
+        });
+      }
+      setOpenDialog(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong while updating admin",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Form {...form}>
@@ -117,14 +152,24 @@ const EditAdminForm = ({ storeData }: EditAdminFormProps) => {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Input name.." {...field} />
+                <Input
+                  placeholder={admin ? admin?.account?.name : "Name"}
+                  {...field}
+                  disabled
+                />
               </FormControl>
-              <FormDescription>This is admin's name.</FormDescription>
+              <FormDescription>
+                Admin Name (
+                <span className="underline">
+                  <a>only account owner can change personal information.</a>
+                </span>
+                ).
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -136,23 +181,38 @@ const EditAdminForm = ({ storeData }: EditAdminFormProps) => {
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
-                <Input placeholder="Input lastname.." {...field} />
+                <Input
+                  placeholder={admin ? admin.phone : "Phone"}
+                  {...field}
+                  disabled
+                />
               </FormControl>
-              <FormDescription>This is admin's lastname.</FormDescription>
+              <FormDescription>
+                Admin Phone Number (
+                <span className="underline">
+                  <a>only account owner can change personal information.</a>
+                </span>
+                ).
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="email"
+          name="position"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Position</FormLabel>
               <FormControl>
-                <Input placeholder="Input email.." {...field} />
+                <Input
+                  placeholder={admin ? admin?.position : "Position"}
+                  {...field}
+                />
               </FormControl>
-              <FormDescription>This is admin's email.</FormDescription>
+              <FormDescription>
+                Position and specific role of admin.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

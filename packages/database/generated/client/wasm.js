@@ -146,25 +146,25 @@ exports.Prisma.AccountScalarFieldEnum = {
 exports.Prisma.ProfileScalarFieldEnum = {
   profile_id: 'profile_id',
   user_id: 'user_id',
-  referred_id: 'referred_id',
   phone: 'phone',
-  pfp_url: 'pfp_url'
+  pfp_url: 'pfp_url',
+  referred_id: 'referred_id'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
   referral_id: 'referral_id',
-  profile_id: 'profile_id',
-  referral_code: 'referral_code'
+  referral_code: 'referral_code',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.AddressScalarFieldEnum = {
   address_id: 'address_id',
-  profile_id: 'profile_id',
   street: 'street',
   city: 'city',
   province: 'province',
   island: 'island',
-  country: 'country'
+  country: 'country',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
@@ -268,8 +268,8 @@ exports.Prisma.DiscountScalarFieldEnum = {
 
 exports.Prisma.CartScalarFieldEnum = {
   cart_id: 'cart_id',
-  profile_id: 'profile_id',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.CartItemScalarFieldEnum = {
@@ -281,12 +281,12 @@ exports.Prisma.CartItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   order_id: 'order_id',
-  profile_id: 'profile_id',
   store_id: 'store_id',
   address_id: 'address_id',
   total_price: 'total_price',
   status: 'status',
-  order_date: 'order_date'
+  order_date: 'order_date',
+  profile_id: 'profile_id'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
