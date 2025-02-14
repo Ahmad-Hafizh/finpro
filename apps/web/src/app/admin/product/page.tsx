@@ -202,6 +202,7 @@ const productPage = () => {
                     {action === "Category" && (
                       <>
                         <DialogTitle>Add, edit, delete category</DialogTitle>
+                        
                         <AddEditCategory />
                       </>
                     )}

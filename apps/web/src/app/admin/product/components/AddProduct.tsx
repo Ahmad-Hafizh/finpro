@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 
 const AddProduct = () => {
@@ -43,6 +44,7 @@ const AddProduct = () => {
         })
         .int("Must be whole number")
     ),
+    description: z.string().nonempty({message:"Description cannot be empty!"}).min(10, {message:"Decription minimum has 10 word"}),
     category: z.string().nonempty({ message: "Category is required!" }),
     images: z
       .array(z.instanceof(File))
@@ -69,12 +71,22 @@ const AddProduct = () => {
     defaultValues: {
       name: "",
       price: 1,
+      description:"",
       category: "",
       images: [],
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {};
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const payload = {
+      product_name:values.name,
+      product_price:values.price,
+      product_description: values.description,
+      product_category: values.category,
+      product_image: values.images
+    }
+    console.log("Ini values: ", payload)
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -121,6 +133,24 @@ const AddProduct = () => {
                 />
               </FormControl>
               <FormDescription>This is product price.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+              <Textarea
+                  placeholder="Tell user about the product"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Tell user about the product.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

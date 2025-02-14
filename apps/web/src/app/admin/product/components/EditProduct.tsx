@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 
 interface EditAdminFormProps {
@@ -66,6 +67,8 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
           .optional()
       )
       .optional(),
+      description: z.string().nonempty({message:"Description cannot be empty!"}).min(10, {message:"Decription minimum has 10 word"}),
+
     category: z
       .string()
       .nonempty({ message: "Category is required!" })
@@ -94,6 +97,7 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
     defaultValues: {
       name: productData?.name,
       price: productData?.price,
+      description: productData?.description,
       category: productData?.category,
       images: productData?.images || [],
     },
@@ -103,6 +107,7 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
     const updatedFields = {
       name: values.name ?? product.name,
       price: values.price ?? product.price,
+      description: values.description ?? product.description,
       category: values.category ?? product.category,
       images: values.images ?? product.images,
     };
@@ -165,6 +170,24 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
                 />
               </FormControl>
               <FormDescription>This is product price.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+                <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+              <Textarea
+                  placeholder={product?.description ? product?.description : "Tell user about your product"}
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Tell user about the product.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
