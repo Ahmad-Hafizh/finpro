@@ -1,8 +1,10 @@
-// INI HANYA CONTOH
-
 "use client";
-
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { fetchCartItems, fetchCartCount } from "@/store/cartSlice";
+import { useCart } from "@/contexts/CartContext";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
   productId: number;
@@ -14,9 +16,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
   productName,
 }) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { updateCart } = useCart();
+  const router = useRouter();
 
   const handleAddToCart = async () => {
+    if (isLoading) return;
     try {
+      setIsLoading(true);
       const res = await fetch("http://localhost:8090/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,18 +35,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
       });
       const data = await res.json();
       if (res.ok) {
-        console.log("Product added, dispatching cartUpdated event");
-        window.dispatchEvent(new Event("cartUpdated"));
-        alert("Product added to cart!");
+        await Promise.all([
+          dispatch(fetchCartItems()).unwrap(),
+          dispatch(fetchCartCount()).unwrap(),
+        ]);
+        updateCart("add_item");
       } else {
         alert(`Error: ${data.error}`);
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Something went wrong while adding the product to your cart.");
+    } finally {
+      setIsLoading(false);
     }
   };
-
   return (
     <div className="border p-4 rounded shadow-sm">
       <h3 className="text-xl font-medium">{productName}</h3>
@@ -47,14 +58,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           type="number"
           min="1"
           value={quantity}
-          onChange={(e) => setQuantity(parseInt(e.target.value))}
+          onChange={(e) =>
+            setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+          }
           className="border rounded p-1 w-16"
+          disabled={isLoading}
         />
         <button
           onClick={handleAddToCart}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className={`px-4 py-2 bg-[#80ED99] text-black rounded hover:bg-[#60cd79] ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isLoading}
         >
-          Add to Cart
+          {isLoading ? "Adding..." : "Add to Cart"}
         </button>
       </div>
     </div>

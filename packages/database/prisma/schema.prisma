@@ -1,29 +1,30 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  output   = "../generated/client"
   provider = "prisma-client-js"
+  output   = "../generated/client"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  url       = "postgresql://postgres.hsleadkzyyhrrhcpspyh:finpro2024@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+  directUrl = "postgresql://postgres.hsleadkzyyhrrhcpspyh:finpro2024@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
+  // url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
-model Account {
-  account_id   Int       @id @default(autoincrement())
-  name         String
-  email        String    @unique
-  password     String
-  role         Role      @default(user)
-  isVerified   Boolean   @default(false)
-  user_profile User?
-  address      Address[]
-  admin        Admin?
+model User {
+  id            String    @id @default(cuid()) @map("user_id")
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  role          Role      @default(user)
+  updateAt      DateTime  @updatedAt
+  accounts      Account[]
+  profile       Profile?
+  admin         Admin?
 
-  @@map("account")
+  @@map("users")
 }
 
 enum Role {
@@ -32,74 +33,103 @@ enum Role {
   super_admin
 }
 
-model User {
-  user_id       Int            @id @default(autoincrement())
-  account_id    Int            @unique
-  account       Account        @relation(fields: [account_id], references: [account_id])
-  referred_id   Int?
-  referred      Referral?      @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
-  phone         String
-  pfp_url       String
-  referral      Referral?      @relation(name: "UserProfileReferral")
+model Account {
+  id                String  @id @default(cuid()) @map("account_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Profile {
+  profile_id    Int            @id @default(autoincrement())
+  user_id       String         @unique
+  user          User           @relation(fields: [user_id], references: [id])
+  phone         String?
+  pfp_url       String?
   cart          Cart[]
   orders        Order[]
   voucher_store VoucherStore[] @relation("UserVouchers")
+  Address       Address[]
 
-  @@map("user")
+  // relation to the owned referral code
+  referral Referral? @relation(name: "UserProfileReferral")
+
+  // referred to referral relation optional only filled in the sign up once
+  referred_id Int?
+  referred    Referral? @relation(fields: [referred_id], references: [referral_id], name: "ReferredReferral")
+
+  @@map("profile")
 }
 
 model Referral {
   referral_id   Int    @id @default(autoincrement())
-  user_id       Int?   @unique
-  user          User?  @relation(fields: [user_id], references: [user_id], name: "UserProfileReferral")
   referral_code String
-  referred      User[] @relation(name: "ReferredReferral")
+
+  // relation to profile as ITS THE OWNER
+  profile_id Int?     @unique
+  profile    Profile? @relation("UserProfileReferral", fields: [profile_id], references: [profile_id])
+
+  // collection of referred profile/user that use this referral code
+  referred Profile[] @relation("ReferredReferral")
 
   @@map("referral")
 }
 
 model Address {
   address_id Int     @id @default(autoincrement())
-  account_id Int
-  account    Account @relation(fields: [account_id], references: [account_id])
   street     String
   city       String
   province   String
   island     String
   country    String
+  profile_id Int
   orders     Order[]
+  profile    Profile @relation(fields: [profile_id], references: [profile_id])
 
   @@map("address")
 }
 
 model Admin {
   admin_id        Int              @id @default(autoincrement())
-  account_id      Int              @unique
-  account         Account          @relation(fields: [account_id], references: [account_id])
+  user_id         String           @unique
+  user            User             @relation(fields: [user_id], references: [id])
   store_id        Int
-  store           Store            @relation(fields: [store_id], references: [store_id])
   phone           String
   position        String
+  store           Store            @relation(fields: [store_id], references: [store_id])
   admin_orders    AdminOrder[]
-  voucher_product VoucherProduct[]
   voucher_ongkir  VoucherOngkir[]
+  voucher_product VoucherProduct[]
   voucher_store   VoucherStore[]
 
   @@map("admin")
 }
 
 model Store {
-  store_id       Int             @id @default(autoincrement())
-  store_name     String          @unique
+  store_id       Int            @id @default(autoincrement())
+  store_name     String         @unique
   store_address  String
   city           String
   lat            String
   lng            String
+  orders         Order[]
   admin          Admin[]
   stock          Stock[]
   stock_journal  StockJournal[]
-  orders         Order[]
-  voucher_ongkir VoucherOngkir[]
+  voucher_ongkir VoucherOngkir?
   voucher_stores VoucherStore[]
 
   @@map("store")
@@ -108,10 +138,10 @@ model Store {
 model Stock {
   stock_id      Int            @id @default(autoincrement())
   store_id      Int
-  store         Store          @relation(fields: [store_id], references: [store_id])
   product_id    Int            @unique
-  product       Product        @relation(fields: [product_id], references: [product_id])
   quantity      Int
+  product       Product        @relation(fields: [product_id], references: [product_id])
+  store         Store          @relation(fields: [store_id], references: [store_id])
   stock_journal StockJournal[]
 
   @@map("stock")
@@ -120,22 +150,16 @@ model Stock {
 model StockJournal {
   stock_journal_id Int      @id @default(autoincrement())
   store_id         Int
-  store            Store    @relation(fields: [store_id], references: [store_id])
   stock_id         Int
-  stock            Stock    @relation(fields: [stock_id], references: [stock_id])
   product_id       String   @unique
   quantity         Int
   type             String
   notes            String
   created_at       DateTime
+  stock            Stock    @relation(fields: [stock_id], references: [stock_id])
+  store            Store    @relation(fields: [store_id], references: [store_id])
 
   @@map("stock_journal")
-}
-
-enum StockType {
-  in
-  out
-  transfer
 }
 
 model Product {
@@ -143,11 +167,11 @@ model Product {
   product_name        String           @unique
   product_price       Int
   product_category_id Int
-  product_category    ProductCategory  @relation(fields: [product_category_id], references: [product_category_id])
-  stock               Stock[]
-  product_img         ProductImg[]
   cart_items          CartItem[]
   order_items         OrderItem[]
+  product_category    ProductCategory  @relation(fields: [product_category_id], references: [product_category_id])
+  product_img         ProductImg[]
+  stock               Stock?
   voucher             VoucherProduct[]
 
   @@map("product")
@@ -171,8 +195,8 @@ model ProductCategory {
 }
 
 model VoucherStore {
-  voucher_store_id                Int      @id @default(autoincrement())
-  voucher_store_code              String   @unique
+  voucher_store_id                Int       @id @default(autoincrement())
+  voucher_store_code              String    @unique
   voucher_store_amount_percentage Int
   voucher_store_exact_nominal     Int
   voucher_store_minimum_buy       Int
@@ -180,14 +204,11 @@ model VoucherStore {
   voucher_store_startdate         DateTime
   voucher_store_enddate           DateTime
   created_at                      DateTime
-
-  admin_responsible Int
-  admin             Admin @relation(fields: [admin_responsible], references: [admin_id])
-
-  store_id Int
-  store    Store @relation(fields: [store_id], references: [store_id])
-
-  users User[] @relation("UserVouchers")
+  admin_responsible               Int
+  store_id                        Int
+  admin                           Admin     @relation(fields: [admin_responsible], references: [admin_id])
+  store                           Store     @relation(fields: [store_id], references: [store_id])
+  profiles                        Profile[] @relation("UserVouchers")
 
   @@map("voucher_store")
 }
@@ -199,13 +220,10 @@ model VoucherOngkir {
   voucher_ongkir_startdate DateTime
   voucher_ongkir_enddate   DateTime
   created_at               DateTime
-
-  // relation
-  admin_responsible Int
-  admin             Admin @relation(fields: [admin_responsible], references: [admin_id])
-
-  store_id Int   @unique
-  store    Store @relation(fields: [store_id], references: [store_id])
+  admin_responsible        Int
+  store_id                 Int      @unique
+  admin                    Admin    @relation(fields: [admin_responsible], references: [admin_id])
+  store                    Store    @relation(fields: [store_id], references: [store_id])
 
   @@map("voucher_ongkir")
 }
@@ -217,13 +235,10 @@ model VoucherProduct {
   voucher_product_startdate DateTime
   voucher_product_enddate   DateTime
   created_at                DateTime
-
-  // relation
-  admin_responsible Int
-  admin             Admin @relation(fields: [admin_responsible], references: [admin_id])
-
-  product_id Int
-  product    Product @relation(fields: [product_id], references: [product_id])
+  admin_responsible         Int
+  product_id                Int
+  admin                     Admin    @relation(fields: [admin_responsible], references: [admin_id])
+  product                   Product  @relation(fields: [product_id], references: [product_id])
 
   @@map("voucher_product")
 }
@@ -242,10 +257,10 @@ model Discount {
 
 model Cart {
   cart_id    Int        @id @default(autoincrement())
-  user_id    Int
-  user       User       @relation(fields: [user_id], references: [user_id])
   created_at DateTime
+  profile_id Int
   cart_items CartItem[]
+  profile    Profile    @relation(fields: [profile_id], references: [profile_id])
 
   @@map("cart")
 }
@@ -253,38 +268,38 @@ model Cart {
 model CartItem {
   cart_item_id Int     @id @default(autoincrement())
   cart_id      Int
-  cart         Cart    @relation(fields: [cart_id], references: [cart_id])
   product_id   Int
-  product      Product @relation(fields: [product_id], references: [product_id])
   quantity     Int
+  cart         Cart    @relation(fields: [cart_id], references: [cart_id])
+  product      Product @relation(fields: [product_id], references: [product_id])
 }
 
 model Order {
   order_id      Int           @id @default(autoincrement())
-  user_id       Int
-  user          User          @relation(fields: [user_id], references: [user_id])
   store_id      Int
-  store         Store         @relation(fields: [store_id], references: [store_id])
   address_id    Int
-  address       Address       @relation(fields: [address_id], references: [address_id])
   total_price   Int
   status        OrderStatus
   order_date    DateTime
-  order_items   OrderItem[]
-  payment_proof PaymentProof?
+  profile_id    Int
+  address       Address       @relation(fields: [address_id], references: [address_id])
+  profile       Profile       @relation(fields: [profile_id], references: [profile_id])
+  store         Store         @relation(fields: [store_id], references: [store_id])
   order_cancel  OrderCancel?
   admin_orders  AdminOrder[]
+  order_items   OrderItem[]
+  payment_proof PaymentProof?
 }
 
 model OrderItem {
   order_item_id Int     @id @default(autoincrement())
   order_id      Int
-  order         Order   @relation(fields: [order_id], references: [order_id])
   product_id    Int
-  product       Product @relation(fields: [product_id], references: [product_id])
   quantity      Int
   price         Int
   subtotal      Int
+  order         Order   @relation(fields: [order_id], references: [order_id])
+  product       Product @relation(fields: [product_id], references: [product_id])
 
   @@map("order_item")
 }
@@ -292,10 +307,10 @@ model OrderItem {
 model PaymentProof {
   payment_proof_id Int           @id @default(autoincrement())
   order_id         Int           @unique
-  order            Order         @relation(fields: [order_id], references: [order_id])
   image_url        String
   uploaded_at      DateTime
   status           PaymentStatus
+  order            Order         @relation(fields: [order_id], references: [order_id])
 
   @@map("payment_proof")
 }
@@ -303,21 +318,27 @@ model PaymentProof {
 model OrderCancel {
   order_cancel_id Int      @id @default(autoincrement())
   order_id        Int      @unique
-  order           Order    @relation(fields: [order_id], references: [order_id])
   reason          String
   canceled_at     DateTime
+  order           Order    @relation(fields: [order_id], references: [order_id])
 }
 
 model AdminOrder {
   admin_order_id Int        @id @default(autoincrement())
   admin_id       Int
-  admin          Admin      @relation(fields: [admin_id], references: [admin_id])
   order_id       Int
-  order          Order      @relation(fields: [order_id], references: [order_id])
   action         ActionEnum
   action_time    DateTime
+  admin          Admin      @relation(fields: [admin_id], references: [admin_id])
+  order          Order      @relation(fields: [order_id], references: [order_id])
 
   @@map("admin_order")
+}
+
+enum StockType {
+  in
+  out
+  transfer
 }
 
 enum ActionEnum {

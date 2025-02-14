@@ -3,6 +3,7 @@ import cors from 'cors';
 import { prisma } from '../../../packages/database/src/client';
 import { CartRouter } from './routers/cart.router';
 import { AccountRouter } from './routers/account.router';
+import { AdminRouter } from './routers/admin.router';
 
 const PORT = 8090;
 class App {
@@ -29,6 +30,9 @@ class App {
 
     const cartRouter = new CartRouter();
     this.app.use('/cart', cartRouter.getRouter());
+
+    const adminRouter = new AdminRouter();
+    this.app.use('/admin', adminRouter.getRouter());
   }
 
   public start() {

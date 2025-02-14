@@ -1,12 +1,12 @@
 import { Response } from 'express';
 
 class ResponseHandler {
-  success(res: Response, statusCode: number = 200, message: string, data?: any) {
+  success(res: Response, statusCode: number = 200, message: string, result?: any) {
     return res.status(statusCode).send({
       statusCode,
       isSuccess: true,
       message,
-      data,
+      result,
     });
   }
   error(res: Response, statusCode: number = 500, message: string, error?: any) {
