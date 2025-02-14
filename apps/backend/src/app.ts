@@ -27,8 +27,8 @@ class App {
     const accountRouter = new AccountRouter();
     this.app.use('/account', accountRouter.getRouter());
 
-    const cartRouter = new CartRouter();
-    this.app.use('/cart', cartRouter.getRouter());
+    // const cartRouter = new CartRouter();
+    // this.app.use('/cart', cartRouter.getRouter());
   }
 
   public start() {

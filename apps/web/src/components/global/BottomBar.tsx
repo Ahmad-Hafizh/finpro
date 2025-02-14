@@ -36,9 +36,7 @@ const Botbar = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (pathName == "/") {
-      setIsVisible(true);
-    }
+    setIsVisible(pathName == "/" ? true : false);
   }, [pathName]);
 
   return (
