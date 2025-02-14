@@ -19,6 +19,8 @@ import { DataTable } from "./components/data-table";
 import { ProductList, columns } from "./components/column";
 import AddEditCategory from "./components/AddEditCategory";
 import EditProduct from "./components/EditProduct";
+import FilterBox from "./components/FilterBox";
+import SearchBox from "./components/SearchBox";
 
 const productPage = () => {
   const [action, setAction] = useState<string | null>("");
@@ -127,18 +129,10 @@ const productPage = () => {
             >
               Add new product
             </Button>
-            <Button
-              onClick={() => {
-                setOpenDialog(true);
-                setAction("Category");
-              }}
-            >
-              Category Management
-            </Button>
           </div>
         </div>
         <div className="main flex gap-5 h-full w-full">
-          <div className="filter-box rounded-lg shadow-sm border border-gray-200 h-full w-1/4 p-6 gap-3">
+          {/* <div className="filter-box rounded-lg shadow-sm border border-gray-200 h-full w-1/4 p-6 gap-3">
             <h2 className="font-bold text-lg">Filter</h2>
             <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
@@ -165,14 +159,11 @@ const productPage = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-          </div>
+          </div> */}
+          <FilterBox/>
           <div className="mainpart flex flex-col w-full h-full gap-5">
             <div className="searchbox rounded-lg h-14 w-full">
-              <Input
-                type="text"
-                placeholder="Search here..."
-                className="h-full px-7"
-              />
+            <SearchBox/>
             </div>
             <div className="flex flex-col gap-8">
               <div className="table rounded-lg shadow-sm h-fit w-full">
@@ -202,7 +193,6 @@ const productPage = () => {
                     {action === "Category" && (
                       <>
                         <DialogTitle>Add, edit, delete category</DialogTitle>
-                        
                         <AddEditCategory />
                       </>
                     )}
