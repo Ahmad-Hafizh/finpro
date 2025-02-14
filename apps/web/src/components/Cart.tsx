@@ -67,13 +67,13 @@ const Cart: React.FC = () => {
 
   const handleUpdateQuantity = async (
     cart_item_id: number,
-    newQuantity: number
+    newQuantity: number,
   ) => {
     if (newQuantity < 1) return;
     try {
       setQuantities((prev) => ({ ...prev, [cart_item_id]: newQuantity }));
       await dispatch(
-        updateCartItemQuantity({ cart_item_id, quantity: newQuantity })
+        updateCartItemQuantity({ cart_item_id, quantity: newQuantity }),
       ).unwrap();
       await refreshCartData();
     } catch (error) {
@@ -97,12 +97,12 @@ const Cart: React.FC = () => {
 
   const handleProceedToCheckout = () => {
     const itemsToCheckout = cartItems.filter(
-      (item) => selectedItems[item.cart_item_id]
+      (item) => selectedItems[item.cart_item_id],
     );
     alert(
       `Proceeding to checkout with items: ${itemsToCheckout
         .map((item) => item.product.product_name)
-        .join(", ")}`
+        .join(", ")}`,
     );
   };
 
@@ -122,7 +122,7 @@ const Cart: React.FC = () => {
       acc[storeName].push(item);
       return acc;
     },
-    {} as { [key: string]: typeof cartItems }
+    {} as { [key: string]: typeof cartItems },
   );
 
   const isGroupSelected = (storeName: string) => {
@@ -138,21 +138,33 @@ const Cart: React.FC = () => {
     setSelectedItems(updatedSelectedItems);
   };
 
+  const handleSelectAll = (isSelected: boolean) => {
+    const updatedSelectedItems: { [key: number]: boolean } = {};
+    cartItems.forEach((item) => {
+      updatedSelectedItems[item.cart_item_id] = isSelected;
+    });
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const allSelected =
+    cartItems.length > 0 &&
+    cartItems.every((item) => selectedItems[item.cart_item_id]);
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#80ED99]"></div>
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-[#80ED99]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white p-4 md:p-8 font-sans relative">
+    <div className="relative min-h-screen bg-white p-4 font-sans md:p-8">
       {/* MOBILE LAYOUT */}
-      <div className="md:hidden max-w-4xl mx-auto">
+      <div className="mx-auto max-w-4xl md:hidden">
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <ShoppingCart className="w-8 h-8 text-[#80ED99]" />
+          <div className="mb-4 flex items-center gap-3">
+            <ShoppingCart className="h-8 w-8 text-[#80ED99]" />
             <h1 className="text-2xl font-normal text-black">
               Your Cart ({cartCount})
             </h1>
@@ -162,23 +174,23 @@ const Cart: React.FC = () => {
               <div className="flex items-center bg-gray-100 p-2">
                 <input
                   type="checkbox"
-                  className="mr-2 w-5 h-5"
+                  className="mr-2 h-5 w-5"
                   checked={isGroupSelected(storeName)}
                   onChange={(e) =>
                     handleSelectGroup(storeName, e.target.checked)
                   }
                 />
-                <Store className="w-5 h-5 mr-2" />
+                <Store className="mr-2 h-5 w-5" />
                 <span className="font-medium">{storeName}</span>
               </div>
-              <div className="space-y-4 mt-2">
+              <div className="mt-2 space-y-4">
                 {groupedItems[storeName].map((item) => (
                   <Card key={item.cart_item_id} className="overflow-hidden">
                     <CardContent className="p-4">
                       <div className="flex">
                         <input
                           type="checkbox"
-                          className="mr-2 w-5 h-5"
+                          className="mr-2 h-5 w-5"
                           checked={selectedItems[item.cart_item_id] || false}
                           onChange={(e) =>
                             setSelectedItems({
@@ -187,17 +199,17 @@ const Cart: React.FC = () => {
                             })
                           }
                         />
-                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                           {item.product.product_img &&
                           item.product.product_img.length > 0 ? (
                             <img
                               src={item.product.product_img[0].url}
                               alt={item.product.product_name}
-                              className="w-full h-full object-cover"
+                              className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                              <ShoppingCart className="w-8 h-8 text-gray-400" />
+                            <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                              <ShoppingCart className="h-8 w-8 text-gray-400" />
                             </div>
                           )}
                         </div>
@@ -205,15 +217,15 @@ const Cart: React.FC = () => {
                           <h3 className="text-lg font-medium">
                             {item.product.product_name}
                           </h3>
-                          <span className="text-gray-600 block">
+                          <span className="block text-gray-600">
                             Price: Rp{" "}
                             {(
                               item.product.product_price *
                               (quantities[item.cart_item_id] || item.quantity)
                             ).toLocaleString()}
                           </span>
-                          <div className="flex items-center mt-2">
-                            <div className="flex items-center border rounded-lg overflow-hidden">
+                          <div className="mt-2 flex items-center">
+                            <div className="flex items-center overflow-hidden rounded-lg border">
                               <button
                                 onClick={() =>
                                   handleUpdateQuantity(
@@ -221,13 +233,13 @@ const Cart: React.FC = () => {
                                     Math.max(
                                       1,
                                       (quantities[item.cart_item_id] ||
-                                        item.quantity) - 1
-                                    )
+                                        item.quantity) - 1,
+                                    ),
                                   )
                                 }
                                 className="p-2 hover:bg-gray-100"
                               >
-                                <Minus className="w-4 h-4" />
+                                <Minus className="h-4 w-4" />
                               </button>
                               <Input
                                 type="number"
@@ -238,26 +250,26 @@ const Cart: React.FC = () => {
                                 onChange={(e) => {
                                   const newQty = Math.max(
                                     1,
-                                    parseInt(e.target.value) || 1
+                                    parseInt(e.target.value) || 1,
                                   );
                                   handleUpdateQuantity(
                                     item.cart_item_id,
-                                    newQty
+                                    newQty,
                                   );
                                 }}
-                                className="w-16 text-center border-0 focus:ring-0"
+                                className="w-16 border-0 text-center focus:ring-0"
                               />
                               <button
                                 onClick={() =>
                                   handleUpdateQuantity(
                                     item.cart_item_id,
                                     (quantities[item.cart_item_id] ||
-                                      item.quantity) + 1
+                                      item.quantity) + 1,
                                   )
                                 }
                                 className="p-2 hover:bg-gray-100"
                               >
-                                <Plus className="w-4 h-4" />
+                                <Plus className="h-4 w-4" />
                               </button>
                             </div>
                             <button
@@ -266,7 +278,7 @@ const Cart: React.FC = () => {
                               }
                               className="ml-4 text-[#80ED99]"
                             >
-                              <Trash2 className="w-5 h-5" />
+                              <Trash2 className="h-5 w-5" />
                             </button>
                           </div>
                         </div>
@@ -281,46 +293,46 @@ const Cart: React.FC = () => {
       </div>
 
       {/* DESKTOP LAYOUT */}
-      <div className="hidden md:block max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-6">
-          <ShoppingCart className="w-8 h-8 text-[#80ED99]" />
+      <div className="mx-auto hidden max-w-4xl md:block">
+        <div className="mb-6 flex items-center gap-3">
+          <ShoppingCart className="h-8 w-8 text-[#80ED99]" />
           <h1 className="text-2xl font-normal text-black">
             Your Cart ({cartCount})
           </h1>
         </div>
         {cartItems.length === 0 ? (
-          <Card className="text-center p-8">
+          <Card className="p-8 text-center">
             <CardContent>
-              <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <ShoppingCart className="mx-auto mb-4 h-16 w-16 text-gray-300" />
               <p className="text-lg text-gray-600">Your cart is empty</p>
-              <Button className="mt-4 bg-[#80ED99] hover:bg-[#60cd79] text-black">
+              <Button className="mt-4 bg-[#80ED99] text-black hover:bg-[#60cd79]">
                 Start Shopping
               </Button>
             </CardContent>
           </Card>
         ) : (
           Object.keys(groupedItems).map((storeName) => (
-            <div key={storeName} className="mb-6 border rounded-lg">
-              <div className="flex items-center bg-gray-100 p-2 border-b">
+            <div key={storeName} className="mb-6 rounded-lg border">
+              <div className="flex items-center border-b bg-gray-100 p-2">
                 <input
                   type="checkbox"
-                  className="mr-2 w-5 h-5"
+                  className="mr-2 h-5 w-5"
                   checked={isGroupSelected(storeName)}
                   onChange={(e) =>
                     handleSelectGroup(storeName, e.target.checked)
                   }
                 />
-                <Store className="w-5 h-5 mr-2" />
+                <Store className="mr-2 h-5 w-5" />
                 <span className="font-medium">{storeName}</span>
               </div>
               {(groupedItems[storeName] || []).map((item) => (
                 <div
                   key={item.cart_item_id}
-                  className="flex items-center p-4 border-b last:border-0"
+                  className="flex items-center border-b p-4 last:border-0"
                 >
                   <input
                     type="checkbox"
-                    className="mr-4 w-5 h-5"
+                    className="mr-4 h-5 w-5"
                     checked={selectedItems[item.cart_item_id] || false}
                     onChange={(e) =>
                       setSelectedItems({
@@ -329,21 +341,21 @@ const Cart: React.FC = () => {
                       })
                     }
                   />
-                  <div className="w-20 h-20 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                  <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-gray-100">
                     {item.product.product_img &&
                     item.product.product_img.length > 0 ? (
                       <img
                         src={item.product.product_img[0].url}
                         alt={item.product.product_name}
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                        <ShoppingCart className="w-8 h-8 text-gray-400" />
+                      <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                        <ShoppingCart className="h-8 w-8 text-gray-400" />
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 ml-4">
+                  <div className="ml-4 flex-1">
                     <div className="font-medium text-gray-800">
                       {item.product.product_name}
                     </div>
@@ -358,13 +370,14 @@ const Cart: React.FC = () => {
                           item.cart_item_id,
                           Math.max(
                             1,
-                            (quantities[item.cart_item_id] || item.quantity) - 1
-                          )
+                            (quantities[item.cart_item_id] || item.quantity) -
+                              1,
+                          ),
                         )
                       }
-                      className="p-2 border border-gray-300 rounded-l"
+                      className="rounded-l border border-gray-300 p-2"
                     >
-                      <Minus className="w-4 h-4" />
+                      <Minus className="h-4 w-4" />
                     </button>
                     <Input
                       type="number"
@@ -373,25 +386,25 @@ const Cart: React.FC = () => {
                       onChange={(e) => {
                         const newQty = Math.max(
                           1,
-                          parseInt(e.target.value) || 1
+                          parseInt(e.target.value) || 1,
                         );
                         handleUpdateQuantity(item.cart_item_id, newQty);
                       }}
-                      className="w-16 text-center border-0 focus:ring-0"
+                      className="w-16 border-0 text-center focus:ring-0"
                     />
                     <button
                       onClick={() =>
                         handleUpdateQuantity(
                           item.cart_item_id,
-                          (quantities[item.cart_item_id] || item.quantity) + 1
+                          (quantities[item.cart_item_id] || item.quantity) + 1,
                         )
                       }
-                      className="p-2 border border-gray-300 rounded-r"
+                      className="rounded-r border border-gray-300 p-2"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="w-32 text-right font-medium ml-4">
+                  <div className="ml-4 w-32 text-right font-medium">
                     Rp{" "}
                     {(
                       item.product.product_price *
@@ -402,7 +415,7 @@ const Cart: React.FC = () => {
                     onClick={() => handleDeleteItem(item.cart_item_id)}
                     className="ml-4 text-[#80ED99]"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               ))}
@@ -411,17 +424,41 @@ const Cart: React.FC = () => {
         )}
       </div>
 
-      {/* CHECKOUT SUMMARY */}
-      <div className="fixed left-0 right-0 bottom-[100px] md:bottom-0 z-10 w-full">
+      {/* MOBILE CHECKOUT SUMMARY */}
+      <div className="fixed inset-x-0 bottom-0 z-10 md:hidden">
+        <Card className="mx-4 mb-4">
+          <CardContent className="flex items-center justify-between p-4">
+            <input
+              type="checkbox"
+              className="h-5 w-5"
+              checked={allSelected}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+            />
+            <div className="flex items-center space-x-2">
+              <span className="text-lg font-bold">
+                Rp {selectedTotal.toLocaleString()}
+              </span>
+              <Button
+                onClick={handleProceedToCheckout}
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
+                Checkout
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      {/* DESKTOP CHECKOUT SUMMARY */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 hidden w-full md:block">
         <div className="flex divide-x divide-gray-300 border border-t-2">
-          <div className="flex-1 py-4 text-center bg-white">
+          <div className="flex-1 bg-white py-4 text-center">
             <span className="text-lg font-bold">
               Total: Rp {selectedTotal.toLocaleString()}
             </span>
           </div>
           <button
             onClick={handleProceedToCheckout}
-            className="flex-1 py-4 text-center bg-[#80ED99] hover:bg-[#60cd79] text-gray-600 hover:text-gray-50 font-semibold"
+            className="flex-1 bg-[#80ED99] py-4 text-center font-semibold text-gray-600 hover:bg-[#60cd79] hover:text-gray-50"
           >
             Proceed to Checkout
           </button>
