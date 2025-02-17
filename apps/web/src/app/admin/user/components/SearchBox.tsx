@@ -6,19 +6,21 @@ import { useState, useEffect } from "react";
 const SearchBox = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [searchValue, setSearchValue] = useState(
-    searchParams.get("keyword") || "",
-  );
+  
+  // Get initial search keyword from URL
+  const [searchValue, setSearchValue] = useState(searchParams.get("keyword") || "");
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
+
     if (searchValue) {
-      params.set("search", searchValue);
+      params.set("keyword", searchValue);
     } else {
-      params.delete("search");
+      params.delete("keyword");
     }
+
     router.push(`?${params.toString()}`, { scroll: false });
-  }, [searchValue, searchParams]);
+  }, [searchValue]);
 
   return (
     <Input

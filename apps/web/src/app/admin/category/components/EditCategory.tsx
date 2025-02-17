@@ -14,24 +14,34 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 interface EditCategoryFormProps {
-  categoryData:{
-    id:number,
-    name:string;
-  }
+  categoryData: {
+    product_category_id: number;
+    product_category_name: string;
+  };
+  setOpenDialog: (open: boolean) => void;
 }
 
-const EditCategory = (categoryData : EditCategoryFormProps) => {
-    const [category, setCategory] = useState<any>({
-        id:0,
-        name:""
-    })
+const EditCategory = ({
+  categoryData,
+  setOpenDialog,
+}: EditCategoryFormProps) => {
+  const { toast } = useToast();
+  const [category, setCategory] = useState<{ id: number; name: string }>({
+    id: 0,
+    name: "",
+  });
 
-    useEffect(()=>{
-        setCategory(categoryData);
-        form.reset({ category: categoryData.categoryData.name });
-    }, [categoryData])
+  useEffect(() => {
+    setCategory({
+      id: categoryData.product_category_id,
+      name: categoryData.product_category_name,
+    });
+    form.reset({ category: categoryData.product_category_name });
+  }, [categoryData]);
 
   const formSchema = z.object({
     category: z.string().optional(),
@@ -46,17 +56,40 @@ const EditCategory = (categoryData : EditCategoryFormProps) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const payload = {
-    id: categoryData.categoryData.id,
-      name: values.category
-    }
-    console.log("Value: ", payload)
+      id: category.id,
+      name: values.category,
+    };
+
+    const submitApi = async (payload: any) => {
+      try {
+        const response = await callAPI.patch("/category", payload);
+        console.log("Ini respons: ", response);
+        if (response.data.isSuccess) {
+          toast({
+            title: "Success",
+            description: "Updating Category Success",
+            className: "bg-gradient-to-r from-green-300 to-green-200",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Something went wrong while updating category",
+          variant: "destructive",
+        });
+        console.log("Error editing category: ", error);
+      }
+    };
+
+    submitApi(payload);
+    console.log("Value: ", payload);
   };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col gap-0 my-5"
+        className="my-5 flex flex-col gap-5"
       >
         <FormField
           control={form.control}
@@ -65,14 +98,17 @@ const EditCategory = (categoryData : EditCategoryFormProps) => {
             <FormItem>
               <FormLabel>Category</FormLabel>
               <FormControl>
-                <Input placeholder={category?.name ? category?.name : "Category cannot be the same"} {...field} />
+                <Input
+                  placeholder={category.name || "Enter new category name"}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>Edit category here</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">LOLOLOL</Button>
+        <Button type="submit">Update Category</Button>
       </form>
     </Form>
   );

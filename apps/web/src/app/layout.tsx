@@ -5,6 +5,7 @@ import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import ReduxProvider from "@/components/ReduxProvider";
 import { CartProvider } from "@/contexts/CartContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
         <ReduxProvider>
           <CartProvider>
             <Navbar />
-            <div className="w-full h-full my-20">{children}</div>
+            <div className="my-20 h-full w-full">{children}</div>
+            <Toaster />
             <Botbar />
           </CartProvider>
         </ReduxProvider>
-
       </body>
     </html>
   );

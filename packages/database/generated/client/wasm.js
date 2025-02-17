@@ -187,7 +187,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   product_id: 'product_id',
   product_name: 'product_name',
   product_price: 'product_price',
-  product_category_id: 'product_category_id'
+  product_category_id: 'product_category_id',
+  product_description: 'product_description',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ProductImgScalarFieldEnum = {
@@ -198,7 +200,8 @@ exports.Prisma.ProductImgScalarFieldEnum = {
 
 exports.Prisma.ProductCategoryScalarFieldEnum = {
   product_category_id: 'product_category_id',
-  product_category_name: 'product_category_name'
+  product_category_name: 'product_category_name',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.VoucherStoreScalarFieldEnum = {

@@ -7,21 +7,37 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const FilterBox = () => {
+interface Icategory {
+  product_category_id?: number;
+  product_category_name?: string;
+  deletedAt?: any;
+}
+
+interface FilterBoxProps {
+  categories?: Icategory[];
+}
+
+const FilterBox = ({ categories }: FilterBoxProps) => {
+  const [category, setCategory] = useState<any>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const categories = [
-    "Dry vegetable",
-    "Fruit",
-    "Wet vegetable",
-    "Green vegetable",
-    "Nut",
-  ];
+  useEffect(() => {
+    setCategory(categories);
+  }, [categories]);
 
-  // Function to update URL based on selected filters
+  // const categories = [
+  //   "Dry vegetable",
+  //   "Fruit",
+  //   "Wet vegetable",
+  //   "Green vegetable",
+  //   "Nut",
+  // ];
+
+  console.log("INI CATEGORIES :", category);
+
   const dynamicFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     const currentValues = params.get(key)?.split(",") || [];
@@ -41,40 +57,100 @@ const FilterBox = () => {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  // Function to check if a filter value is selected
   const isChecked = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     return params.get(key)?.split(",").includes(value) || false;
   };
 
   return (
-    <div className="filter-box rounded-lg shadow-sm border border-gray-200 h-full w-1/4 p-6 gap-3">
-      <h2 className="font-bold text-lg">Filter</h2>
+    <div className="filter-box h-full w-1/4 gap-3 rounded-lg border border-gray-200 p-6 shadow-sm">
+      <h2 className="text-lg font-bold">Filter</h2>
       <Accordion type="single" collapsible defaultValue="item-1">
         <AccordionItem value="item-1">
-          <AccordionTrigger>Category</AccordionTrigger>
+          <AccordionTrigger className="font-bold">Category</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-1">
-              {categories.map((category) => (
+              {category ? (
+                category?.map((category: any) => (
+                  <div
+                    key={category.product_category_id}
+                    className="flex items-center justify-between py-2"
+                  >
+                    <label
+                      htmlFor={category.product_category_id}
+                      className="w-full text-sm font-medium leading-none"
+                    >
+                      {category.product_category_name}
+                    </label>
+                    <Checkbox
+                      key={category.product_category_id}
+                      id={category.product_category_name.toString()}
+                      checked={isChecked(
+                        "cat",
+                        category.product_category_name.toString(),
+                      )}
+                      onCheckedChange={(checked) =>
+                        dynamicFilter(
+                          "cat",
+                          category.product_category_name.toString(),
+                        )
+                      }
+                    />
+                  </div>
+                ))
+              ) : (
                 <div
                   key={category}
-                  className="flex justify-between items-center py-2"
+                  className="flex items-center justify-between py-2"
                 >
                   <label
                     htmlFor={category}
-                    className="text-sm font-medium leading-none w-full"
+                    className="w-full text-sm font-medium leading-none"
                   >
                     {category}
                   </label>
                   <Checkbox
                     id={category}
-                    checked={isChecked("category", category)}
+                    checked={isChecked("cat", category)}
                     onCheckedChange={(checked) =>
-                      dynamicFilter("category", category)
+                      dynamicFilter("cat", category)
                     }
                   />
                 </div>
-              ))}
+              )}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="font-bold">Status</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between py-2">
+                <label
+                  htmlFor={"true"}
+                  className="w-full text-sm font-medium leading-none"
+                >
+                  Inactive
+                </label>
+                <Checkbox
+                  id={"true"}
+                  checked={isChecked("del", "true")}
+                  onCheckedChange={(checked) => dynamicFilter("del", "true")}
+                />
+              </div>
+              <div className="flex items-center justify-between py-2">
+                <label
+                  htmlFor={"false"}
+                  className="w-full text-sm font-medium leading-none"
+                >
+                  Active
+                </label>
+                <Checkbox
+                  id={"false"}
+                  checked={isChecked("del", "false")}
+                  onCheckedChange={(checked) => dynamicFilter("del", "false")}
+                />
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>

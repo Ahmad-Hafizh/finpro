@@ -1,5 +1,3 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { AiOutlineSortAscending } from "react-icons/ai";
@@ -12,82 +10,106 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 
 export type ProductList = {
-  id: number;
-  images: string[];
-  name: string;
-  price: string;
-  category: string;
+  product_id: number;
+  product_img: string[];
+  product_name: string;
+  product_price: string;
+  product_category: {
+    product_category_id: string;
+    product_category_name: string;
+  };
+  deletedAt: Date | null;
 };
 
 export const columns = (
   setAction: (action: string) => void,
   setProductId: (id: number) => void,
-  setOpenDialog: (open: boolean) => void
+  setOpenDialog: (open: boolean) => void,
 ): ColumnDef<ProductList>[] => [
   {
-    accessorKey: "images",
-    header: ({ column }) => {
-      return (
-        <Button className="px-2" variant="ghost">
-          Image
-          <AiOutlineSortAscending />{" "}
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
+    accessorKey: "product_name",
     header: ({ column }) => {
       return (
         <Button
-          className="px-2"
+          className="text-md px-2 font-semibold text-black"
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
-          <AiOutlineSortAscending />{" "}
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const product = row.original;
+      return <div className="text-md font-medium">{product.product_name}</div>;
+    },
   },
   {
-    accessorKey: "price",
+    accessorKey: "product_price",
     header: ({ column }) => {
       return (
         <Button
-          className="px-2"
+          className="text-md px-2 font-semibold text-black"
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Price
-          <AiOutlineSortAscending />{" "}
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const product = row.original;
+      return <div className="text-md font-medium">{product.product_price}</div>;
+    },
+  },
+  {
+    accessorKey: "product_category.product_category_name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="text-md px-2 font-semibold text-black"
+          variant="ghost"
+        >
+          Category
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const product = row.original;
+      return (
+        <div className="text-md font-medium">
+          {product.product_category.product_category_name}
+        </div>
       );
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
-          className="px-2"
+          className="text-md px-2 font-semibold text-black"
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
-          <AiOutlineSortAscending />{" "}
+          Status
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const statusList = row.original;
+      if (statusList.deletedAt !== null) {
+        return (
+          <div className="m-2 flex h-fit w-fit items-center justify-center rounded-2xl bg-red-500 px-1">
+            <h1 className="p-2 font-bold text-white">DELETED</h1>
+          </div>
+        );
+      } else {
+        return (
+          <div className="m-2 flex h-fit w-fit items-center justify-center rounded-2xl bg-green-500 px-1">
+            <h1 className="p-2 font-bold text-white">ACTIVE</h1>
+          </div>
+        );
+      }
     },
   },
   {
@@ -96,13 +118,13 @@ export const columns = (
       const productList = row.original;
 
       const onHandleEdit = () => {
-        setProductId(productList.id);
+        setProductId(productList.product_id);
         setAction("Edit");
         setOpenDialog(true);
       };
 
       const onHandleDelete = () => {
-        setProductId(productList.id);
+        setProductId(productList.product_id);
         setAction("Delete");
         setOpenDialog(true);
       };

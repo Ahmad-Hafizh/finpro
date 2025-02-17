@@ -13,9 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 const AddCategory = () => {
+  const { toast } = useToast();
   const formSchema = z.object({
     category: z.string().nonempty({ message: "Category is required!" }),
   });
@@ -29,16 +31,40 @@ const AddCategory = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const payload = {
-      name: values.category
-    }
-    console.log("Value: ", payload)
+      name: values.category,
+    };
+
+    const submitApi = async (payload: any) => {
+      try {
+        const response = await callAPI.post("/category", payload);
+        console.log("Ini response submit category: ", response);
+        if (response.data.isSuccess) {
+          toast({
+            title: "Success",
+            description: "Add category Success",
+            className: "bg-gradient-to-r from-green-300 to-green-200",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Something went wrong while adding category",
+          variant: "destructive",
+        });
+        console.log("Error submit category :", error);
+      }
+    };
+
+    submitApi(payload);
+
+    console.log("Value: ", payload);
   };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col gap-0 my-5"
+        className="my-5 flex flex-col gap-0 space-y-8"
       >
         <FormField
           control={form.control}
@@ -54,7 +80,7 @@ const AddCategory = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">LOLOLOL</Button>
+        <Button type="submit">Add Category</Button>
       </form>
     </Form>
   );
