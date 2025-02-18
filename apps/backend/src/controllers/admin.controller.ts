@@ -28,7 +28,7 @@ export class AdminController {
 
   async updateAdmin(req: Request, res: Response): Promise<any> {
     try {
-      const { admin_id, account_id, store_id, position } = req.body;
+      const { admin_id, user_id, store_id, position } = req.body;
       const checkAdmin = await prisma.admin.findUnique({
         where: { admin_id: admin_id },
       });

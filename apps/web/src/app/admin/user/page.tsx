@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import EditAdminForm from "./components/EditAdminForm";
 import { call } from "@/app/config/axios";
 import FilterBox from "./components/FilterBox";
+import SearchBox from "./components/SearchBox";
 
 const userPage = () => {
   const [action, setAction] = useState<string | null>(null);
@@ -203,11 +204,7 @@ const userPage = () => {
           <FilterBox />
           <div className="mainpart flex flex-col w-full h-full gap-5">
             <div className="searchbox rounded-lg h-14 w-full">
-              <Input
-                type="text"
-                placeholder="Search here..."
-                className="h-full px-7"
-              />
+             <SearchBox/>
             </div>
             <div className="flex flex-col gap-8">
               <div className="table rounded-lg shadow-sm h-fit w-full">

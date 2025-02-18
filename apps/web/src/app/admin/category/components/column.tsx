@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { AiOutlineSortAscending } from "react-icons/ai";
@@ -11,75 +13,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type ProductList = {
-  product_id: number;
-  product_img: string[];
-  product_name: string;
-  product_price: string;
-  product_category: {
-    product_category_id: string;
-    product_category_name: string;
-  };
-  deletedAt: Date | null;
+export type CategoryList = {
+  product_category_id: number;
+  product_category_name: string;
+  deletedAt: any;
 };
 
 export const columns = (
   setAction: (action: string) => void,
-  setProductId: (id: number) => void,
+  setCategoryId: (id: number) => void,
   setOpenDialog: (open: boolean) => void,
-): ColumnDef<ProductList>[] => [
+): ColumnDef<CategoryList>[] => [
   {
-    accessorKey: "product_name",
+    accessorKey: "product_category_name",
     header: ({ column }) => {
       return (
-        <Button
-          className="text-md px-2 font-semibold text-black"
-          variant="ghost"
-        >
+        <Button className="px-2" variant="ghost">
           Name
         </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const product = row.original;
-      return <div className="text-md font-medium">{product.product_name}</div>;
-    },
-  },
-  {
-    accessorKey: "product_price",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="text-md px-2 font-semibold text-black"
-          variant="ghost"
-        >
-          Price
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const product = row.original;
-      return <div className="text-md font-medium">{product.product_price}</div>;
-    },
-  },
-  {
-    accessorKey: "product_category.product_category_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="text-md px-2 font-semibold text-black"
-          variant="ghost"
-        >
-          Category
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <div className="text-md font-medium">
-          {product.product_category.product_category_name}
-        </div>
       );
     },
   },
@@ -115,16 +66,17 @@ export const columns = (
   {
     id: "actions",
     cell: ({ row }) => {
-      const productList = row.original;
+      const categoryList = row.original;
 
       const onHandleEdit = () => {
-        setProductId(productList.product_id);
+        console.log("INI CATEGORY LIST ID :", categoryList.product_category_id);
+        setCategoryId(categoryList.product_category_id);
         setAction("Edit");
         setOpenDialog(true);
       };
 
       const onHandleDelete = () => {
-        setProductId(productList.product_id);
+        setCategoryId(categoryList.product_category_id);
         setAction("Delete");
         setOpenDialog(true);
       };
@@ -141,13 +93,13 @@ export const columns = (
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem onClick={onHandleEdit}>
-              Edit Admin
+              Edit Category
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuItem onClick={onHandleDelete}>
-              Delete Admin
+              Delete Category
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

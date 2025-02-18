@@ -69,6 +69,11 @@ const data = {
       icon: SquareTerminal,
     },
     {
+      title: "Categories Management",
+      url: "/admin/category",
+      icon: SquareTerminal,
+    },
+    {
       title: "Store Management",
       url: "/admin/store",
       icon: Bot,
