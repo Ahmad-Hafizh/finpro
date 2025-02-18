@@ -121,15 +121,14 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image',
   password: 'password',
+  image: 'image',
   role: 'role',
+  emailVerified: 'emailVerified',
   updateAt: 'updateAt'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
   type: 'type',
   provider: 'provider',
   providerAccountId: 'providerAccountId',
@@ -140,15 +139,16 @@ exports.Prisma.AccountScalarFieldEnum = {
   scope: 'scope',
   id_token: 'id_token',
   session_state: 'session_state',
-  userId: 'userId'
+  userId: 'userId',
+  id: 'id'
 };
 
 exports.Prisma.ProfileScalarFieldEnum = {
   profile_id: 'profile_id',
   user_id: 'user_id',
+  referred_id: 'referred_id',
   phone: 'phone',
-  pfp_url: 'pfp_url',
-  referred_id: 'referred_id'
+  pfp_url: 'pfp_url'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
@@ -169,10 +169,10 @@ exports.Prisma.AddressScalarFieldEnum = {
 
 exports.Prisma.AdminScalarFieldEnum = {
   admin_id: 'admin_id',
-  user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
-  position: 'position'
+  position: 'position',
+  user_id: 'user_id'
 };
 
 exports.Prisma.StoreScalarFieldEnum = {
@@ -206,7 +206,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   product_id: 'product_id',
   product_name: 'product_name',
   product_price: 'product_price',
-  product_category_id: 'product_category_id'
+  product_category_id: 'product_category_id',
+  product_description: 'product_description'
 };
 
 exports.Prisma.ProductImgScalarFieldEnum = {
@@ -321,6 +322,11 @@ exports.Prisma.AdminOrderScalarFieldEnum = {
   action_time: 'action_time'
 };
 
+exports.Prisma.UserVouchersScalarFieldEnum = {
+  A: 'A',
+  B: 'B'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -385,7 +391,8 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   PaymentProof: 'PaymentProof',
   OrderCancel: 'OrderCancel',
-  AdminOrder: 'AdminOrder'
+  AdminOrder: 'AdminOrder',
+  UserVouchers: 'UserVouchers'
 };
 
 /**

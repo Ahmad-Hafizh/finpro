@@ -4,7 +4,7 @@ import "./globals.css";
 import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import ReduxProvider from "@/components/ReduxProvider";
-// import { CartProvider } from "@/contexts/CartContext";
+import { CartProvider } from "@/contexts/CartContext";
 import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
@@ -34,11 +34,13 @@ export default function RootLayout({
       >
         <SessionProvider>
           <ReduxProvider>
-            {/* <CartProvider> */}
-            <Navbar />
-            <div className="container relative mx-auto px-[5%]">{children}</div>
-            <Botbar />
-            {/* </CartProvider> */}
+            <CartProvider>
+              <Navbar />
+              <div className="container relative mx-auto px-[5%]">
+                {children}
+              </div>
+              <Botbar />
+            </CartProvider>
           </ReduxProvider>
         </SessionProvider>
       </body>

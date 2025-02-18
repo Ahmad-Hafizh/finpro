@@ -5,22 +5,22 @@ export class CartController {
   // add to cart
   async addToCart(req: Request, res: Response): Promise<any> {
     const { product_id, quantity } = req.body;
-    const userId = "1"; // test user id
+    const userId = "1";
 
     try {
-      const user = await prisma.users.findUnique({
-        where: { user_id: userId },
-        include: { account: true },
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { accounts: true },
       });
 
-      if (!user || !user.email_verified) {
+      if (!user || !user.emailVerified) {
         return res.status(403).json({
           error: "User not found or not verified",
         });
       }
 
       const profile = await prisma.profile.findUnique({
-        where: { user_id: user.user_id },
+        where: { user_id: user.id },
       });
 
       if (!profile) {
@@ -36,6 +36,7 @@ export class CartController {
           error: "Insufficient product stock",
         });
       }
+
       let cart = await prisma.cart.findFirst({
         where: { profile_id: profile.profile_id },
         include: { cart_items: true },
@@ -87,7 +88,6 @@ export class CartController {
       return res.status(500).json({ error: "Failed to add to cart" });
     }
   }
-
   // get cart items count
   async getCartItemsCount(req: Request, res: Response): Promise<any> {
     const userId = "1";

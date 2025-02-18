@@ -10,6 +10,13 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 
+// tambahan------------
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+import { fetchCartCount } from "@/store/cartSlice";
+import { useCart } from "@/contexts/CartContext";
+// ------------------------------------------------------
+
 const Navbar = () => {
   const pathName = usePathname();
   const [isVisible, setIsVisible] = useState(false);
@@ -20,6 +27,25 @@ const Navbar = () => {
   useEffect(() => {
     setIsVisible(pathName == "/" ? true : false);
   }, [pathName]);
+
+  // tambahan ----------------
+  const dispatch = useDispatch<AppDispatch>();
+  const cartCount = useSelector((state: RootState) => state.cart.count);
+  const { cartVersion } = useCart();
+
+  useEffect(() => {
+    dispatch(fetchCartCount());
+  }, [cartVersion, dispatch]);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      dispatch(fetchCartCount());
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [dispatch]);
+  // ------------------------------------------------
 
   return (
     <div className={`fixed top-0 z-50 h-20 w-full border-b bg-white px-[5%]`}>
@@ -45,7 +71,16 @@ const Navbar = () => {
             <p className="hidden text-nowrap md:flex">Plaza Surabaya</p>
           </div>
           <div className="hidden gap-4 md:flex">
-            <IoCartOutline className="text-3xl" />
+            {/* tambahan --------------- */}
+            <div className="relative">
+              <IoCartOutline className="text-3xl" />
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+            {/* ------------------ */}
             <Link
               href="/order"
               className="flex-col items-center justify-start gap-1"
@@ -90,7 +125,16 @@ const Navbar = () => {
           <p className="hidden text-nowrap md:flex">Plaza Surabaya</p>
         </div>
         <div className="hidden gap-4 md:flex">
-          <IoCartOutline className="text-3xl" />
+          {/* tambahan --------------------- */}
+          <div className="relative">
+            <IoCartOutline className="text-3xl" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
+                {cartCount}
+              </span>
+            )}
+          </div>
+          {/* ------------------------ */}
           <Link
             href="/order"
             className="flex-col items-center justify-start gap-1"
