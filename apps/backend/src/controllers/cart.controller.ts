@@ -8,19 +8,19 @@ export class CartController {
     const userId = "1"; // test user id
 
     try {
-      const user = await prisma.users.findUnique({
-        where: { user_id: userId },
-        include: { account: true },
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { accounts: true },
       });
 
-      if (!user || !user.email_verified) {
+      if (!user || !user.emailVerified) {
         return res.status(403).json({
           error: "User not found or not verified",
         });
       }
 
       const profile = await prisma.profile.findUnique({
-        where: { user_id: user.user_id },
+        where: { user_id: user.id },
       });
 
       if (!profile) {
