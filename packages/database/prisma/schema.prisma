@@ -167,6 +167,8 @@ model Product {
   product_name        String           @unique
   product_price       Int
   product_category_id Int
+  product_description String?
+  deletedAt           DateTime?
   cart_items          CartItem[]
   order_items         OrderItem[]
   product_category    ProductCategory  @relation(fields: [product_category_id], references: [product_category_id])
@@ -189,6 +191,7 @@ model ProductImg {
 model ProductCategory {
   product_category_id   Int       @id @default(autoincrement())
   product_category_name String    @unique
+  deletedAt             DateTime?
   product               Product[]
 
   @@map("product_category")
