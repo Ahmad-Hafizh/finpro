@@ -117,7 +117,19 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  password: 'password',
+  role: 'role',
+  updateAt: 'updateAt'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
+  id: 'id',
   type: 'type',
   provider: 'provider',
   providerAccountId: 'providerAccountId',
@@ -128,8 +140,15 @@ exports.Prisma.AccountScalarFieldEnum = {
   scope: 'scope',
   id_token: 'id_token',
   session_state: 'session_state',
-  userId: 'userId',
-  account_id: 'account_id'
+  userId: 'userId'
+};
+
+exports.Prisma.ProfileScalarFieldEnum = {
+  profile_id: 'profile_id',
+  user_id: 'user_id',
+  phone: 'phone',
+  pfp_url: 'pfp_url',
+  referred_id: 'referred_id'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
@@ -150,10 +169,10 @@ exports.Prisma.AddressScalarFieldEnum = {
 
 exports.Prisma.AdminScalarFieldEnum = {
   admin_id: 'admin_id',
+  user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
-  position: 'position',
-  user_id: 'user_id'
+  position: 'position'
 };
 
 exports.Prisma.StoreScalarFieldEnum = {
@@ -305,25 +324,6 @@ exports.Prisma.AdminOrderScalarFieldEnum = {
   action_time: 'action_time'
 };
 
-exports.Prisma.ProfileScalarFieldEnum = {
-  profile_id: 'profile_id',
-  user_id: 'user_id',
-  referred_id: 'referred_id',
-  phone: 'phone',
-  pfp_url: 'pfp_url'
-};
-
-exports.Prisma.UsersScalarFieldEnum = {
-  user_id: 'user_id',
-  name: 'name',
-  email: 'email',
-  password: 'password',
-  image: 'image',
-  role: 'role',
-  email_verified: 'email_verified',
-  updateAt: 'updateAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -338,6 +338,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Role = exports.$Enums.Role = {
+  user: 'user',
+  admin: 'admin',
+  super_admin: 'super_admin'
+};
+
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   menunggu_pembayaran: 'menunggu_pembayaran',
   menunggu_konfirmasi: 'menunggu_konfirmasi',
@@ -359,14 +365,10 @@ exports.ActionEnum = exports.$Enums.ActionEnum = {
   batalkan_pesanan: 'batalkan_pesanan'
 };
 
-exports.Role = exports.$Enums.Role = {
-  user: 'user',
-  admin: 'admin',
-  super_admin: 'super_admin'
-};
-
 exports.Prisma.ModelName = {
+  User: 'User',
   Account: 'Account',
+  Profile: 'Profile',
   Referral: 'Referral',
   Address: 'Address',
   Admin: 'Admin',
@@ -386,9 +388,7 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   PaymentProof: 'PaymentProof',
   OrderCancel: 'OrderCancel',
-  AdminOrder: 'AdminOrder',
-  profile: 'profile',
-  users: 'users'
+  AdminOrder: 'AdminOrder'
 };
 
 /**

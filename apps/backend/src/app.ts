@@ -27,8 +27,8 @@ class App {
       return res.status(200).send("test api");
     });
 
-    // const accountRouter = new AccountRouter();
-    // this.app.use("/account", accountRouter.getRouter());
+    const accountRouter = new AccountRouter();
+    this.app.use("/account", accountRouter.getRouter());
 
     const cartRouter = new CartRouter();
     this.app.use("/cart", cartRouter.getRouter());
