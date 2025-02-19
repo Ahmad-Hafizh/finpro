@@ -15,6 +15,7 @@ export class ProductRouter {
     this.route.get("/", this.productRouter.getProduct);
     this.route.post("/", this.productRouter.createProduct);
     this.route.patch("/delete", this.productRouter.deleteProduct);
+    this.route.get("/:name", this.productRouter.getDetailedProduct);
   }
 
   public getRouter() {

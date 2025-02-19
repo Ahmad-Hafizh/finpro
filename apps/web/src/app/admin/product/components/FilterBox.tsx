@@ -28,14 +28,6 @@ const FilterBox = ({ categories }: FilterBoxProps) => {
     setCategory(categories);
   }, [categories]);
 
-  // const categories = [
-  //   "Dry vegetable",
-  //   "Fruit",
-  //   "Wet vegetable",
-  //   "Green vegetable",
-  //   "Nut",
-  // ];
-
   console.log("INI CATEGORIES :", category);
 
   const dynamicFilter = (key: string, value: string) => {
