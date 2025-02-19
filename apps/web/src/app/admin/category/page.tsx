@@ -29,8 +29,8 @@ const categoryPage = () => {
   const getCategory = async () => {
     try {
       const response = await callAPI.get("/category");
-      console.log("Ini response get category :", response.data.data);
-      const newResponse = response.data.data.map((product: any) => ({
+      console.log("Ini response get category :", response.data.result);
+      const newResponse = response.data.result.map((product: any) => ({
         ...product,
         status: product.deletedAt ? `Deleted` : "Active",
       }));

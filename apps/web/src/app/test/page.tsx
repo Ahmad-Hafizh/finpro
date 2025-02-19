@@ -14,7 +14,7 @@ export default function TestPage() {
   return (
     <>
       <TestNavbar />
-      <main className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      <main className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3">
         {products.map((product) => (
           <ProductCard key={product.productId} {...product} />
         ))}
