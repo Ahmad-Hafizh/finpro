@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
-import ReduxProvider from "@/components/ReduxProvider";
+import StoreProvider from "@/app/StoreProvider";
 // import { CartProvider } from "@/contexts/CartContext";
 import { SessionProvider } from "next-auth/react";
 
@@ -33,13 +33,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <ReduxProvider>
+          <StoreProvider>
             {/* <CartProvider> */}
             <Navbar />
-            <div className="container relative mx-auto px-[5%]">{children}</div>
+            <div className="container relative mx-auto max-w-7xl px-[5%]">
+              {children}
+            </div>
             <Botbar />
             {/* </CartProvider> */}
-          </ReduxProvider>
+          </StoreProvider>
         </SessionProvider>
       </body>
     </html>

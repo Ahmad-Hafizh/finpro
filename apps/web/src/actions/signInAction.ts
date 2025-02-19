@@ -10,6 +10,8 @@ export const onSignIn = async (values: { email: string; password: string }) => {
       password: values.password,
     });
 
+    console.log(response);
+
     await signIn("credentials", {
       email: response.data.result.email,
       password: values.password,

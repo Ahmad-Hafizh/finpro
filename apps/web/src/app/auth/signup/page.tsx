@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import Link from "next/link";
-import { FaGoogle } from "react-icons/fa";
+// import { FaGoogle } from "react-icons/fa";
 import { z } from "zod";
 import {
   Form,
@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { signUpSchema } from "../../../../../schemas/authSchema";
 import { callAPI } from "@/config/axios";
+import GoogleSignInButton from "@/components/global/GoogleSignInButton";
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState(false);
@@ -113,21 +114,7 @@ const SignUpPage = () => {
           <hr className="w-full" />
         </div>
         <div className="flex items-center justify-center gap-4">
-          <Link href="/apple">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
-          <Link href="/google">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
-          <Link href="/facebook">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
+          <GoogleSignInButton />
         </div>
         <div className="">
           <p className="text-center text-sm">

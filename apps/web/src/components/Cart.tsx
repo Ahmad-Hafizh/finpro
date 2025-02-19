@@ -5,13 +5,13 @@ import { ShoppingCart, Plus, Minus, Trash2, Store } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RootState, AppDispatch } from "@/store/store";
+import { RootState, AppDispatch } from "@/lib/redux/store";
 import {
   fetchCartItems,
   fetchCartCount,
   updateCartItemQuantity,
   deleteCartItem,
-} from "@/store/cartSlice";
+} from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 
 const Cart: React.FC = () => {
@@ -137,6 +137,18 @@ const Cart: React.FC = () => {
     });
     setSelectedItems(updatedSelectedItems);
   };
+
+  const handleSelectAll = (isSelected: boolean) => {
+    const updatedSelectedItems: { [key: number]: boolean } = {};
+    cartItems.forEach((item) => {
+      updatedSelectedItems[item.cart_item_id] = isSelected;
+    });
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const allSelected =
+    cartItems.length > 0 &&
+    cartItems.every((item) => selectedItems[item.cart_item_id]);
 
   if (loading) {
     return (
@@ -412,8 +424,32 @@ const Cart: React.FC = () => {
         )}
       </div>
 
-      {/* CHECKOUT SUMMARY */}
-      <div className="container fixed bottom-0 left-0 right-0 mx-auto w-full px-[5%]">
+      {/* MOBILE CHECKOUT SUMMARY */}
+      <div className="fixed inset-x-0 bottom-0 z-10 md:hidden">
+        <Card className="mx-4 mb-4">
+          <CardContent className="flex items-center justify-between p-4">
+            <input
+              type="checkbox"
+              className="h-5 w-5"
+              checked={allSelected}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+            />
+            <div className="flex items-center space-x-2">
+              <span className="text-lg font-bold">
+                Rp {selectedTotal.toLocaleString()}
+              </span>
+              <Button
+                onClick={handleProceedToCheckout}
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
+                Checkout
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      {/* DESKTOP CHECKOUT SUMMARY */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 hidden w-full md:block">
         <div className="flex divide-x divide-gray-300 border border-t-2">
           <div className="flex-1 bg-white py-4 text-center">
             <span className="text-lg font-bold">
