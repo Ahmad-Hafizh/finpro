@@ -19,30 +19,10 @@ export const findAdmin = async ({
   pageNumber,
   pageSize,
   keyword,
-}: IfindAdmin): Promise<IAdmin[]> => {
+}: IfindAdmin): Promise<any> => {
   const result = await prisma.admin.findMany({
     skip: (pageNumber - 1) * pageSize,
     take: pageSize,
-    where: {
-      store_id: store as unknown as number,
-      OR: [
-        {
-          account: {
-            name: { contains: keyword as string, mode: "insensitive" },
-          },
-        },
-        {
-          account: {
-            email: { contains: keyword as string, mode: "insensitive" },
-          },
-        },
-        { phone: { contains: keyword as string, mode: "insensitive" } },
-        { position: { contains: keyword as string, mode: "insensitive" } },
-      ],
-    },
-    include: {
-      account: true,
-    },
   });
 
   return result;

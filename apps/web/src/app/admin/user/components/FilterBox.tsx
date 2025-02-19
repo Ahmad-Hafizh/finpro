@@ -1,3 +1,4 @@
+"use client";
 import {
   Accordion,
   AccordionContent,
@@ -6,48 +7,72 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const FilterBox = () => {
   const router = useRouter();
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
 
-  const dynamicFilter = (key: string, value: string, condition?: string) => {
-    const searchParams = new URLSearchParams(params.toString());
-    const valueUpdate = searchParams.get(key);
-    if (valueUpdate) {
-      const newValuesUpdate = valueUpdate.split(",");
-      if (!newValuesUpdate.includes(value)) {
-        newValuesUpdate.push(value);
-        searchParams.set(key, newValuesUpdate.join(","));
+  const categories = [
+    "Dry vegetable",
+    "Fruit",
+    "Wet vegetable",
+    "Green vegetable",
+    "Nut",
+  ];
+
+  // Function to update URL based on selected filters
+  const dynamicFilter = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentValues = params.get(key)?.split(",") || [];
+
+    if (currentValues.includes(value)) {
+      const updatedValues = currentValues.filter((item) => item !== value);
+      if (updatedValues.length > 0) {
+        params.set(key, updatedValues.join(","));
+      } else {
+        params.delete(key);
       }
     } else {
-      searchParams.set(key, value);
+      currentValues.push(value);
+      params.set(key, currentValues.join(","));
     }
-    router.push(`?${searchParams.toString()}`);
+
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  const store = ["Store 1", "Store 2", "Store 3", "Store 4", "Store 5"];
+  // Function to check if a filter value is selected
+  const isChecked = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    return params.get(key)?.split(",").includes(value) || false;
+  };
+
   return (
     <div className="filter-box rounded-lg shadow-sm border border-gray-200 h-full w-1/4 p-6 gap-3">
       <h2 className="font-bold text-lg">Filter</h2>
       <Accordion type="single" collapsible defaultValue="item-1">
         <AccordionItem value="item-1">
-          <AccordionTrigger>Store</AccordionTrigger>
+          <AccordionTrigger>Category</AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col gap-1 ">
-              {store.map((store) => (
+            <div className="flex flex-col gap-1">
+              {categories.map((category) => (
                 <div
-                  key={store}
+                  key={category}
                   className="flex justify-between items-center py-2"
                 >
                   <label
-                    htmlFor={store}
-                    className="text-sm font-medium leading-none h-full w-full"
+                    htmlFor={category}
+                    className="text-sm font-medium leading-none w-full"
                   >
-                    {store}
+                    {category}
                   </label>
-                  <Checkbox />
+                  <Checkbox
+                    id={category}
+                    checked={isChecked("category", category)}
+                    onCheckedChange={(checked) =>
+                      dynamicFilter("category", category)
+                    }
+                  />
                 </div>
               ))}
             </div>

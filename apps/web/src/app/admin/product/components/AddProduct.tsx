@@ -20,16 +20,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
-const AddProduct = () => {
-  const category = [
-    "Dry vegetable",
-    "Fruit",
-    "Wet vegetable",
-    "Green vegetable",
-    "Nut",
-  ];
+interface Icategory {
+  product_category_id: string;
+  product_category_name: string;
+}
+
+interface IaddProduct {
+  categories: Icategory[];
+  setOpenDialog: (open: boolean) => void;
+}
+
+const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
+  const { toast } = useToast();
   const formSchema = z.object({
     name: z.string().min(2, {
       message: "Product name must atleasy 2 characters!",
@@ -41,8 +47,12 @@ const AddProduct = () => {
         .min(1, {
           message: "Minimum price is 1! Price cannot be negative!",
         })
-        .int("Must be whole number")
+        .int("Must be whole number"),
     ),
+    description: z
+      .string()
+      .nonempty({ message: "Description cannot be empty!" })
+      .min(10, { message: "Decription minimum has 10 word" }),
     category: z.string().nonempty({ message: "Category is required!" }),
     images: z
       .array(z.instanceof(File))
@@ -50,17 +60,17 @@ const AddProduct = () => {
       .refine(
         (files) =>
           files.every((file) =>
-            ["image/jpeg", "image/png", "image/gif"].includes(file.type)
+            ["image/jpeg", "image/png", "image/gif"].includes(file.type),
           ),
         {
           message: "Only JPG, PNG, and GIF files are allowed1",
-        }
+        },
       )
       .refine(
         (files) => files.every((file) => file.size <= 1024 * 1024), // 1MB max
         {
           message: "Each file must be under 1MB!",
-        }
+        },
       ),
   });
 
@@ -69,12 +79,62 @@ const AddProduct = () => {
     defaultValues: {
       name: "",
       price: 1,
+      description: "",
       category: "",
       images: [],
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {};
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    // const payload = {
+    //   product_name: values.name,
+    //   product_price: values.price,
+    //   product_description: values.description,
+    //   product_category: values.category,
+    //   product_image: values.images,
+    // };
+    // console.log("Ini values: ", payload);
+
+    const formData = new FormData();
+    formData.append("product_name", values.name);
+    formData.append("product_price", values.price.toString());
+    formData.append("product_description", values.description);
+    formData.append("product_category", values.category);
+
+    values.images.forEach((image) => {
+      formData.append("product_image", image);
+    });
+
+    const sendResult = async (payload: any) => {
+      try {
+        // const response = await callAPI.post("/product", payload);
+        const response = await callAPI.post("/product", payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        console.log("Ini response :", response);
+        if (response.data.isSuccess) {
+          toast({
+            title: "Success",
+            description: "Adding Product Success",
+            className: "bg-gradient-to-r from-green-300 to-green-200",
+          });
+        }
+        setOpenDialog(false);
+        return;
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Something went wrong while updating category",
+          variant: "destructive",
+        });
+        setOpenDialog(false);
+        console.log("Ini error: ", error);
+      }
+    };
+
+    sendResult(formData);
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -88,7 +148,7 @@ const AddProduct = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col gap-0 my-5"
+        className="my-5 flex flex-col gap-0 space-y-8"
       >
         <FormField
           control={form.control}
@@ -127,6 +187,24 @@ const AddProduct = () => {
         />
         <FormField
           control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Tell user about the product"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Tell user about the product.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
@@ -138,10 +216,13 @@ const AddProduct = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {category.map((category) => {
+                  {categories.map((category: any) => {
                     return (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                      <SelectItem
+                        key={category.product_category_id}
+                        value={category.product_category_id.toString()}
+                      >
+                        {category.product_category_name}
                       </SelectItem>
                     );
                   })}

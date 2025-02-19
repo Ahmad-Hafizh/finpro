@@ -5,6 +5,7 @@ import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import StoreProvider from "@/app/StoreProvider";
 // import { CartProvider } from "@/contexts/CartContext";
+import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
@@ -39,6 +40,7 @@ export default function RootLayout({
             <div className="container relative mx-auto max-w-7xl px-[5%]">
               {children}
             </div>
+            <Toaster />
             <Botbar />
             {/* </CartProvider> */}
           </StoreProvider>
