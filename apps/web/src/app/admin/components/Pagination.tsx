@@ -1,12 +1,12 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface IPagination {
   currentPage: number;
@@ -14,28 +14,44 @@ interface IPagination {
 }
 
 const PaginationTable: React.FC<IPagination> = ({ currentPage, totalPage }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const updatePage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            href="#"
+            onClick={() => currentPage > 1 && updatePage(currentPage - 1)}
+          />
         </PaginationItem>
+
+        {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              href="#"
+              isActive={page === currentPage}
+              onClick={() => updatePage(page)}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
         <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            href="#"
+            onClick={() =>
+              currentPage < totalPage && updatePage(currentPage + 1)
+            }
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

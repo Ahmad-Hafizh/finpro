@@ -71,5 +71,39 @@ export const findProduct = async ({
     },
   });
 
-  return result;
+  const totalItems = await prisma.product.count({
+    where: {
+      AND: [
+        category
+          ? {
+              product_category: {
+                product_category_name: category,
+              },
+            }
+          : {},
+        keyword
+          ? {
+              OR: [
+                { product_name: { contains: keyword, mode: "insensitive" } },
+                {
+                  product_description: {
+                    contains: keyword,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            }
+          : {},
+        deletedAt === "true"
+          ? { deletedAt: { not: null } }
+          : deletedAt === "false"
+            ? { deletedAt: null }
+            : {},
+      ],
+    },
+  });
+
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  return { products: result, totalItems, totalPages };
 };
