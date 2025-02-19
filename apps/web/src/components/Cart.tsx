@@ -13,9 +13,11 @@ import {
   deleteCartItem,
 } from "@/store/cartSlice";
 import { useCart } from "@/contexts/CartContext";
+import { useRouter } from "next/navigation";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const { cartVersion } = useCart();
   const {
     items: cartItems,
@@ -95,17 +97,34 @@ const Cart: React.FC = () => {
     }
   };
 
+  // const handleProceedToCheckout = () => {
+  //   const itemsToCheckout = cartItems.filter(
+  //     (item) => selectedItems[item.cart_item_id],
+  //   );
+  //   alert(
+  //     `Proceeding to checkout with items: ${itemsToCheckout
+  //       .map((item) => item.product.product_name)
+  //       .join(", ")}`,
+  //   );
+  // };
+
+  // const selectedTotal = cartItems.reduce((sum, item) => {
+  //   if (selectedItems[item.cart_item_id]) {
+  //     return sum + item.product.product_price * item.quantity;
+  //   }
+  //   return sum;
+  // }, 0);
   const handleProceedToCheckout = () => {
     const itemsToCheckout = cartItems.filter(
       (item) => selectedItems[item.cart_item_id],
     );
-    alert(
-      `Proceeding to checkout with items: ${itemsToCheckout
-        .map((item) => item.product.product_name)
-        .join(", ")}`,
-    );
+    if (itemsToCheckout.length === 0) {
+      alert("Pilih item untuk checkout.");
+      return;
+    }
+    localStorage.setItem("selectedCartItems", JSON.stringify(itemsToCheckout));
+    router.push("/checkout");
   };
-
   const selectedTotal = cartItems.reduce((sum, item) => {
     if (selectedItems[item.cart_item_id]) {
       return sum + item.product.product_price * item.quantity;
