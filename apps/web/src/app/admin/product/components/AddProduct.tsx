@@ -86,18 +86,32 @@ const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload = {
-      product_name: values.name,
-      product_price: values.price,
-      product_description: values.description,
-      product_category: values.category,
-      product_image: values.images,
-    };
-    console.log("Ini values: ", payload);
+    // const payload = {
+    //   product_name: values.name,
+    //   product_price: values.price,
+    //   product_description: values.description,
+    //   product_category: values.category,
+    //   product_image: values.images,
+    // };
+    // console.log("Ini values: ", payload);
+
+    const formData = new FormData();
+    formData.append("product_name", values.name);
+    formData.append("product_price", values.price.toString());
+    formData.append("product_description", values.description);
+    formData.append("product_category", values.category);
+
+    values.images.forEach((image) => {
+      formData.append("product_image", image);
+    });
 
     const sendResult = async (payload: any) => {
       try {
-        const response = await callAPI.post("/product", payload);
+        // const response = await callAPI.post("/product", payload);
+        const response = await callAPI.post("/product", payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
         console.log("Ini response :", response);
         if (response.data.isSuccess) {
           toast({
@@ -119,7 +133,7 @@ const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
       }
     };
 
-    sendResult(payload);
+    sendResult(formData);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

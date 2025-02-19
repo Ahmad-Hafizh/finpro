@@ -12,7 +12,7 @@ import EditProduct from "./components/EditProduct";
 import FilterBox from "./components/FilterBox";
 import SearchBox from "./components/SearchBox";
 import { callAPI } from "@/config/axios";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import SortBox from "./components/SortBox";
 
@@ -22,20 +22,37 @@ const productPage = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [categories, setCategories] = useState<any>([]);
   const [productList, setProductList] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState<any>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
 
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     getCategory();
     getProduct();
   }, [searchParams]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const pageParam = params.get("page") || "1";
+
+    if (pageParam !== currentPage.toString()) {
+      setCurrentPage(parseInt(pageParam));
+    }
+
+    if (!params.has("page")) {
+      params.set("page", "1");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [searchParams, router]);
+
   const getCategory = async () => {
     try {
       const response = await callAPI.get("/category");
-      console.log("Ini response get category :", response.data.data);
-      setCategories(response.data.data);
+      console.log("Ini response get category :", response.data.result);
+      setCategories(response.data.result);
     } catch (error) {
       console.log(error);
     }
@@ -45,12 +62,13 @@ const productPage = () => {
     try {
       const queryParams = searchParams.toString();
       const response = await callAPI.get(`/product?${queryParams}`);
-      console.log("Ini response get product :", response.data.data);
-      const newResponse = response.data.data.map((product: any) => ({
+      console.log("Ini response get product :", response.data.result.products);
+      const newResponse = response.data.result.products.map((product: any) => ({
         ...product,
         status: product.deletedAt ? `Deleted` : "Active",
       }));
       setProductList(newResponse);
+      setTotalPage(response.data.result.totalPages);
     } catch (error) {
       console.log("Ini error get product: ", error);
     }
@@ -81,80 +99,6 @@ const productPage = () => {
     }
   };
   console.log("INI KATEGORI DARI STATE : ", categories);
-  const city = ["Malang", "Surabaya", "Jakarta", "Bandung", "Semarang"];
-  // const productList = [
-  //   {
-  //     id: 0,
-  //     images: ["https://url"],
-  //     name: "Tomato",
-  //     price: "2000",
-  //     category: "Fruit",
-  //   },
-  //   {
-  //     id: 1,
-  //     images: ["https://url"],
-  //     name: "Carrot",
-  //     price: "3000",
-  //     category: "Dry vegetable",
-  //   },
-  //   {
-  //     id: 2,
-  //     images: ["https://url"],
-  //     name: "Spinach",
-  //     price: "2500",
-  //     category: "Green vegetable",
-  //   },
-  //   {
-  //     id: 3,
-  //     images: ["https://url"],
-  //     name: "Almond",
-  //     price: "10000",
-  //     category: "Nut",
-  //   },
-  //   {
-  //     id: 4,
-  //     images: ["https://url"],
-  //     name: "Mango",
-  //     price: "8000",
-  //     category: "Fruit",
-  //   },
-  //   {
-  //     id: 5,
-  //     images: ["https://url"],
-  //     name: "Onion",
-  //     price: "4000",
-  //     category: "Wet vegetable",
-  //   },
-  //   {
-  //     id: 6,
-  //     images: ["https://url"],
-  //     name: "Lettuce",
-  //     price: "3500",
-  //     category: "Green vegetable",
-  //   },
-  //   {
-  //     id: 7,
-  //     images: ["https://url"],
-  //     name: "Cashew",
-  //     price: "12000",
-  //     category: "Nut",
-  //   },
-  //   {
-  //     id: 8,
-  //     images: ["https://url"],
-  //     name: "Potato",
-  //     price: "5000",
-  //     category: "Dry vegetable",
-  //   },
-  //   {
-  //     id: 9,
-  //     images: ["https://url"],
-  //     name: "Cucumber",
-  //     price: "3000",
-  //     category: "Wet vegetable",
-  //   },
-  // ];
-
   console.log(productList);
 
   const category = [
@@ -186,7 +130,7 @@ const productPage = () => {
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
-          {categories.length > 0 ? (
+          {categories ? (
             <FilterBox categories={categories} />
           ) : (
             <FilterBox categories={category} />
@@ -242,7 +186,10 @@ const productPage = () => {
                 </Dialog>
               </div>
               <div className="pagination flex items-center justify-center">
-                <PaginationTable currentPage={1} totalPage={3} />
+                <PaginationTable
+                  currentPage={currentPage}
+                  totalPage={totalPage}
+                />
               </div>
             </div>
           </div>

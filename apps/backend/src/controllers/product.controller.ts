@@ -4,6 +4,8 @@ import ResponseHandler from "../utils/responseHandler";
 import { findProduct } from "../services/product/getProduct.services";
 import { createProduct } from "../services/product/createProduct.services";
 import { deleteProduct } from "../services/product/deleteProduct.services";
+import { findDetailedProduct } from "../services/product/getDetailedProduct.services";
+import { uploadImage } from "../utils/cloudinary";
 
 export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
@@ -11,7 +13,7 @@ export class ProductController {
       const { page, search, cat, sort, del } = req.query;
       console.log(cat);
       const pageNumber = parseInt(page as string) || 1;
-      const pageSize = 7;
+      const pageSize = 8;
       const category = cat as string;
       const keyword = search as string;
       const sortBy = sort as string;
@@ -45,7 +47,19 @@ export class ProductController {
       const price = req.body.product_price as string;
       const description = req.body.product_description as string;
       const category = req.body.product_category as string;
-      const image = req.body.product_image as string[];
+      const images = req.body.product_image as string[];
+
+      if (!req.files) {
+        return res.status(400).json({ error: "No files uploaded" });
+      }
+
+      const image = await Promise.all(
+        (req.files as Express.Multer.File[]).map(async (file) => {
+          const result = await uploadImage(file.path, "product_images");
+          return result.secure_url;
+        })
+      );
+
       const objectPayload = { name, price, description, category, image };
 
       console.log("This is category :", category);
@@ -75,6 +89,22 @@ export class ProductController {
       );
     } catch (error) {
       return ResponseHandler.error(res, 500, "Internal Server Error", error);
+    }
+  }
+
+  async getDetailedProduct(req: Request, res: Response): Promise<any> {
+    try {
+      const { name } = req.params;
+      const result = await findDetailedProduct({ name });
+      return ResponseHandler.success(
+        res,
+        200,
+        "Get detailed product success",
+        result
+      );
+    } catch (error) {
+      console.log("error from get detailed product", error);
+      return ResponseHandler.error(res, 500, "Internal server error", error);
     }
   }
 }
