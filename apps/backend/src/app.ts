@@ -7,6 +7,7 @@ import { AdminRouter } from "./routers/admin.router";
 import { ProductRouter } from "./routers/product.router";
 import { CategoryRouter } from "./routers/category.router";
 import { OrderRouter } from "./routers/order.router";
+import { AddressRouter } from "./routers/address.router";
 
 const PORT = 8090;
 class App {
@@ -45,6 +46,8 @@ class App {
 
     const orderRouter = new OrderRouter();
     this.app.use("/order", orderRouter.getRouter());
+    const addressRouter = new AddressRouter();
+    this.app.use("/address", addressRouter.getRouter());
   }
 
   public start() {
