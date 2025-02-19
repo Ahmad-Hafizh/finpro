@@ -38,13 +38,16 @@ export const createProduct = async ({
         },
       },
     });
+
     console.log("Ini Image :", image);
-    image.map((imageUrl: any) =>
-      tx.productImg.create({
-        data: {
-          image_url: imageUrl.name as string,
-          product: { connect: { product_id: product.product_id } },
-        },
+    await Promise.all(
+      image.map(async (imageUrl) => {
+        await tx.productImg.create({
+          data: {
+            image_url: imageUrl,
+            product: { connect: { product_id: product.product_id } },
+          },
+        });
       })
     );
   });

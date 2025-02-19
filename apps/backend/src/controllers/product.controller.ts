@@ -5,6 +5,7 @@ import { findProduct } from "../services/product/getProduct.services";
 import { createProduct } from "../services/product/createProduct.services";
 import { deleteProduct } from "../services/product/deleteProduct.services";
 import { findDetailedProduct } from "../services/product/getDetailedProduct.services";
+import { uploadImage } from "../utils/cloudinary";
 
 export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
@@ -46,7 +47,19 @@ export class ProductController {
       const price = req.body.product_price as string;
       const description = req.body.product_description as string;
       const category = req.body.product_category as string;
-      const image = req.body.product_image as string[];
+      const images = req.body.product_image as string[];
+
+      if (!req.files) {
+        return res.status(400).json({ error: "No files uploaded" });
+      }
+
+      const image = await Promise.all(
+        (req.files as Express.Multer.File[]).map(async (file) => {
+          const result = await uploadImage(file.path, "product_images");
+          return result.secure_url;
+        })
+      );
+
       const objectPayload = { name, price, description, category, image };
 
       console.log("This is category :", category);

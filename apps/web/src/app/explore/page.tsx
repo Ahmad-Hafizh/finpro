@@ -40,7 +40,7 @@ const explorePage = () => {
     try {
       const response = await callAPI.get("/category");
       console.log("Ini response get category :", response.data);
-      setCategories(response.data.data);
+      setCategories(response.data.result);
     } catch (error) {
       console.log(error);
     }
@@ -73,21 +73,30 @@ const explorePage = () => {
       </div>
       <div className="main section flex flex-col lg:flex-row">
         <div className="filterbox h-full w-full lg:w-[400px]">
-          <FilterBox categories={category} />
+          <FilterBox categories={categories} />
         </div>
         <div className="product-section grid grid-cols-1 gap-5 px-5 lg:grid-cols-4 lg:px-10">
-          {products ? (
+          {products.length > 0 ? (
             products.map((product: any) => {
               return (
                 <ProductCardExplore
                   key={product.product_id}
                   product_name={product.product_name}
                   product_price={product.product_price}
+                  product_category={
+                    product.product_category.product_category_name
+                  }
+                  product_image={
+                    Array.isArray(product.product_img) &&
+                    product.product_img.length > 0
+                      ? product.product_img[0].image_url
+                      : "https://media.post.rvohealth.io/wp-content/uploads/sites/3/2022/02/health_benefits_carrots_732x549_thumb-732x549.jpg"
+                  }
                 />
               );
             })
           ) : (
-            <div>LOADING</div>
+            <div>NOT FOUND</div>
           )}
         </div>
       </div>
