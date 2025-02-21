@@ -106,6 +106,55 @@ export class AccountController {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
   }
+  async getUserById(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.body.id,
+        },
+        include: {
+          accounts: true,
+        },
+      });
+
+      if (!user) {
+        return ResponseHandler.error(res, 404, 'User not found');
+      }
+      return ResponseHandler.success(res, 200, 'Sign in is success', user);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
+
+  async createProfileReferral(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { name, id } = req.body;
+      const existProfile = await prisma.profile.findUnique({ where: { user_id: id } });
+
+      if (existProfile) {
+        return ResponseHandler.success(res, 200, 'profile is already exist');
+      }
+
+      await prisma.$transaction(async (tx) => {
+        const referralCode: string = `${name?.slice(0, 4).toUpperCase() ?? 'USER'}${Math.round(Math.random() * 10000).toString()}`;
+        const profile = await tx.profile.create({
+          data: {
+            user_id: id,
+          },
+        });
+
+        await tx.referral.create({
+          data: {
+            profile_id: profile.profile_id,
+            referral_code: referralCode,
+          },
+        });
+      });
+      return ResponseHandler.success(res, 200, 'create profile and referral success');
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
   async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { email } = req.body;

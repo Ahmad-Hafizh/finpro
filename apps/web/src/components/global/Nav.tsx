@@ -15,6 +15,13 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { FaArrowLeft } from "react-icons/fa";
 import { MapPin } from "lucide-react";
 
+// tambahan------------
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/redux/store";
+import { fetchCartCount } from "@/lib/redux/reducers/cartSlice";
+import { useCart } from "@/contexts/CartContext";
+// ------------------------------------------------------
+
 const Navbar = () => {
   const pathName = usePathname();
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +30,8 @@ const Navbar = () => {
   const currentPath = splitPath[splitPath.length - 1].replace("-", " ");
   const dispatch = useAppDispatch();
   const currStore = useAppSelector((state) => state.store);
+  const cartCount = useSelector((state: RootState) => state.cart.count);
+  const { cartVersion } = useCart();
 
   useEffect(() => {
     setIsVisible(pathName == "/" ? true : false);
@@ -77,6 +86,20 @@ const Navbar = () => {
     }
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchCartCount());
+  }, [cartVersion, dispatch]);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      dispatch(fetchCartCount());
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [dispatch]);
+  // ------------------------------------------------
+
   return (
     <div
       className={`${pathName.startsWith("/auth") ? "hidden" : "flex"} fixed top-0 z-50 mx-auto h-20 w-full justify-center border-b bg-white px-[5%]`}
@@ -98,12 +121,17 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex h-full items-center gap-2">
-            <Button
-              className="space-y-0 hover:bg-transparent"
-              variant={"ghost"}
+            <Link
+              href="/order"
+              className="flex-col items-center justify-start gap-1"
             >
-              <FaArrowLeft className="text-3xl" />
-            </Button>
+              <Button
+                className="space-y-0 hover:bg-transparent"
+                variant={"ghost"}
+              >
+                <FaArrowLeft className="text-3xl" />
+              </Button>
+            </Link>
             <p className="text-2xl capitalize">{currentPath}</p>
           </div>
         )}
@@ -132,6 +160,11 @@ const Navbar = () => {
         <div className="flex items-center justify-center gap-4 border-r-2 pr-4">
           <Link href="/cart">
             <IoCartOutline className="text-2xl" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
+                {cartCount}
+              </span>
+            )}
           </Link>
           <Link href="/order">
             <FiPackage className="text-2xl" />

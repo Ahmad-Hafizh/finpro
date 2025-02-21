@@ -1,22 +1,13 @@
-<<<<<<< HEAD
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import { prisma } from '../../../packages/database/src/client';
 import { CartRouter } from './routers/cart.router';
 import { AccountRouter } from './routers/account.router';
 import { AdminRouter } from './routers/admin.router';
 import { StoreRouter } from './routers/store.router';
-=======
-import express, { Application, Request, Response } from "express";
-import cors from "cors";
-import { prisma } from "../../../packages/database/src/client";
-// import { CartRouter } from "./routers/cart.router";
-import { AccountRouter } from "./routers/account.router";
-import { AdminRouter } from "./routers/admin.router";
-import { ProductRouter } from "./routers/product.router";
-import { CategoryRouter } from "./routers/category.router";
-import { OrderRouter } from "./routers/order.router";
->>>>>>> main
+import { ProductRouter } from './routers/product.router';
+import { CategoryRouter } from './routers/category.router';
+import { OrderRouter } from './routers/order.router';
+import { AddressRouter } from './routers/address.router';
 
 const PORT = 8090;
 class App {
@@ -34,38 +25,33 @@ class App {
   }
 
   private routes() {
-    this.app.get("/", (req: Request, res: Response): any => {
-      return res.status(200).send("test api");
+    this.app.get('/', (req: Request, res: Response): any => {
+      return res.status(200).send('test api');
     });
 
     const accountRouter = new AccountRouter();
-    this.app.use("/account", accountRouter.getRouter());
+    this.app.use('/account', accountRouter.getRouter());
 
-<<<<<<< HEAD
     const storeRouter = new StoreRouter();
     this.app.use('/store', storeRouter.getRouter());
 
     // const cartRouter = new CartRouter();
     // this.app.use('/cart', cartRouter.getRouter());
 
-    // const adminRouter = new AdminRouter();
-    // this.app.use('/admin', adminRouter.getRouter());
-=======
-    // const cartRouter = new CartRouter();
-    // this.app.use("/cart", cartRouter.getRouter());
-
     const adminRouter = new AdminRouter();
-    this.app.use("/admin", adminRouter.getRouter());
+    this.app.use('/admin', adminRouter.getRouter());
 
-    const productRouter = new ProductRouter();
-    this.app.use("/product", productRouter.getRouter());
+    // const productRouter = new ProductRouter();
+    // this.app.use('/product', productRouter.getRouter());
 
     const categoryRouter = new CategoryRouter();
-    this.app.use("/category", categoryRouter.getRouter());
+    this.app.use('/category', categoryRouter.getRouter());
 
-    const orderRouter = new OrderRouter();
-    this.app.use("/order", orderRouter.getRouter());
->>>>>>> main
+    // const orderRouter = new OrderRouter();
+    // this.app.use('/order', orderRouter.getRouter());
+
+    const addressRouter = new AddressRouter();
+    this.app.use('/address', addressRouter.getRouter());
   }
 
   public start() {

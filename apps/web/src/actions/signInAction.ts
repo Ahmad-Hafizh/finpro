@@ -5,15 +5,8 @@ import { AuthError } from "next-auth";
 
 export const onSignIn = async (values: { email: string; password: string }) => {
   try {
-    const response = await callAPI.post("/account/sign-in", {
-      email: values.email,
-      password: values.password,
-    });
-
-    console.log(response);
-
     await signIn("credentials", {
-      email: response.data.result.email,
+      email: values.email,
       password: values.password,
       redirectTo: "/",
     });

@@ -19,6 +19,9 @@ export class AccountRouter {
     this.route.post('/sign-in', this.accountController.signIn);
     this.route.post('/forgot-password', this.accountController.forgotPassword);
     this.route.post('/recover-password', this.accountController.resetPassword);
+
+    this.route.post('/get-user-by-id', this.accountController.getUserById);
+    this.route.post('/oauth-signup', this.accountController.createProfileReferral);
   }
 
   public getRouter() {
