@@ -2,6 +2,14 @@ import { Request, Response } from "express";
 import { prisma } from "../../../../packages/database/src/client";
 import { uploadImage } from "../utils/cloudinary";
 
+const generateOrderNumber = (date: Date): string => {
+  const yyyy = date.getFullYear().toString();
+  const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+  const dd = date.getDate().toString().padStart(2, "0");
+  const datePrefix = `${yyyy}${mm}${dd}`;
+  const randomDigits = Math.floor(1000 + Math.random() * 9000).toString();
+  return `${datePrefix}${randomDigits}`;
+};
 export class OrderController {
   // create a new order
   async createOrder(req: Request, res: Response): Promise<any> {
@@ -40,8 +48,12 @@ export class OrderController {
       if (!nearestStore)
         return res.status(400).json({ error: "No store available" });
 
+      const now = new Date();
+      const orderNumber = generateOrderNumber(now);
+
       const order = await prisma.order.create({
         data: {
+          order_number: orderNumber,
           store_id: nearestStore.store_id,
           address_id: address.address_id,
           total_price: total_price || 0,
@@ -141,15 +153,20 @@ export class OrderController {
 
       if (order_id) whereClause.order_id = Number(order_id);
       if (date) {
-        const start = new Date(date as string);
-        const end = new Date(date as string);
-        end.setDate(end.getDate() + 1);
+        const localStart = new Date((date as string) + "T00:00:00");
+        const localEnd = new Date((date as string) + "T23:59:59");
+        const start = new Date(localStart.getTime() - 7 * 60 * 60 * 1000);
+        const end = new Date(localEnd.getTime() - 7 * 60 * 60 * 1000);
+        console.log("Filtering orders with start:", start, "and end:", end);
         whereClause.order_date = { gte: start, lt: end };
       }
 
       const orders = await prisma.order.findMany({
         where: whereClause,
-        include: { order_items: true, payment_proof: true },
+        include: {
+          order_items: { include: { product: true } },
+          payment_proof: true,
+        },
       });
       return res.status(200).json(orders);
     } catch (error) {
@@ -236,6 +253,81 @@ export class OrderController {
     } catch (error) {
       console.error("Confirm Order Error:", error);
       return res.status(500).json({ error: "Failed to confirm order" });
+    }
+  }
+  // get order by id
+  async getOrderById(req: Request, res: Response): Promise<any> {
+    const userId = "1";
+    try {
+      const profile = await prisma.profile.findUnique({
+        where: { user_id: userId },
+      });
+      if (!profile) {
+        return res.status(404).json({ error: "Profile not found" });
+      }
+
+      const { order_id } = req.params;
+      const order = await prisma.order.findUnique({
+        where: { order_id: Number(order_id) },
+        include: {
+          order_items: {
+            include: { product: true },
+          },
+          payment_proof: true,
+        },
+      });
+
+      if (!order || order.profile_id !== profile.profile_id) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      return res.status(200).json(order);
+    } catch (error) {
+      console.error("Get Order By Id Error:", error);
+      return res.status(500).json({ error: "Failed to fetch order details" });
+    }
+  }
+  // method auto cancel
+  async autoCancelOrders(): Promise<void> {
+    try {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+      const ordersToCancel = await prisma.order.findMany({
+        where: {
+          status: "menunggu_pembayaran",
+          order_date: { lt: oneHourAgo },
+        },
+      });
+      for (const order of ordersToCancel) {
+        await prisma.order.update({
+          where: { order_id: order.order_id },
+          data: { status: "dibatalkan" },
+        });
+        console.log(`Order ${order.order_id} canceled automatically.`);
+      }
+    } catch (error) {
+      console.error("Error auto-cancelling orders:", error);
+    }
+  }
+
+  // method untuk auto-confirmation
+  async autoConfirmOrders(): Promise<void> {
+    try {
+      const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+      const ordersToConfirm = await prisma.order.findMany({
+        where: {
+          status: "dikirim",
+          order_date: { lt: twoDaysAgo },
+        },
+      });
+      for (const order of ordersToConfirm) {
+        await prisma.order.update({
+          where: { order_id: order.order_id },
+          data: { status: "pesanan_dikonfirmasi" },
+        });
+        console.log(`Order ${order.order_id} auto confirmed.`);
+      }
+    } catch (error) {
+      console.error("Error auto-confirming orders:", error);
     }
   }
 }
