@@ -279,12 +279,15 @@ model CartItem {
 
 model Order {
   order_id      Int           @id @default(autoincrement())
+  order_number  String?       @unique
   store_id      Int
   address_id    Int
   total_price   Int
   status        OrderStatus
   order_date    DateTime
   profile_id    Int
+  createdAt     DateTime?     @default(now())
+  updatedAt     DateTime?     @updatedAt
   address       Address       @relation(fields: [address_id], references: [address_id])
   profile       Profile       @relation(fields: [profile_id], references: [profile_id])
   store         Store         @relation(fields: [store_id], references: [store_id])

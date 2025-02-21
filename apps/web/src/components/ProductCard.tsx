@@ -11,7 +11,7 @@ interface ProductCardProps {
   productName: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const ProductCards: React.FC<ProductCardProps> = ({
   productId,
   productName,
 }) => {
@@ -51,9 +51,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
   return (
-    <div className="border p-4 rounded shadow-sm">
+    <div className="rounded border p-4 shadow-sm">
       <h3 className="text-xl font-medium">{productName}</h3>
-      <div className="flex items-center space-x-2 mt-2">
+      <div className="mt-2 flex items-center space-x-2">
         <input
           type="number"
           min="1"
@@ -61,13 +61,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           onChange={(e) =>
             setQuantity(Math.max(1, parseInt(e.target.value) || 1))
           }
-          className="border rounded p-1 w-16"
+          className="w-16 rounded border p-1"
           disabled={isLoading}
         />
         <button
           onClick={handleAddToCart}
-          className={`px-4 py-2 bg-[#80ED99] text-black rounded hover:bg-[#60cd79] ${
-            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          className={`rounded bg-[#80ED99] px-4 py-2 text-black hover:bg-[#60cd79] ${
+            isLoading ? "cursor-not-allowed opacity-50" : ""
           }`}
           disabled={isLoading}
         >
@@ -78,4 +78,4 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-export default ProductCard;
+export default ProductCards;
