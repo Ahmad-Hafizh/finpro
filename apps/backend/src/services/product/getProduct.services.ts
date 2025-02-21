@@ -7,6 +7,7 @@ interface IfindProduct {
   category: string;
   sortBy: string;
   deletedAt: string;
+  theStore: string;
 }
 
 export const findProduct = async ({
@@ -16,6 +17,7 @@ export const findProduct = async ({
   keyword,
   sortBy,
   deletedAt,
+  theStore,
 }: IfindProduct): Promise<any> => {
   console.log("category in services :", category);
   console.log("Sort by :", sortBy);
@@ -50,6 +52,7 @@ export const findProduct = async ({
           : deletedAt === "false"
             ? { deletedAt: null }
             : {},
+        theStore ? { stock: { store_id: parseInt(theStore) } } : {},
       ],
     },
     orderBy: sortBy
