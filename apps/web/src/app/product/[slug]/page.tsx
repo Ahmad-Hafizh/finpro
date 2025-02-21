@@ -4,6 +4,14 @@ import { callAPI } from "@/config/axios";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 
+//===========================
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { fetchCartItems, fetchCartCount } from "@/store/cartSlice";
+import { useCart } from "@/contexts/CartContext";
+import { useRouter } from "next/navigation";
+//===============================
+
 interface IProductDetailPage {
   params: Promise<{ slug: string }>;
 }
@@ -12,6 +20,15 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any | null>(null);
   const [productData, setProductData] = useState<any>([]);
+
+  //==========================
+  const [quantity, setQuantity] = useState<number>(1);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { updateCart } = useCart();
+  const router = useRouter();
+  //===========================
 
   useEffect(() => {
     getData();
@@ -38,18 +55,65 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   };
 
   //KURANG BIKIN SKELETON (PAKAI LOADING STATE)
+  //==============================================
+  const handleAddToCart = async () => {
+    if (isAdding) return;
+    try {
+      setIsAdding(true);
+      const res = await fetch("http://localhost:8090/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_id: productData?.product_id,
+          quantity: quantity,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        await Promise.all([
+          dispatch(fetchCartItems()).unwrap(),
+          dispatch(fetchCartCount()).unwrap(),
+        ]);
+        updateCart("add_item");
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Something went wrong while adding the product to your cart.");
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !productData) {
+    return <div>Error loading product details.</div>;
+  }
+  //===============================
   return (
     <div className="grid h-full w-full grid-cols-1 gap-5 p-7 lg:grid-cols-3 lg:px-20 lg:py-10">
       <div className="title and image h-full w-full p-2 lg:col-span-2 lg:px-20 lg:py-10">
-        <img
+        {/* <img
           className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
           src={
             productData?.product_img?.length
               ? productData.product_img[0].image_url
               : ""
           }
-        />
+        /> */}
+        {/* aku ganti ini dulu soalnya td error kalo kosong src nya */}
+        {productData?.product_img?.length ? (
+          <img
+            className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
+            src={productData.product_img[0].image_url}
+            alt={productData.product_name}
+          />
+        ) : null}
+        {/* ======================================================= */}
 
         <div className="flex items-center justify-between py-2 lg:py-5">
           <h1 className="py-3 text-3xl font-bold lg:py-2 lg:font-semibold">
@@ -60,7 +124,13 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
           </h1>
         </div>
         <h1 className="pb-4 text-lg font-bold lg:text-lg lg:font-semibold">
-          Available Stock : {productData.stock ? productData.stock : "0"}
+          {/* Available Stock : {productData.stock ? productData.stock : "0"} */}
+          {/* aku ganti ini dulu */}
+          Available Stock :{" "}
+          {productData.stock && productData.stock.quantity
+            ? productData.stock.quantity
+            : "0"}
+          {/* ============================= */}
         </h1>
         <div className="description text-sm lg:text-base">
           <h1>{productData.product_description}</h1>
@@ -73,7 +143,33 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
         </div>
       </div>
       <div className="product cart h-full w-full bg-blue-700 lg:col-span-1 lg:px-20 lg:py-10">
-        TOMBOL ADD TO CART HERE
+        {/* TOMBOL ADD TO CART HERE */}
+        {/* -------------------------------------- */}
+        <div className="rounded border bg-white p-4 shadow-sm">
+          <h3 className="mb-4 text-xl font-medium">Add to Cart</h3>
+          <div className="mt-2 flex items-center space-x-2">
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) =>
+                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+              }
+              className="w-16 rounded border p-1"
+              disabled={isAdding}
+            />
+            <button
+              onClick={handleAddToCart}
+              className={`rounded bg-[#80ED99] px-4 py-2 text-black hover:bg-[#60cd79] ${
+                isAdding ? "cursor-not-allowed opacity-50" : ""
+              }`}
+              disabled={isAdding}
+            >
+              {isAdding ? "Adding..." : "Add to Cart"}
+            </button>
+          </div>
+        </div>
+        {/* --------------------------- */}
       </div>
     </div>
   );

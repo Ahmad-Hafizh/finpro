@@ -4,7 +4,7 @@ import "./globals.css";
 import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import ReduxProvider from "@/components/ReduxProvider";
-// import { CartProvider } from "@/contexts/CartContext";
+import { CartProvider } from "@/contexts/CartContext";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 
@@ -35,12 +35,12 @@ export default function RootLayout({
       >
         <SessionProvider>
           <ReduxProvider>
-            {/* <CartProvider> */}
-            <Navbar />
-            <div className="my-20 h-full w-full">{children}</div>
-            <Toaster />
-            <Botbar />
-            {/* </CartProvider> */}
+            <CartProvider>
+              <Navbar />
+              <div className="my-20 h-full w-full">{children}</div>
+              <Toaster />
+              <Botbar />
+            </CartProvider>
           </ReduxProvider>
         </SessionProvider>
       </body>

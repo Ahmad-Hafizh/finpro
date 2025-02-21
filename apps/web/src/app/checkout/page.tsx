@@ -105,75 +105,94 @@ const CheckoutPage: React.FC = () => {
   };
 
   if (selectedItems.length === 0) {
-    return <div>Tidak ada item yang dipilih untuk checkout.</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white p-4">
+        <p className="text-xl text-gray-600">
+          Tidak ada item yang dipilih untuk checkout.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="mx-auto max-w-3xl p-4">
-      <h1 className="mb-4 text-2xl font-bold">Checkout Pesanan</h1>
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold">Detail Pesanan</h2>
-        <ul>
-          {selectedItems.map((item) => (
-            <li key={item.cart_item_id} className="mb-2 border p-2">
-              <div className="flex items-center">
+    <div className="min-h-screen bg-white px-4 py-8">
+      <div className="mx-auto max-w-3xl">
+        <h1 className="mb-6 text-center text-3xl font-bold text-[#57CC99]">
+          Checkout Pesanan
+        </h1>
+        <div className="mb-6">
+          <h2 className="mb-4 text-xl font-semibold text-gray-800">
+            Detail Pesanan
+          </h2>
+          <ul className="space-y-4">
+            {selectedItems.map((item) => (
+              <li
+                key={item.cart_item_id}
+                className="flex items-center rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+              >
                 {item.product.product_img &&
                 item.product.product_img.length > 0 ? (
                   <img
                     src={item.product.product_img[0].url}
                     alt={item.product.product_name}
-                    className="mr-4 h-16 w-16 object-cover"
+                    className="mr-4 h-20 w-20 rounded object-cover"
                   />
                 ) : (
-                  <div className="mr-4 h-16 w-16 bg-gray-100" />
+                  <div className="mr-4 h-20 w-20 rounded bg-gray-100" />
                 )}
-                <div>
-                  <p>{item.product.product_name}</p>
-                  <p>Harga: Rp {item.product.product_price.toLocaleString()}</p>
-                  <p>Jumlah: {item.quantity}</p>
+                <div className="flex-1">
+                  <p className="mb-1 text-lg font-semibold text-gray-800">
+                    {item.product.product_name}
+                  </p>
+                  <p className="text-gray-600">
+                    Harga: Rp {item.product.product_price.toLocaleString()}
+                  </p>
+                  <p className="text-gray-600">Jumlah: {item.quantity}</p>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-2 font-bold">
-          Total Harga: Rp {totalPrice.toLocaleString()}
-        </p>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* dropdown alamat */}
-        <div>
-          <label className="mb-1 block font-semibold">
-            Pilih Alamat Pengiriman
-          </label>
-          {addresses.length > 0 ? (
-            <select
-              value={selectedAddress || ""}
-              onChange={(e) => setSelectedAddress(Number(e.target.value))}
-              className="w-full rounded border p-2"
-              required
-            >
-              {addresses.map((address) => (
-                <option key={address.address_id} value={address.address_id}>
-                  {address.street}, {address.city}, {address.province}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <p className="text-sm text-gray-500">
-              Belum ada alamat. Silahkan tambahkan alamat terlebih dahulu.
-            </p>
-          )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-right text-2xl font-bold text-gray-800">
+            Total Harga: Rp {totalPrice.toLocaleString()}
+          </p>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded bg-blue-500 px-4 py-2 text-white"
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
         >
-          {loading ? "Memproses pesanan…" : "Buat Pesanan"}
-        </button>
-      </form>
+          <div>
+            <label className="mb-2 block text-lg font-semibold text-gray-800">
+              Pilih Alamat Pengiriman
+            </label>
+            {addresses.length > 0 ? (
+              <select
+                value={selectedAddress || ""}
+                onChange={(e) => setSelectedAddress(Number(e.target.value))}
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-[#57CC99] focus:ring focus:ring-[#57CC99] focus:ring-opacity-50"
+                required
+              >
+                {addresses.map((address) => (
+                  <option key={address.address_id} value={address.address_id}>
+                    {address.street}, {address.city}, {address.province}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Belum ada alamat. Silahkan tambahkan alamat terlebih dahulu.
+              </p>
+            )}
+          </div>
+          {error && <p className="text-center text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-md bg-[#57CC99] py-3 text-center text-xl font-semibold text-white transition-colors duration-200 hover:bg-[#80ED99]"
+          >
+            {loading ? "Memproses pesanan…" : "Buat Pesanan"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
