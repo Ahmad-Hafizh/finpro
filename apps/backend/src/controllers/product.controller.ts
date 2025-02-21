@@ -10,7 +10,7 @@ import { uploadImage } from "../utils/cloudinary";
 export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
     try {
-      const { page, search, cat, sort, del } = req.query;
+      const { page, search, cat, sort, del, store } = req.query;
       console.log(cat);
       const pageNumber = parseInt(page as string) || 1;
       const pageSize = 8;
@@ -18,6 +18,7 @@ export class ProductController {
       const keyword = search as string;
       const sortBy = sort as string;
       const deletedAt = del as string;
+      const theStore = store as string;
 
       const objectPayload = {
         category,
@@ -26,6 +27,7 @@ export class ProductController {
         keyword,
         sortBy,
         deletedAt,
+        theStore,
       };
 
       const result = await findProduct(objectPayload);
