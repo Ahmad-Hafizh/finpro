@@ -1,7 +1,7 @@
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
-import { signInSchema } from "../../../schemas/authSchema";
+import { signInSchema } from "../../schemas/authSchema";
 import { callAPI } from "@/config/axios";
 
 export default {

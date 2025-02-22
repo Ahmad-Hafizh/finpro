@@ -1,6 +1,5 @@
 "use server";
-import { callAPI } from "@/config/axios";
-import { signIn } from "@/config/auth";
+import { signIn } from "../auth";
 import { AuthError } from "next-auth";
 
 export const onSignIn = async (values: { email: string; password: string }) => {

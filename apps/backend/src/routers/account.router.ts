@@ -22,6 +22,8 @@ export class AccountRouter {
 
     this.route.post('/get-user-by-id', this.accountController.getUserById);
     this.route.post('/oauth-signup', this.accountController.createProfileReferral);
+
+    this.route.patch('/update-user', this.accountController.updateUser);
   }
 
   public getRouter() {

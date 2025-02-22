@@ -18,7 +18,7 @@ export class AccountController {
         return ResponseHandler.error(res, 404, 'user is already exist');
       }
 
-      const createUserFlow = await prisma.$transaction(async (tx) => {
+      const createUserFlow = await prisma.$transaction(async (tx: any) => {
         const user = await tx.user.create({
           data: {
             email: email.toLowerCase(),
@@ -135,7 +135,7 @@ export class AccountController {
         return ResponseHandler.success(res, 200, 'profile is already exist');
       }
 
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         const referralCode: string = `${name?.slice(0, 4).toUpperCase() ?? 'USER'}${Math.round(Math.random() * 10000).toString()}`;
         const profile = await tx.profile.create({
           data: {
@@ -193,6 +193,35 @@ export class AccountController {
       });
 
       return ResponseHandler.success(res, 201, 'Reset password is success');
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
+
+  async updateUser(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const { email, name, phone } = req.body;
+
+      const exist = await findUser(email);
+      if (!exist) {
+        return ResponseHandler.error(res, 404, 'user not found');
+      }
+
+      await prisma.$transaction(async (tx: any) => {
+        await tx.user.update({
+          where: { id: exist.id },
+          data: { name },
+        });
+
+        if (phone) {
+          await tx.profile.update({
+            where: { user_id: exist.id },
+            data: { phone },
+          });
+        }
+      });
+
+      return ResponseHandler.success(res, 200, 'update success');
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }

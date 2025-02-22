@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "../../../../packages/database/src/client";
+import { prisma } from "../../../packages/database/src/client";
 import authConfig from "./auth.config";
-import { callAPI } from "./axios";
+import { callAPI } from "./config/axios";
 import { redirect } from "next/navigation";
 
 export const {
@@ -17,7 +17,7 @@ export const {
   callbacks: {
     signIn: async ({ user, account }) => {
       if (account?.provider !== "credentials") {
-        const response = await callAPI.post("/account/oauth-signup", {
+        await callAPI.post("/account/oauth-signup", {
           name: user.name,
           id: user.id,
         });
@@ -38,11 +38,9 @@ export const {
         return false;
       }
 
-      console.log("user", user);
-
       return true;
     },
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token }) => {
       if (!token.sub) return token;
 
       const response = await callAPI.post("/account/get-user-by-id", {

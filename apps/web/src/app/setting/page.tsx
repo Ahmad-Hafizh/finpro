@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { UserRoundPen, MapPinned, UsersRound } from "lucide-react";
-import { auth } from "@/config/auth";
+import { auth } from "../../auth";
 import Image from "next/image";
 
 const SettingPage = async () => {
