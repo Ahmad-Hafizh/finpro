@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { callAPI } from "@/config/axios";
 
 interface Order {
   order_id: number;
@@ -18,20 +19,14 @@ const PaymentProofListPage: React.FC = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8090/order", {
-        method: "GET",
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal mengambil order");
-      }
-      const data = await res.json();
+      const response = await callAPI.get("/order");
+      const data = response.data;
       const pendingOrders = data.filter(
         (order: Order) => order.status === "menunggu_pembayaran",
       );
       setOrders(pendingOrders);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }

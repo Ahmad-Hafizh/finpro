@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { callAPI } from "@/config/axios";
 
 interface OrderItem {
   order_item_id: number;
@@ -60,8 +61,8 @@ const OrderListPage: React.FC = () => {
   );
   const [searchDate, setSearchDate] = useState<string>("");
   const [searchOrderNumber, setSearchOrderNumber] = useState<string>("");
-
   const [currentTime, setCurrentTime] = useState<number>(Date.now());
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(Date.now());
@@ -75,24 +76,10 @@ const OrderListPage: React.FC = () => {
   }) => {
     setLoading(true);
     try {
-      let url = "http://localhost:8090/order";
-      const queryParams: Record<string, string> = {};
-      if (params) {
-        if (params.date) queryParams.date = params.date;
-        if (params.order_number) queryParams.order_number = params.order_number;
-      }
-      const queryString = new URLSearchParams(queryParams).toString();
-      if (queryString) url = `${url}?${queryString}`;
-
-      const res = await fetch(url, { method: "GET" });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal mengambil pesanan");
-      }
-      const data = await res.json();
-      setOrders(data);
+      const response = await callAPI.get("/order", { params });
+      setOrders(response.data);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }
@@ -110,38 +97,25 @@ const OrderListPage: React.FC = () => {
     const reason = prompt("Masukkan alasan pembatalan pesanan:");
     if (!reason) return;
     try {
-      const res = await fetch(`http://localhost:8090/order/${orderId}/cancel`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reason }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal membatalkan pesanan");
-      }
+      await callAPI.post(
+        `/order/${orderId}/cancel`,
+        { reason },
+        { headers: { "Content-Type": "application/json" } },
+      );
       alert("Pesanan berhasil dibatalkan.");
       fetchOrders();
     } catch (err: any) {
-      alert(err.message);
+      alert(err.response?.data?.error || err.message);
     }
   };
 
   const handleConfirmOrder = async (orderId: number) => {
     try {
-      const res = await fetch(
-        `http://localhost:8090/order/${orderId}/confirm`,
-        {
-          method: "POST",
-        },
-      );
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal mengkonfirmasi pesanan");
-      }
+      await callAPI.post(`/order/${orderId}/confirm`);
       alert("Pesanan berhasil dikonfirmasi.");
       fetchOrders();
     } catch (err: any) {
-      alert(err.message);
+      alert(err.response?.data?.error || err.message);
     }
   };
 
@@ -241,7 +215,6 @@ const OrderListPage: React.FC = () => {
           const deadline =
             new Date(order.order_date).getTime() + 60 * 60 * 1000;
           const remainingTime = deadline - currentTime;
-
           return (
             <div
               key={order.order_id}
