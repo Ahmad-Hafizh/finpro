@@ -60,25 +60,16 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     if (isAdding) return;
     try {
       setIsAdding(true);
-      const res = await fetch("http://localhost:8090/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_id: productData?.product_id,
-          quantity: quantity,
-        }),
+      await callAPI.post("/cart", {
+        product_id: productData?.product_id,
+        quantity: quantity,
       });
-      const data = await res.json();
-      if (res.ok) {
-        await Promise.all([
-          dispatch(fetchCartItems()).unwrap(),
-          dispatch(fetchCartCount()).unwrap(),
-        ]);
-        updateCart("add_item");
-      } else {
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
+      await Promise.all([
+        dispatch(fetchCartItems()).unwrap(),
+        dispatch(fetchCartCount()).unwrap(),
+      ]);
+      updateCart("add_item");
+    } catch (error: any) {
       console.error("Error adding to cart:", error);
       alert("Something went wrong while adding the product to your cart.");
     } finally {

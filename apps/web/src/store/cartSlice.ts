@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { callAPI } from "@/config/axios";
 
 export interface ProductImg {
   url: string;
@@ -29,78 +30,55 @@ export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:8090/cart/items");
-      const data: CartResponse = await res.json();
-      if (!res.ok) {
-        return rejectWithValue(data);
-      }
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
+      const response = await callAPI.get("/cart/items");
+      return response.data as CartResponse;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 export const fetchCartCount = createAsyncThunk(
   "cart/fetchCartCount",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:8090/cart/count");
-      const data = await res.json();
-      if (!res.ok) {
-        return rejectWithValue(data);
-      }
-      return data.count;
-    } catch (error) {
-      return rejectWithValue(error);
+      const response = await callAPI.get("/cart/count");
+      return response.data.count;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
   async (
     { cart_item_id, quantity }: { cart_item_id: number; quantity: number },
-    { dispatch, rejectWithValue }
+    { dispatch, rejectWithValue },
   ) => {
     try {
-      const res = await fetch(`http://localhost:8090/cart/${cart_item_id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity }),
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        return rejectWithValue(errorData.error);
-      }
-
+      await callAPI.patch(`/cart/${cart_item_id}`, { quantity });
       dispatch(fetchCartItems());
       dispatch(fetchCartCount());
       return { cart_item_id, quantity };
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.error || error.message);
     }
-  }
+  },
 );
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
   async (cart_item_id: number, { dispatch, rejectWithValue }) => {
     try {
-      const res = await fetch(`http://localhost:8090/cart/${cart_item_id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        return rejectWithValue(errorData.error);
-      }
+      await callAPI.delete(`/cart/${cart_item_id}`);
       dispatch(fetchCartItems());
       dispatch(fetchCartCount());
       return cart_item_id;
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.error || error.message);
     }
-  }
+  },
 );
 
 interface CartState {
@@ -144,4 +122,5 @@ export const cartSlice = createSlice({
       });
   },
 });
+
 export default cartSlice.reducer;
