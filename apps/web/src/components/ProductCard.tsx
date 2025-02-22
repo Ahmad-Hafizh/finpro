@@ -11,7 +11,7 @@ interface ProductCardProps {
   productName: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const ProductCards: React.FC<ProductCardProps> = ({
   productId,
   productName,
 }) => {
@@ -78,4 +78,4 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-export default ProductCard;
+export default ProductCards;

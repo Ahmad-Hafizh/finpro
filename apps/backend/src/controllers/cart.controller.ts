@@ -10,11 +10,7 @@ export class CartController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-<<<<<<< HEAD
-        include: { accounts: true, profile: true },
-=======
         include: { accounts: true },
->>>>>>> main
       });
 
       if (!user || !user.emailVerified) {

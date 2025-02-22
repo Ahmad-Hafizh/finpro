@@ -3,7 +3,7 @@
 
 import React from "react";
 import TestNavbar from "../../components/testingnavbar";
-import ProductCard from "../../components/ProductCard";
+import ProductCards from "../../components/ProductCard";
 
 const products = [
   { productId: 1, productName: "Product 1" },
@@ -16,7 +16,7 @@ export default function TestPage() {
       <TestNavbar />
       <main className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3">
         {products.map((product) => (
-          <ProductCard key={product.productId} {...product} />
+          <ProductCards key={product.productId} {...product} />
         ))}
       </main>
     </>

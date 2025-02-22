@@ -20,6 +20,7 @@ export class OrderRouter {
       this.orderController.uploadPaymentProof
     );
     this.route.get("/", this.orderController.getOrderList);
+    this.route.get("/:order_id", this.orderController.getOrderById);
     this.route.post("/:order_id/cancel", this.orderController.cancelOrder);
     this.route.post("/:order_id/confirm", this.orderController.confirmOrder);
   }

@@ -4,7 +4,6 @@ import "./globals.css";
 import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
 import StoreProvider from "@/app/StoreProvider";
-// import { CartProvider } from "@/contexts/CartContext";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 
