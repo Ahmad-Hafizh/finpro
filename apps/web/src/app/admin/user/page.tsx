@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import EditAdminForm from "./components/EditAdminForm";
-import { call } from "@/app/config/axios";
 import FilterBox from "./components/FilterBox";
 import SearchBox from "./components/SearchBox";
+import { callAPI } from "@/config/axios";
 
 const userPage = () => {
   const [action, setAction] = useState<string | null>(null);
@@ -22,7 +22,7 @@ const userPage = () => {
 
   const getData = async () => {
     try {
-      const response = await call.get("/admin");
+      const response = await callAPI.get("/admin");
       const data = response.data.data;
       setData(data);
     } catch (error) {
@@ -190,24 +190,24 @@ const userPage = () => {
   return (
     <>
       <HeaderDashboard pagename="User Management" />
-      <div className="flex flex-col p-5 h-full w-full gap-5">
-        <div className="informasi rounded-lg bg-gradient-to-r from-green-300 to-green-200 h-1/5  w-full flex">
-          <div className="profile flex flex-col justify-center items-start px-20 h-full w-full">
+      <div className="flex h-full w-full flex-col gap-5 p-5">
+        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
+          <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
             <h2 className="text-2xl font-bold">Welcome, Name!</h2>
             <h2 className="text-lg">Manage or see user information here.</h2>
           </div>
-          <div className="flex justify-end items-center px-20 h-full w-full">
+          <div className="flex h-full w-full items-center justify-end px-20">
             <Button>Add new admin</Button>
           </div>
         </div>
-        <div className="main flex gap-5 h-full w-full">
+        <div className="main flex h-full w-full gap-5">
           <FilterBox />
-          <div className="mainpart flex flex-col w-full h-full gap-5">
-            <div className="searchbox rounded-lg h-14 w-full">
-             <SearchBox/>
+          <div className="mainpart flex h-full w-full flex-col gap-5">
+            <div className="searchbox h-14 w-full rounded-lg">
+              <SearchBox />
             </div>
             <div className="flex flex-col gap-8">
-              <div className="table rounded-lg shadow-sm h-fit w-full">
+              <div className="table h-fit w-full rounded-lg shadow-sm">
                 <DataTable
                   columns={columns(setAction, setAdminId, setOpenDialog)}
                   data={data ? data : adminDataDummy}
@@ -236,7 +236,7 @@ const userPage = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="pagination flex justify-center items-center">
+              <div className="pagination flex items-center justify-center">
                 <PaginationTable currentPage={1} totalPage={3} />
               </div>
             </div>

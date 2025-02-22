@@ -3,10 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Botbar from "@/components/global/BottomBar";
 import Navbar from "@/components/global/Nav";
-import ReduxProvider from "@/components/ReduxProvider";
-import { CartProvider } from "@/contexts/CartContext";
+import StoreProvider from "@/app/StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
+import SuspenseWrapper from "./SuspenseWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,16 +33,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <ReduxProvider>
-            <CartProvider>
+        <SuspenseWrapper>
+          <SessionProvider>
+            <StoreProvider>
+              {/* <CartProvider> */}
               <Navbar />
-              <div className="my-20 h-full w-full">{children}</div>
+              <div className="container relative mx-auto max-w-7xl px-[5%]">
+                {children}
+              </div>
               <Toaster />
               <Botbar />
-            </CartProvider>
-          </ReduxProvider>
-        </SessionProvider>
+              {/* </CartProvider> */}
+            </StoreProvider>
+          </SessionProvider>
+        </SuspenseWrapper>
       </body>
     </html>
   );

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItems, fetchCartCount } from "@/store/cartSlice";
+import { AppDispatch } from "@/lib/redux/store";
+import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 

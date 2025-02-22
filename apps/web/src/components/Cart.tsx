@@ -5,13 +5,13 @@ import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RootState, AppDispatch } from "@/store/store";
+import { RootState, AppDispatch } from "@/lib/redux/store";
 import {
   fetchCartItems,
   fetchCartCount,
   updateCartItemQuantity,
   deleteCartItem,
-} from "@/store/cartSlice";
+} from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 
@@ -129,9 +129,9 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-white p-4 font-sans md:p-8">
+    <div className="relative min-h-screen w-full bg-white p-4 font-sans md:p-8">
       {/* MOBILE LAYOUT */}
-      <div className="mx-auto max-w-4xl md:hidden">
+      <div className="mx-auto h-full md:hidden">
         <div className="mb-6">
           <div className="mb-4 flex items-center gap-3">
             <ShoppingCart className="h-8 w-8 text-[#80ED99]" />
@@ -242,7 +242,7 @@ const Cart: React.FC = () => {
       </div>
 
       {/* DESKTOP LAYOUT */}
-      <div className="mx-auto hidden max-w-4xl md:block">
+      <div className="mx-auto hidden h-full md:block">
         <div className="mb-6 flex items-center gap-3">
           <ShoppingCart className="h-8 w-8 text-[#80ED99]" />
           <h1 className="text-2xl font-normal text-black">

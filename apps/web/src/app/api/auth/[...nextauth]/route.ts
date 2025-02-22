@@ -1,1 +1,1 @@
-export { GET, POST } from "../../../../config/auth";
+export { GET, POST } from "../../../../auth";
