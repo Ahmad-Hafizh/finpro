@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { callAPI } from "@/config/axios";
 
 interface CartItem {
   cart_item_id: number;
@@ -49,18 +50,14 @@ const CheckoutPage: React.FC = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const res = await fetch("http://localhost:8090/address");
-        if (!res.ok) {
-          throw new Error("Gagal mengambil data alamat");
-        }
-        const data = await res.json();
-        setAddresses(data);
-        if (data.length > 0) {
-          setSelectedAddress(data[0].address_id);
+        const response = await callAPI.get("/address");
+        setAddresses(response.data);
+        if (response.data && response.data.length > 0) {
+          setSelectedAddress(response.data[0].address_id);
         }
       } catch (err: any) {
-        console.error(err);
-        setError(err.message);
+        console.error("Error fetching addresses:", err);
+        setError(err.response?.data?.message || err.message);
       }
     };
     fetchAddresses();
@@ -85,20 +82,14 @@ const CheckoutPage: React.FC = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:8090/order/new", {
-        method: "POST",
+      const response = await callAPI.post("/order/new", payload, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal membuat pesanan");
-      }
-      const createdOrder = await res.json();
+      const createdOrder = response.data;
       localStorage.removeItem("selectedCartItems");
       router.push(`/payment-proof/${createdOrder.order_id}`);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }

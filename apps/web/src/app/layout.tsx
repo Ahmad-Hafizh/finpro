@@ -6,6 +6,7 @@ import Navbar from "@/components/global/Nav";
 import StoreProvider from "@/app/StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
+import SuspenseWrapper from "./SuspenseWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,18 +33,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <StoreProvider>
-            {/* <CartProvider> */}
-            <Navbar />
-            <div className="container relative mx-auto max-w-7xl px-[5%]">
-              {children}
-            </div>
-            <Toaster />
-            <Botbar />
-            {/* </CartProvider> */}
-          </StoreProvider>
-        </SessionProvider>
+        <SuspenseWrapper>
+          <SessionProvider>
+            <StoreProvider>
+              {/* <CartProvider> */}
+              <Navbar />
+              <div className="container relative mx-auto max-w-7xl px-[5%]">
+                {children}
+              </div>
+              <Toaster />
+              <Botbar />
+              {/* </CartProvider> */}
+            </StoreProvider>
+          </SessionProvider>
+        </SuspenseWrapper>
       </body>
     </html>
   );

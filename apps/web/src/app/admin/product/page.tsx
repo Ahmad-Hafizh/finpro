@@ -2,7 +2,7 @@
 import HeaderDashboard from "../components/header";
 import PaginationTable from "../components/Pagination";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import AddProduct from "./components/AddProduct";
 import { DataTable } from "./components/data-table";
@@ -110,7 +110,7 @@ const productPage = () => {
   ];
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />
       <div className="flex h-full w-full flex-col gap-5 p-5">
         <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
@@ -195,7 +195,7 @@ const productPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </Suspense>
   );
 };
 
