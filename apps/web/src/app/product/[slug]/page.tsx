@@ -5,11 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 
 //===========================
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItems, fetchCartCount } from "@/store/cartSlice";
+import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/redux/hooks";
 //===============================
 
 interface IProductDetailPage {
@@ -25,7 +24,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { updateCart } = useCart();
   const router = useRouter();
   //===========================

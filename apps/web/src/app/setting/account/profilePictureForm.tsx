@@ -3,22 +3,20 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-interface ISession {
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-    isOauth: boolean;
-    role: string;
-  };
+interface IProfilePictureFormProps {
+  image: string;
+  isOauth: boolean;
 }
 
-const ProfilePictureForm: React.FC<{ session: ISession }> = ({ session }) => {
+const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
+  image,
+  isOauth,
+}) => {
   return (
     <>
       <div className="relative aspect-square w-40 overflow-hidden rounded-full bg-gray-300">
         <Image
-          src={session?.user.image || ""}
+          src={image || ""}
           alt="profile picture"
           fill
           className="absolute"
@@ -31,9 +29,9 @@ const ProfilePictureForm: React.FC<{ session: ISession }> = ({ session }) => {
           className=""
           type="file"
           placeholder="profile picture"
-          disabled={session?.user.isOauth}
+          disabled={isOauth}
         />
-        <Button type="button" disabled={session?.user.isOauth}>
+        <Button type="button" disabled={isOauth}>
           Submit
         </Button>
       </div>

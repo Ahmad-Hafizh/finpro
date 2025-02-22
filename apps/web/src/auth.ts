@@ -1,9 +1,18 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "../../../packages/database/src/client";
 import authConfig from "./auth.config";
 import { callAPI } from "./config/axios";
 import { redirect } from "next/navigation";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      role: string;
+      isOauth: boolean;
+    } & DefaultSession["user"];
+  }
+}
 
 export const {
   auth,

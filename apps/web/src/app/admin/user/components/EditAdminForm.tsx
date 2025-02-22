@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
-import { call } from "@/app/config/axios";
 import { useToast } from "@/hooks/use-toast";
+import { callAPI } from "@/config/axios";
 
 const formSchema = z.object({
   name: z.string().optional(),
@@ -125,7 +125,7 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
 
   const submitApi = async (updatedValues: any) => {
     try {
-      const submit = await call.patch("/admin", updatedValues);
+      const submit = await callAPI.patch("/admin", updatedValues);
       console.log("INI SUBMIT", submit);
       if (submit.data.isSuccess) {
         toast({
@@ -148,7 +148,7 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col gap-0 my-5"
+        className="my-5 flex flex-col gap-0 space-y-8"
       >
         <FormField
           control={form.control}

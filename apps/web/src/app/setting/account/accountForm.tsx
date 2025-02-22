@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import React, { useEffect } from "react";
 import { callAPI } from "@/config/axios";
 import { z } from "zod";
 import { updateProfileSchema } from "../../../../../schemas/authSchema";
@@ -15,22 +15,12 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 
-interface ISession {
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-    isOauth: boolean;
-    role: string;
-  };
-}
-
-const AccountForm = ({ session }: { session: ISession }) => {
+const AccountForm = ({ name, email, isOauth }: any) => {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      name: session?.user?.name || "",
-      email: session?.user?.email || "",
+      name: name || "",
+      email: email || "",
       phone: "",
     },
   });
@@ -61,7 +51,7 @@ const AccountForm = ({ session }: { session: ISession }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} disabled={session.user.isOauth} />
+                <Input {...field} disabled={isOauth} />
               </FormControl>
             </FormItem>
           )}
@@ -73,7 +63,7 @@ const AccountForm = ({ session }: { session: ISession }) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} disabled={session.user.isOauth} />
+                <Input {...field} disabled={isOauth} />
               </FormControl>
             </FormItem>
           )}
