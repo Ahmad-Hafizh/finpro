@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Link from "next/link";
-import { FaGoogle } from "react-icons/fa";
+// import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from "../../../../../schemas/authSchema";
@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { onSignIn } from "@/actions/signInAction";
+import GoogleSignInButton from "@/components/global/GoogleSignInButton";
 
 const SignInPage = () => {
   const [loading, setLoading] = useState(false);
@@ -35,12 +36,11 @@ const SignInPage = () => {
     await onSignIn(values).then((res) => {
       if (res.error) {
         setError(res.error);
-        setLoading(false);
       } else {
         setError("");
-        setLoading(false);
       }
     });
+    setLoading(false);
   };
   return (
     <div className="flex h-screen w-full items-center justify-center">
@@ -106,21 +106,7 @@ const SignInPage = () => {
           <hr className="w-full" />
         </div>
         <div className="flex items-center justify-center gap-4">
-          <Link href="/apple">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
-          <Link href="/google">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
-          <Link href="/facebook">
-            <Button className="flex h-16 w-16 items-center rounded-full border bg-white">
-              <FaGoogle className="text-3xl text-black" />
-            </Button>
-          </Link>
+          <GoogleSignInButton />
         </div>
         <div className="">
           <p className="text-center text-sm">

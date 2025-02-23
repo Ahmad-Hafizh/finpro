@@ -25,10 +25,10 @@ interface EditCategoryFormProps {
   setOpenDialog: (open: boolean) => void;
 }
 
-const EditCategory = ({
+const EditCategory: React.FC<EditCategoryFormProps> = ({
   categoryData,
   setOpenDialog,
-}: EditCategoryFormProps) => {
+}) => {
   const { toast } = useToast();
   const [category, setCategory] = useState<{ id: number; name: string }>({
     id: 0,

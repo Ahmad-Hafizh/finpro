@@ -12,6 +12,7 @@ import EditCategory from "./components/EditCategory";
 import { callAPI } from "@/config/axios";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Suspense } from "react";
 
 const categoryPage = () => {
   const { toast } = useToast();
@@ -67,7 +68,7 @@ const categoryPage = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />
       <div className="flex h-full w-full flex-col gap-5 p-5">
         <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
@@ -164,7 +165,7 @@ const categoryPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </Suspense>
   );
 };
 

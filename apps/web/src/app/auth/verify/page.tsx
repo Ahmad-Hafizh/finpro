@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,7 @@ const VerifyPage = () => {
           },
           { headers: { Authorization: `Bearer ${token}` } },
         );
-        console.log(response);
+        console.log(response.data.message);
       } catch (error) {
         console.log(error);
       }

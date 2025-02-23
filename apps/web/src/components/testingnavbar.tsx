@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store/store";
-import { fetchCartCount } from "@/store/cartSlice";
+import { RootState, AppDispatch } from "@/lib/redux/store";
+import { fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 
 const TestingNavbar: React.FC = () => {
@@ -45,7 +45,7 @@ const TestingNavbar: React.FC = () => {
         <Button variant="ghost" size="icon" className="relative">
           <ShoppingCart className="h-6 w-6 text-black" />
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-[#80ED99] text-black text-xs font-medium px-2 py-1 rounded-full">
+            <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
               {cartCount}
             </span>
           )}

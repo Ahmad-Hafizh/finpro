@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Navbar from "@/components/global/Nav";
+import { callAPI } from "@/config/axios";
 
 interface OrderDetail {
   order_id: number;
@@ -34,14 +35,10 @@ const PaymentProofUploadPage: React.FC = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:8090/order/${orderId}`);
-        if (!res.ok) {
-          throw new Error("Gagal mengambil detail pesanan");
-        }
-        const data = await res.json();
-        setOrderDetail(data);
+        const response = await callAPI.get(`/order/${orderId}`);
+        setOrderDetail(response.data);
       } catch (err: any) {
-        setError(err.message);
+        setError(err.response?.data?.error || err.message);
       }
     };
 
@@ -82,22 +79,13 @@ const PaymentProofUploadPage: React.FC = () => {
     formData.append("proof", file);
 
     try {
-      const res = await fetch(
-        `http://localhost:8090/order/${orderId}/payment-proof`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal mengupload bukti pembayaran");
-      }
-      await res.json();
+      await callAPI.post(`/order/${orderId}/payment-proof`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       setMessage("Bukti pembayaran berhasil diupload.");
       router.push("/payment-proof");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }
@@ -141,9 +129,6 @@ const PaymentProofUploadPage: React.FC = () => {
                   </li>
                 ))}
               </ul>
-              {/* <p className="mt-4 text-right text-xl font-bold text-gray-800">
-                Total: Rp {orderDetail.total_price.toLocaleString()}
-              </p> */}
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-6">

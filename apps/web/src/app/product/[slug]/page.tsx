@@ -5,11 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 
 //===========================
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { fetchCartItems, fetchCartCount } from "@/store/cartSlice";
+import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/redux/hooks";
 //===============================
 
 interface IProductDetailPage {
@@ -25,7 +24,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { updateCart } = useCart();
   const router = useRouter();
   //===========================
@@ -60,25 +59,16 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     if (isAdding) return;
     try {
       setIsAdding(true);
-      const res = await fetch("http://localhost:8090/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_id: productData?.product_id,
-          quantity: quantity,
-        }),
+      await callAPI.post("/cart", {
+        product_id: productData?.product_id,
+        quantity: quantity,
       });
-      const data = await res.json();
-      if (res.ok) {
-        await Promise.all([
-          dispatch(fetchCartItems()).unwrap(),
-          dispatch(fetchCartCount()).unwrap(),
-        ]);
-        updateCart("add_item");
-      } else {
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
+      await Promise.all([
+        dispatch(fetchCartItems()).unwrap(),
+        dispatch(fetchCartCount()).unwrap(),
+      ]);
+      updateCart("add_item");
+    } catch (error: any) {
       console.error("Error adding to cart:", error);
       alert("Something went wrong while adding the product to your cart.");
     } finally {
