@@ -170,7 +170,10 @@ const Navbar = () => {
             <FiPackage className="text-2xl" />
           </Link>
         </div>
-        <Link href="setting" className="flex items-center justify-start gap-2">
+        <Link
+          href="setting"
+          className={`${session?.user ? "flex" : "hidden"} items-center justify-start gap-2`}
+        >
           <MdOutlineAccountCircle className="text-2xl" />
           <p className="text-xl">{session?.user?.name}</p>
         </Link>

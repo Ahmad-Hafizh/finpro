@@ -5638,7 +5638,7 @@ var require_client = __commonJS({
     exports2.$Enums = {};
     Prisma.prismaVersion = {
       client: "6.3.1",
-      engine: "acc0b9dd43eb689cbd20c9470515d719db10d0b0"
+      engine: "a9055b89e58b4b5bfb59600785423b1db3d0e75d"
     };
     Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError2;
     Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError2;
@@ -5951,7 +5951,7 @@ var require_client = __commonJS({
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.3.1",
-      "engineVersion": "acc0b9dd43eb689cbd20c9470515d719db10d0b0",
+      "engineVersion": "a9055b89e58b4b5bfb59600785423b1db3d0e75d",
       "datasourceNames": [
         "db"
       ],
