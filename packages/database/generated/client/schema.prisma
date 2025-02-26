@@ -151,7 +151,7 @@ model StockJournal {
   stock_journal_id Int      @id @default(autoincrement())
   store_id         Int
   stock_id         Int
-  product_id       String   @unique
+  product_id       String
   quantity         Int
   type             String
   notes            String
@@ -254,6 +254,7 @@ model Discount {
   discount_startdate DateTime
   discount_enddate   DateTime
   isActive           Boolean
+  orders             Order[]
 
   @@map("discount")
 }
@@ -278,23 +279,28 @@ model CartItem {
 }
 
 model Order {
-  order_id      Int           @id @default(autoincrement())
-  order_number  String?       @unique
-  store_id      Int
-  address_id    Int
-  total_price   Int
-  status        OrderStatus
-  order_date    DateTime
-  profile_id    Int
-  createdAt     DateTime?     @default(now())
-  updatedAt     DateTime?     @updatedAt
-  address       Address       @relation(fields: [address_id], references: [address_id])
-  profile       Profile       @relation(fields: [profile_id], references: [profile_id])
-  store         Store         @relation(fields: [store_id], references: [store_id])
-  order_cancel  OrderCancel?
-  admin_orders  AdminOrder[]
-  order_items   OrderItem[]
-  payment_proof PaymentProof?
+  order_id        Int           @id @default(autoincrement())
+  order_number    String?       @unique
+  store_id        Int
+  address_id      Int
+  total_price     Int
+  shipping_price  Int?
+  total_payment   Int?
+  tracking_number String?
+  discount_id     Int?
+  status          OrderStatus
+  order_date      DateTime
+  profile_id      Int
+  createdAt       DateTime?     @default(now())
+  updatedAt       DateTime?     @updatedAt
+  address         Address       @relation(fields: [address_id], references: [address_id])
+  profile         Profile       @relation(fields: [profile_id], references: [profile_id])
+  store           Store         @relation(fields: [store_id], references: [store_id])
+  discount        Discount?     @relation(fields: [discount_id], references: [discount_id])
+  order_cancel    OrderCancel?
+  admin_orders    AdminOrder[]
+  order_items     OrderItem[]
+  payment_proof   PaymentProof?
 }
 
 model OrderItem {
