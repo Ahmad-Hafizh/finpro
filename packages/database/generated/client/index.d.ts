@@ -142,6 +142,15 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const adminPosition: {
+  store_manager: 'store_manager',
+  store_delivery: 'store_delivery',
+  store_logistic: 'store_logistic'
+};
+
+export type adminPosition = (typeof adminPosition)[keyof typeof adminPosition]
+
+
 export const StockType: {
   in: 'in',
   out: 'out',
@@ -185,6 +194,10 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type adminPosition = $Enums.adminPosition
+
+export const adminPosition: typeof $Enums.adminPosition
 
 export type StockType = $Enums.StockType
 
@@ -8212,30 +8225,42 @@ export namespace Prisma {
     address_id: number | null
     street: string | null
     city: string | null
-    province: string | null
-    island: string | null
     country: string | null
+    lat: string | null
+    lng: string | null
+    post_code: string | null
+    address_name: string | null
+    address_contact: string | null
     profile_id: number | null
+    deleted_at: Date | null
   }
 
   export type AddressMaxAggregateOutputType = {
     address_id: number | null
     street: string | null
     city: string | null
-    province: string | null
-    island: string | null
     country: string | null
+    lat: string | null
+    lng: string | null
+    post_code: string | null
+    address_name: string | null
+    address_contact: string | null
     profile_id: number | null
+    deleted_at: Date | null
   }
 
   export type AddressCountAggregateOutputType = {
     address_id: number
     street: number
     city: number
-    province: number
-    island: number
     country: number
+    lat: number
+    lng: number
+    post_code: number
+    address_name: number
+    address_contact: number
     profile_id: number
+    deleted_at: number
     _all: number
   }
 
@@ -8254,30 +8279,42 @@ export namespace Prisma {
     address_id?: true
     street?: true
     city?: true
-    province?: true
-    island?: true
     country?: true
+    lat?: true
+    lng?: true
+    post_code?: true
+    address_name?: true
+    address_contact?: true
     profile_id?: true
+    deleted_at?: true
   }
 
   export type AddressMaxAggregateInputType = {
     address_id?: true
     street?: true
     city?: true
-    province?: true
-    island?: true
     country?: true
+    lat?: true
+    lng?: true
+    post_code?: true
+    address_name?: true
+    address_contact?: true
     profile_id?: true
+    deleted_at?: true
   }
 
   export type AddressCountAggregateInputType = {
     address_id?: true
     street?: true
     city?: true
-    province?: true
-    island?: true
     country?: true
+    lat?: true
+    lng?: true
+    post_code?: true
+    address_name?: true
+    address_contact?: true
     profile_id?: true
+    deleted_at?: true
     _all?: true
   }
 
@@ -8371,10 +8408,14 @@ export namespace Prisma {
     address_id: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
     profile_id: number
+    deleted_at: Date | null
     _count: AddressCountAggregateOutputType | null
     _avg: AddressAvgAggregateOutputType | null
     _sum: AddressSumAggregateOutputType | null
@@ -8400,10 +8441,14 @@ export namespace Prisma {
     address_id?: boolean
     street?: boolean
     city?: boolean
-    province?: boolean
-    island?: boolean
     country?: boolean
+    lat?: boolean
+    lng?: boolean
+    post_code?: boolean
+    address_name?: boolean
+    address_contact?: boolean
     profile_id?: boolean
+    deleted_at?: boolean
     orders?: boolean | Address$ordersArgs<ExtArgs>
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     _count?: boolean | AddressCountOutputTypeDefaultArgs<ExtArgs>
@@ -8413,10 +8458,14 @@ export namespace Prisma {
     address_id?: boolean
     street?: boolean
     city?: boolean
-    province?: boolean
-    island?: boolean
     country?: boolean
+    lat?: boolean
+    lng?: boolean
+    post_code?: boolean
+    address_name?: boolean
+    address_contact?: boolean
     profile_id?: boolean
+    deleted_at?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["address"]>
 
@@ -8424,10 +8473,14 @@ export namespace Prisma {
     address_id?: boolean
     street?: boolean
     city?: boolean
-    province?: boolean
-    island?: boolean
     country?: boolean
+    lat?: boolean
+    lng?: boolean
+    post_code?: boolean
+    address_name?: boolean
+    address_contact?: boolean
     profile_id?: boolean
+    deleted_at?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["address"]>
 
@@ -8435,13 +8488,17 @@ export namespace Prisma {
     address_id?: boolean
     street?: boolean
     city?: boolean
-    province?: boolean
-    island?: boolean
     country?: boolean
+    lat?: boolean
+    lng?: boolean
+    post_code?: boolean
+    address_name?: boolean
+    address_contact?: boolean
     profile_id?: boolean
+    deleted_at?: boolean
   }
 
-  export type AddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"address_id" | "street" | "city" | "province" | "island" | "country" | "profile_id", ExtArgs["result"]["address"]>
+  export type AddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"address_id" | "street" | "city" | "country" | "lat" | "lng" | "post_code" | "address_name" | "address_contact" | "profile_id" | "deleted_at", ExtArgs["result"]["address"]>
   export type AddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Address$ordersArgs<ExtArgs>
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
@@ -8464,10 +8521,14 @@ export namespace Prisma {
       address_id: number
       street: string
       city: string
-      province: string
-      island: string
       country: string
+      lat: string
+      lng: string
+      post_code: string
+      address_name: string
+      address_contact: string
       profile_id: number
+      deleted_at: Date | null
     }, ExtArgs["result"]["address"]>
     composites: {}
   }
@@ -8896,10 +8957,14 @@ export namespace Prisma {
     readonly address_id: FieldRef<"Address", 'Int'>
     readonly street: FieldRef<"Address", 'String'>
     readonly city: FieldRef<"Address", 'String'>
-    readonly province: FieldRef<"Address", 'String'>
-    readonly island: FieldRef<"Address", 'String'>
     readonly country: FieldRef<"Address", 'String'>
+    readonly lat: FieldRef<"Address", 'String'>
+    readonly lng: FieldRef<"Address", 'String'>
+    readonly post_code: FieldRef<"Address", 'String'>
+    readonly address_name: FieldRef<"Address", 'String'>
+    readonly address_contact: FieldRef<"Address", 'String'>
     readonly profile_id: FieldRef<"Address", 'Int'>
+    readonly deleted_at: FieldRef<"Address", 'DateTime'>
   }
     
 
@@ -9366,6 +9431,7 @@ export namespace Prisma {
     store_id: number | null
     phone: string | null
     position: string | null
+    deleted_at: Date | null
   }
 
   export type AdminMaxAggregateOutputType = {
@@ -9374,6 +9440,7 @@ export namespace Prisma {
     store_id: number | null
     phone: string | null
     position: string | null
+    deleted_at: Date | null
   }
 
   export type AdminCountAggregateOutputType = {
@@ -9382,6 +9449,7 @@ export namespace Prisma {
     store_id: number
     phone: number
     position: number
+    deleted_at: number
     _all: number
   }
 
@@ -9402,6 +9470,7 @@ export namespace Prisma {
     store_id?: true
     phone?: true
     position?: true
+    deleted_at?: true
   }
 
   export type AdminMaxAggregateInputType = {
@@ -9410,6 +9479,7 @@ export namespace Prisma {
     store_id?: true
     phone?: true
     position?: true
+    deleted_at?: true
   }
 
   export type AdminCountAggregateInputType = {
@@ -9418,6 +9488,7 @@ export namespace Prisma {
     store_id?: true
     phone?: true
     position?: true
+    deleted_at?: true
     _all?: true
   }
 
@@ -9513,6 +9584,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at: Date | null
     _count: AdminCountAggregateOutputType | null
     _avg: AdminAvgAggregateOutputType | null
     _sum: AdminSumAggregateOutputType | null
@@ -9540,6 +9612,7 @@ export namespace Prisma {
     store_id?: boolean
     phone?: boolean
     position?: boolean
+    deleted_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
     admin_orders?: boolean | Admin$admin_ordersArgs<ExtArgs>
@@ -9555,6 +9628,7 @@ export namespace Prisma {
     store_id?: boolean
     phone?: boolean
     position?: boolean
+    deleted_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
@@ -9565,6 +9639,7 @@ export namespace Prisma {
     store_id?: boolean
     phone?: boolean
     position?: boolean
+    deleted_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
@@ -9575,9 +9650,10 @@ export namespace Prisma {
     store_id?: boolean
     phone?: boolean
     position?: boolean
+    deleted_at?: boolean
   }
 
-  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"admin_id" | "user_id" | "store_id" | "phone" | "position", ExtArgs["result"]["admin"]>
+  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"admin_id" | "user_id" | "store_id" | "phone" | "position" | "deleted_at", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -9612,6 +9688,7 @@ export namespace Prisma {
       store_id: number
       phone: string
       position: string
+      deleted_at: Date | null
     }, ExtArgs["result"]["admin"]>
     composites: {}
   }
@@ -10046,6 +10123,7 @@ export namespace Prisma {
     readonly store_id: FieldRef<"Admin", 'Int'>
     readonly phone: FieldRef<"Admin", 'String'>
     readonly position: FieldRef<"Admin", 'String'>
+    readonly deleted_at: FieldRef<"Admin", 'DateTime'>
   }
     
 
@@ -10580,27 +10658,33 @@ export namespace Prisma {
     store_id: number | null
     store_name: string | null
     store_address: string | null
+    country: string | null
     city: string | null
     lat: string | null
     lng: string | null
+    isActive: boolean | null
   }
 
   export type StoreMaxAggregateOutputType = {
     store_id: number | null
     store_name: string | null
     store_address: string | null
+    country: string | null
     city: string | null
     lat: string | null
     lng: string | null
+    isActive: boolean | null
   }
 
   export type StoreCountAggregateOutputType = {
     store_id: number
     store_name: number
     store_address: number
+    country: number
     city: number
     lat: number
     lng: number
+    isActive: number
     _all: number
   }
 
@@ -10617,27 +10701,33 @@ export namespace Prisma {
     store_id?: true
     store_name?: true
     store_address?: true
+    country?: true
     city?: true
     lat?: true
     lng?: true
+    isActive?: true
   }
 
   export type StoreMaxAggregateInputType = {
     store_id?: true
     store_name?: true
     store_address?: true
+    country?: true
     city?: true
     lat?: true
     lng?: true
+    isActive?: true
   }
 
   export type StoreCountAggregateInputType = {
     store_id?: true
     store_name?: true
     store_address?: true
+    country?: true
     city?: true
     lat?: true
     lng?: true
+    isActive?: true
     _all?: true
   }
 
@@ -10731,9 +10821,11 @@ export namespace Prisma {
     store_id: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive: boolean
     _count: StoreCountAggregateOutputType | null
     _avg: StoreAvgAggregateOutputType | null
     _sum: StoreSumAggregateOutputType | null
@@ -10759,9 +10851,11 @@ export namespace Prisma {
     store_id?: boolean
     store_name?: boolean
     store_address?: boolean
+    country?: boolean
     city?: boolean
     lat?: boolean
     lng?: boolean
+    isActive?: boolean
     orders?: boolean | Store$ordersArgs<ExtArgs>
     admin?: boolean | Store$adminArgs<ExtArgs>
     stock?: boolean | Store$stockArgs<ExtArgs>
@@ -10775,30 +10869,36 @@ export namespace Prisma {
     store_id?: boolean
     store_name?: boolean
     store_address?: boolean
+    country?: boolean
     city?: boolean
     lat?: boolean
     lng?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["store"]>
 
   export type StoreSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     store_id?: boolean
     store_name?: boolean
     store_address?: boolean
+    country?: boolean
     city?: boolean
     lat?: boolean
     lng?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["store"]>
 
   export type StoreSelectScalar = {
     store_id?: boolean
     store_name?: boolean
     store_address?: boolean
+    country?: boolean
     city?: boolean
     lat?: boolean
     lng?: boolean
+    isActive?: boolean
   }
 
-  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"store_id" | "store_name" | "store_address" | "city" | "lat" | "lng", ExtArgs["result"]["store"]>
+  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"store_id" | "store_name" | "store_address" | "country" | "city" | "lat" | "lng" | "isActive", ExtArgs["result"]["store"]>
   export type StoreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Store$ordersArgs<ExtArgs>
     admin?: boolean | Store$adminArgs<ExtArgs>
@@ -10825,9 +10925,11 @@ export namespace Prisma {
       store_id: number
       store_name: string
       store_address: string
+      country: string
       city: string
       lat: string
       lng: string
+      isActive: boolean
     }, ExtArgs["result"]["store"]>
     composites: {}
   }
@@ -11260,9 +11362,11 @@ export namespace Prisma {
     readonly store_id: FieldRef<"Store", 'Int'>
     readonly store_name: FieldRef<"Store", 'String'>
     readonly store_address: FieldRef<"Store", 'String'>
+    readonly country: FieldRef<"Store", 'String'>
     readonly city: FieldRef<"Store", 'String'>
     readonly lat: FieldRef<"Store", 'String'>
     readonly lng: FieldRef<"Store", 'String'>
+    readonly isActive: FieldRef<"Store", 'Boolean'>
   }
     
 
@@ -30227,10 +30331,14 @@ export namespace Prisma {
     address_id: 'address_id',
     street: 'street',
     city: 'city',
-    province: 'province',
-    island: 'island',
     country: 'country',
-    profile_id: 'profile_id'
+    lat: 'lat',
+    lng: 'lng',
+    post_code: 'post_code',
+    address_name: 'address_name',
+    address_contact: 'address_contact',
+    profile_id: 'profile_id',
+    deleted_at: 'deleted_at'
   };
 
   export type AddressScalarFieldEnum = (typeof AddressScalarFieldEnum)[keyof typeof AddressScalarFieldEnum]
@@ -30241,7 +30349,8 @@ export namespace Prisma {
     user_id: 'user_id',
     store_id: 'store_id',
     phone: 'phone',
-    position: 'position'
+    position: 'position',
+    deleted_at: 'deleted_at'
   };
 
   export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
@@ -30251,9 +30360,11 @@ export namespace Prisma {
     store_id: 'store_id',
     store_name: 'store_name',
     store_address: 'store_address',
+    country: 'country',
     city: 'city',
     lat: 'lat',
-    lng: 'lng'
+    lng: 'lng',
+    isActive: 'isActive'
   };
 
   export type StoreScalarFieldEnum = (typeof StoreScalarFieldEnum)[keyof typeof StoreScalarFieldEnum]
@@ -30906,10 +31017,14 @@ export namespace Prisma {
     address_id?: IntFilter<"Address"> | number
     street?: StringFilter<"Address"> | string
     city?: StringFilter<"Address"> | string
-    province?: StringFilter<"Address"> | string
-    island?: StringFilter<"Address"> | string
     country?: StringFilter<"Address"> | string
+    lat?: StringFilter<"Address"> | string
+    lng?: StringFilter<"Address"> | string
+    post_code?: StringFilter<"Address"> | string
+    address_name?: StringFilter<"Address"> | string
+    address_contact?: StringFilter<"Address"> | string
     profile_id?: IntFilter<"Address"> | number
+    deleted_at?: DateTimeNullableFilter<"Address"> | Date | string | null
     orders?: OrderListRelationFilter
     profile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
   }
@@ -30918,10 +31033,14 @@ export namespace Prisma {
     address_id?: SortOrder
     street?: SortOrder
     city?: SortOrder
-    province?: SortOrder
-    island?: SortOrder
     country?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    post_code?: SortOrder
+    address_name?: SortOrder
+    address_contact?: SortOrder
     profile_id?: SortOrder
+    deleted_at?: SortOrderInput | SortOrder
     orders?: OrderOrderByRelationAggregateInput
     profile?: ProfileOrderByWithRelationInput
   }
@@ -30933,10 +31052,14 @@ export namespace Prisma {
     NOT?: AddressWhereInput | AddressWhereInput[]
     street?: StringFilter<"Address"> | string
     city?: StringFilter<"Address"> | string
-    province?: StringFilter<"Address"> | string
-    island?: StringFilter<"Address"> | string
     country?: StringFilter<"Address"> | string
+    lat?: StringFilter<"Address"> | string
+    lng?: StringFilter<"Address"> | string
+    post_code?: StringFilter<"Address"> | string
+    address_name?: StringFilter<"Address"> | string
+    address_contact?: StringFilter<"Address"> | string
     profile_id?: IntFilter<"Address"> | number
+    deleted_at?: DateTimeNullableFilter<"Address"> | Date | string | null
     orders?: OrderListRelationFilter
     profile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
   }, "address_id">
@@ -30945,10 +31068,14 @@ export namespace Prisma {
     address_id?: SortOrder
     street?: SortOrder
     city?: SortOrder
-    province?: SortOrder
-    island?: SortOrder
     country?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    post_code?: SortOrder
+    address_name?: SortOrder
+    address_contact?: SortOrder
     profile_id?: SortOrder
+    deleted_at?: SortOrderInput | SortOrder
     _count?: AddressCountOrderByAggregateInput
     _avg?: AddressAvgOrderByAggregateInput
     _max?: AddressMaxOrderByAggregateInput
@@ -30963,10 +31090,14 @@ export namespace Prisma {
     address_id?: IntWithAggregatesFilter<"Address"> | number
     street?: StringWithAggregatesFilter<"Address"> | string
     city?: StringWithAggregatesFilter<"Address"> | string
-    province?: StringWithAggregatesFilter<"Address"> | string
-    island?: StringWithAggregatesFilter<"Address"> | string
     country?: StringWithAggregatesFilter<"Address"> | string
+    lat?: StringWithAggregatesFilter<"Address"> | string
+    lng?: StringWithAggregatesFilter<"Address"> | string
+    post_code?: StringWithAggregatesFilter<"Address"> | string
+    address_name?: StringWithAggregatesFilter<"Address"> | string
+    address_contact?: StringWithAggregatesFilter<"Address"> | string
     profile_id?: IntWithAggregatesFilter<"Address"> | number
+    deleted_at?: DateTimeNullableWithAggregatesFilter<"Address"> | Date | string | null
   }
 
   export type AdminWhereInput = {
@@ -30978,6 +31109,7 @@ export namespace Prisma {
     store_id?: IntFilter<"Admin"> | number
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
+    deleted_at?: DateTimeNullableFilter<"Admin"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
     admin_orders?: AdminOrderListRelationFilter
@@ -30992,6 +31124,7 @@ export namespace Prisma {
     store_id?: SortOrder
     phone?: SortOrder
     position?: SortOrder
+    deleted_at?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     store?: StoreOrderByWithRelationInput
     admin_orders?: AdminOrderOrderByRelationAggregateInput
@@ -31009,6 +31142,7 @@ export namespace Prisma {
     store_id?: IntFilter<"Admin"> | number
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
+    deleted_at?: DateTimeNullableFilter<"Admin"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
     admin_orders?: AdminOrderListRelationFilter
@@ -31023,6 +31157,7 @@ export namespace Prisma {
     store_id?: SortOrder
     phone?: SortOrder
     position?: SortOrder
+    deleted_at?: SortOrderInput | SortOrder
     _count?: AdminCountOrderByAggregateInput
     _avg?: AdminAvgOrderByAggregateInput
     _max?: AdminMaxOrderByAggregateInput
@@ -31039,6 +31174,7 @@ export namespace Prisma {
     store_id?: IntWithAggregatesFilter<"Admin"> | number
     phone?: StringWithAggregatesFilter<"Admin"> | string
     position?: StringWithAggregatesFilter<"Admin"> | string
+    deleted_at?: DateTimeNullableWithAggregatesFilter<"Admin"> | Date | string | null
   }
 
   export type StoreWhereInput = {
@@ -31048,9 +31184,11 @@ export namespace Prisma {
     store_id?: IntFilter<"Store"> | number
     store_name?: StringFilter<"Store"> | string
     store_address?: StringFilter<"Store"> | string
+    country?: StringFilter<"Store"> | string
     city?: StringFilter<"Store"> | string
     lat?: StringFilter<"Store"> | string
     lng?: StringFilter<"Store"> | string
+    isActive?: BoolFilter<"Store"> | boolean
     orders?: OrderListRelationFilter
     admin?: AdminListRelationFilter
     stock?: StockListRelationFilter
@@ -31063,9 +31201,11 @@ export namespace Prisma {
     store_id?: SortOrder
     store_name?: SortOrder
     store_address?: SortOrder
+    country?: SortOrder
     city?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    isActive?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
     admin?: AdminOrderByRelationAggregateInput
     stock?: StockOrderByRelationAggregateInput
@@ -31081,9 +31221,11 @@ export namespace Prisma {
     OR?: StoreWhereInput[]
     NOT?: StoreWhereInput | StoreWhereInput[]
     store_address?: StringFilter<"Store"> | string
+    country?: StringFilter<"Store"> | string
     city?: StringFilter<"Store"> | string
     lat?: StringFilter<"Store"> | string
     lng?: StringFilter<"Store"> | string
+    isActive?: BoolFilter<"Store"> | boolean
     orders?: OrderListRelationFilter
     admin?: AdminListRelationFilter
     stock?: StockListRelationFilter
@@ -31096,9 +31238,11 @@ export namespace Prisma {
     store_id?: SortOrder
     store_name?: SortOrder
     store_address?: SortOrder
+    country?: SortOrder
     city?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    isActive?: SortOrder
     _count?: StoreCountOrderByAggregateInput
     _avg?: StoreAvgOrderByAggregateInput
     _max?: StoreMaxOrderByAggregateInput
@@ -31113,9 +31257,11 @@ export namespace Prisma {
     store_id?: IntWithAggregatesFilter<"Store"> | number
     store_name?: StringWithAggregatesFilter<"Store"> | string
     store_address?: StringWithAggregatesFilter<"Store"> | string
+    country?: StringWithAggregatesFilter<"Store"> | string
     city?: StringWithAggregatesFilter<"Store"> | string
     lat?: StringWithAggregatesFilter<"Store"> | string
     lng?: StringWithAggregatesFilter<"Store"> | string
+    isActive?: BoolWithAggregatesFilter<"Store"> | boolean
   }
 
   export type StockWhereInput = {
@@ -32503,9 +32649,13 @@ export namespace Prisma {
   export type AddressCreateInput = {
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
+    deleted_at?: Date | string | null
     orders?: OrderCreateNestedManyWithoutAddressInput
     profile: ProfileCreateNestedOneWithoutAddressInput
   }
@@ -32514,19 +32664,27 @@ export namespace Prisma {
     address_id?: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
     profile_id: number
+    deleted_at?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutAddressInput
   }
 
   export type AddressUpdateInput = {
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutAddressNestedInput
     profile?: ProfileUpdateOneRequiredWithoutAddressNestedInput
   }
@@ -32535,10 +32693,14 @@ export namespace Prisma {
     address_id?: IntFieldUpdateOperationsInput | number
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
     profile_id?: IntFieldUpdateOperationsInput | number
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutAddressNestedInput
   }
 
@@ -32546,33 +32708,46 @@ export namespace Prisma {
     address_id?: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
     profile_id: number
+    deleted_at?: Date | string | null
   }
 
   export type AddressUpdateManyMutationInput = {
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AddressUncheckedUpdateManyInput = {
     address_id?: IntFieldUpdateOperationsInput | number
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
     profile_id?: IntFieldUpdateOperationsInput | number
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AdminCreateInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
@@ -32587,6 +32762,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
@@ -32596,6 +32772,7 @@ export namespace Prisma {
   export type AdminUpdateInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
@@ -32610,6 +32787,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
@@ -32622,11 +32800,13 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
   }
 
   export type AdminUpdateManyMutationInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AdminUncheckedUpdateManyInput = {
@@ -32635,14 +32815,17 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StoreCreateInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
@@ -32655,9 +32838,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
@@ -32669,9 +32854,11 @@ export namespace Prisma {
   export type StoreUpdateInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
@@ -32684,9 +32871,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
@@ -32699,26 +32888,32 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
   }
 
   export type StoreUpdateManyMutationInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StoreUncheckedUpdateManyInput = {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StockCreateInput = {
@@ -34167,10 +34362,14 @@ export namespace Prisma {
     address_id?: SortOrder
     street?: SortOrder
     city?: SortOrder
-    province?: SortOrder
-    island?: SortOrder
     country?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    post_code?: SortOrder
+    address_name?: SortOrder
+    address_contact?: SortOrder
     profile_id?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AddressAvgOrderByAggregateInput = {
@@ -34182,20 +34381,28 @@ export namespace Prisma {
     address_id?: SortOrder
     street?: SortOrder
     city?: SortOrder
-    province?: SortOrder
-    island?: SortOrder
     country?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    post_code?: SortOrder
+    address_name?: SortOrder
+    address_contact?: SortOrder
     profile_id?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AddressMinOrderByAggregateInput = {
     address_id?: SortOrder
     street?: SortOrder
     city?: SortOrder
-    province?: SortOrder
-    island?: SortOrder
     country?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    post_code?: SortOrder
+    address_name?: SortOrder
+    address_contact?: SortOrder
     profile_id?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AddressSumOrderByAggregateInput = {
@@ -34244,6 +34451,7 @@ export namespace Prisma {
     store_id?: SortOrder
     phone?: SortOrder
     position?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AdminAvgOrderByAggregateInput = {
@@ -34257,6 +34465,7 @@ export namespace Prisma {
     store_id?: SortOrder
     phone?: SortOrder
     position?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AdminMinOrderByAggregateInput = {
@@ -34265,11 +34474,17 @@ export namespace Prisma {
     store_id?: SortOrder
     phone?: SortOrder
     position?: SortOrder
+    deleted_at?: SortOrder
   }
 
   export type AdminSumOrderByAggregateInput = {
     admin_id?: SortOrder
     store_id?: SortOrder
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type AdminListRelationFilter = {
@@ -34311,9 +34526,11 @@ export namespace Prisma {
     store_id?: SortOrder
     store_name?: SortOrder
     store_address?: SortOrder
+    country?: SortOrder
     city?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    isActive?: SortOrder
   }
 
   export type StoreAvgOrderByAggregateInput = {
@@ -34324,22 +34541,34 @@ export namespace Prisma {
     store_id?: SortOrder
     store_name?: SortOrder
     store_address?: SortOrder
+    country?: SortOrder
     city?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    isActive?: SortOrder
   }
 
   export type StoreMinOrderByAggregateInput = {
     store_id?: SortOrder
     store_name?: SortOrder
     store_address?: SortOrder
+    country?: SortOrder
     city?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    isActive?: SortOrder
   }
 
   export type StoreSumOrderByAggregateInput = {
     store_id?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type ProductScalarRelationFilter = {
@@ -34738,11 +34967,6 @@ export namespace Prisma {
     product_id?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type DiscountCountOrderByAggregateInput = {
     discount_id?: SortOrder
     discount_product?: SortOrder
@@ -34781,14 +35005,6 @@ export namespace Prisma {
   export type DiscountSumOrderByAggregateInput = {
     discount_id?: SortOrder
     discount_amount?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type CartCountOrderByAggregateInput = {
@@ -35928,6 +36144,10 @@ export namespace Prisma {
     connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type OrderUpdateManyWithoutStoreNestedInput = {
     create?: XOR<OrderCreateWithoutStoreInput, OrderUncheckedCreateWithoutStoreInput> | OrderCreateWithoutStoreInput[] | OrderUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutStoreInput | OrderCreateOrConnectWithoutStoreInput[]
@@ -36590,10 +36810,6 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutDiscountInput | OrderCreateOrConnectWithoutDiscountInput[]
     createMany?: OrderCreateManyDiscountInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type OrderUpdateManyWithoutDiscountNestedInput = {
@@ -37348,6 +37564,7 @@ export namespace Prisma {
   export type AdminCreateWithoutUserInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -37360,6 +37577,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
@@ -37453,6 +37671,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutUserInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -37465,6 +37684,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
@@ -37675,9 +37895,13 @@ export namespace Prisma {
   export type AddressCreateWithoutProfileInput = {
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
+    deleted_at?: Date | string | null
     orders?: OrderCreateNestedManyWithoutAddressInput
   }
 
@@ -37685,9 +37909,13 @@ export namespace Prisma {
     address_id?: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
+    deleted_at?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutAddressInput
   }
 
@@ -37887,10 +38115,14 @@ export namespace Prisma {
     address_id?: IntFilter<"Address"> | number
     street?: StringFilter<"Address"> | string
     city?: StringFilter<"Address"> | string
-    province?: StringFilter<"Address"> | string
-    island?: StringFilter<"Address"> | string
     country?: StringFilter<"Address"> | string
+    lat?: StringFilter<"Address"> | string
+    lng?: StringFilter<"Address"> | string
+    post_code?: StringFilter<"Address"> | string
+    address_name?: StringFilter<"Address"> | string
+    address_contact?: StringFilter<"Address"> | string
     profile_id?: IntFilter<"Address"> | number
+    deleted_at?: DateTimeNullableFilter<"Address"> | Date | string | null
   }
 
   export type ReferralUpsertWithoutProfileInput = {
@@ -38220,9 +38452,11 @@ export namespace Prisma {
   export type StoreCreateWithoutAdminInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
@@ -38234,9 +38468,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
@@ -38418,9 +38654,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutAdminInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
@@ -38432,9 +38670,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
@@ -38597,6 +38837,7 @@ export namespace Prisma {
   export type AdminCreateWithoutStoreInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -38609,6 +38850,7 @@ export namespace Prisma {
     user_id: string
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
@@ -38779,6 +39021,7 @@ export namespace Prisma {
     store_id?: IntFilter<"Admin"> | number
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
+    deleted_at?: DateTimeNullableFilter<"Admin"> | Date | string | null
   }
 
   export type StockUpsertWithWhereUniqueWithoutStoreInput = {
@@ -38916,9 +39159,11 @@ export namespace Prisma {
   export type StoreCreateWithoutStockInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
@@ -38930,9 +39175,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
@@ -39024,9 +39271,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutStockInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
@@ -39038,9 +39287,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
@@ -39085,9 +39336,11 @@ export namespace Prisma {
   export type StoreCreateWithoutStock_journalInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
@@ -39099,9 +39352,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
@@ -39152,9 +39407,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutStock_journalInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
@@ -39166,9 +39423,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
@@ -39577,6 +39836,7 @@ export namespace Prisma {
   export type AdminCreateWithoutVoucher_storeInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
@@ -39590,6 +39850,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
@@ -39603,9 +39864,11 @@ export namespace Prisma {
   export type StoreCreateWithoutVoucher_storesInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
@@ -39617,9 +39880,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
@@ -39674,6 +39939,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutVoucher_storeInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
@@ -39687,6 +39953,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
@@ -39706,9 +39973,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutVoucher_storesInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
@@ -39720,9 +39989,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
@@ -39749,6 +40020,7 @@ export namespace Prisma {
   export type AdminCreateWithoutVoucher_ongkirInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
@@ -39762,6 +40034,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
     voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
@@ -39775,9 +40048,11 @@ export namespace Prisma {
   export type StoreCreateWithoutVoucher_ongkirInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderCreateNestedManyWithoutStoreInput
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
@@ -39789,9 +40064,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutStoreInput
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
@@ -39818,6 +40095,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutVoucher_ongkirInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
@@ -39831,6 +40109,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
     voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
@@ -39850,9 +40129,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutVoucher_ongkirInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutStoreNestedInput
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
@@ -39864,9 +40145,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutStoreNestedInput
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
@@ -39877,6 +40160,7 @@ export namespace Prisma {
   export type AdminCreateWithoutVoucher_productInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
@@ -39890,6 +40174,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     admin_orders?: AdminOrderUncheckedCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
@@ -39944,6 +40229,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutVoucher_productInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
@@ -39957,6 +40243,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
@@ -40269,9 +40556,13 @@ export namespace Prisma {
   export type AddressCreateWithoutOrdersInput = {
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
+    deleted_at?: Date | string | null
     profile: ProfileCreateNestedOneWithoutAddressInput
   }
 
@@ -40279,10 +40570,14 @@ export namespace Prisma {
     address_id?: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
     profile_id: number
+    deleted_at?: Date | string | null
   }
 
   export type AddressCreateOrConnectWithoutOrdersInput = {
@@ -40321,9 +40616,11 @@ export namespace Prisma {
   export type StoreCreateWithoutOrdersInput = {
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     admin?: AdminCreateNestedManyWithoutStoreInput
     stock?: StockCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalCreateNestedManyWithoutStoreInput
@@ -40335,9 +40632,11 @@ export namespace Prisma {
     store_id?: number
     store_name: string
     store_address: string
+    country: string
     city: string
     lat: string
     lng: string
+    isActive?: boolean
     admin?: AdminUncheckedCreateNestedManyWithoutStoreInput
     stock?: StockUncheckedCreateNestedManyWithoutStoreInput
     stock_journal?: StockJournalUncheckedCreateNestedManyWithoutStoreInput
@@ -40470,9 +40769,13 @@ export namespace Prisma {
   export type AddressUpdateWithoutOrdersInput = {
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profile?: ProfileUpdateOneRequiredWithoutAddressNestedInput
   }
 
@@ -40480,10 +40783,14 @@ export namespace Prisma {
     address_id?: IntFieldUpdateOperationsInput | number
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
     profile_id?: IntFieldUpdateOperationsInput | number
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProfileUpsertWithoutOrdersInput = {
@@ -40534,9 +40841,11 @@ export namespace Prisma {
   export type StoreUpdateWithoutOrdersInput = {
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     admin?: AdminUpdateManyWithoutStoreNestedInput
     stock?: StockUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUpdateManyWithoutStoreNestedInput
@@ -40548,9 +40857,11 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     store_name?: StringFieldUpdateOperationsInput | string
     store_address?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     admin?: AdminUncheckedUpdateManyWithoutStoreNestedInput
     stock?: StockUncheckedUpdateManyWithoutStoreNestedInput
     stock_journal?: StockJournalUncheckedUpdateManyWithoutStoreNestedInput
@@ -41017,6 +41328,7 @@ export namespace Prisma {
   export type AdminCreateWithoutAdmin_ordersInput = {
     phone: string
     position: string
+    deleted_at?: Date | string | null
     user: UserCreateNestedOneWithoutAdminInput
     store: StoreCreateNestedOneWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -41030,6 +41342,7 @@ export namespace Prisma {
     store_id: number
     phone: string
     position: string
+    deleted_at?: Date | string | null
     voucher_ongkir?: VoucherOngkirUncheckedCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductUncheckedCreateNestedManyWithoutAdminInput
     voucher_store?: VoucherStoreUncheckedCreateNestedManyWithoutAdminInput
@@ -41098,6 +41411,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutAdmin_ordersInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     store?: StoreUpdateOneRequiredWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -41111,6 +41425,7 @@ export namespace Prisma {
     store_id?: IntFieldUpdateOperationsInput | number
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
     voucher_store?: VoucherStoreUncheckedUpdateManyWithoutAdminNestedInput
@@ -41247,9 +41562,13 @@ export namespace Prisma {
     address_id?: number
     street: string
     city: string
-    province: string
-    island: string
     country: string
+    lat: string
+    lng: string
+    post_code: string
+    address_name: string
+    address_contact: string
+    deleted_at?: Date | string | null
   }
 
   export type CartUpdateWithoutProfileInput = {
@@ -41367,9 +41686,13 @@ export namespace Prisma {
   export type AddressUpdateWithoutProfileInput = {
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutAddressNestedInput
   }
 
@@ -41377,9 +41700,13 @@ export namespace Prisma {
     address_id?: IntFieldUpdateOperationsInput | number
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutAddressNestedInput
   }
 
@@ -41387,9 +41714,13 @@ export namespace Prisma {
     address_id?: IntFieldUpdateOperationsInput | number
     street?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
-    province?: StringFieldUpdateOperationsInput | string
-    island?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    post_code?: StringFieldUpdateOperationsInput | string
+    address_name?: StringFieldUpdateOperationsInput | string
+    address_contact?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProfileCreateManyReferredInput = {
@@ -41679,6 +42010,7 @@ export namespace Prisma {
     user_id: string
     phone: string
     position: string
+    deleted_at?: Date | string | null
   }
 
   export type StockCreateManyStoreInput = {
@@ -41768,6 +42100,7 @@ export namespace Prisma {
   export type AdminUpdateWithoutStoreInput = {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -41780,6 +42113,7 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     admin_orders?: AdminOrderUncheckedUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUncheckedUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUncheckedUpdateManyWithoutAdminNestedInput
@@ -41791,6 +42125,7 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StockUpdateWithoutStoreInput = {
