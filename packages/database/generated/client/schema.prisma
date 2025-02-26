@@ -89,15 +89,19 @@ model Referral {
 }
 
 model Address {
-  address_id Int     @id @default(autoincrement())
-  street     String
-  city       String
-  province   String
-  island     String
-  country    String
-  profile_id Int
-  orders     Order[]
-  profile    Profile @relation(fields: [profile_id], references: [profile_id])
+  address_id      Int       @id @default(autoincrement())
+  street          String
+  city            String
+  country         String
+  lat             String
+  lng             String
+  post_code       String
+  address_name    String
+  address_contact String
+  profile_id      Int
+  deleted_at      DateTime?
+  orders          Order[]
+  profile         Profile   @relation(fields: [profile_id], references: [profile_id])
 
   @@map("address")
 }
@@ -109,6 +113,7 @@ model Admin {
   store_id        Int
   phone           String
   position        String
+  deleted_at      DateTime?
   store           Store            @relation(fields: [store_id], references: [store_id])
   admin_orders    AdminOrder[]
   voucher_ongkir  VoucherOngkir[]
@@ -118,13 +123,21 @@ model Admin {
   @@map("admin")
 }
 
+enum adminPosition {
+  store_manager
+  store_delivery
+  store_logistic
+}
+
 model Store {
   store_id       Int            @id @default(autoincrement())
   store_name     String         @unique
   store_address  String
+  country        String
   city           String
   lat            String
   lng            String
+  isActive       Boolean        @default(true)
   orders         Order[]
   admin          Admin[]
   stock          Stock[]
@@ -151,7 +164,7 @@ model StockJournal {
   stock_journal_id Int      @id @default(autoincrement())
   store_id         Int
   stock_id         Int
-  product_id       String   @unique
+  product_id       String
   quantity         Int
   type             String
   notes            String
@@ -254,6 +267,7 @@ model Discount {
   discount_startdate DateTime
   discount_enddate   DateTime
   isActive           Boolean
+  orders             Order[]
 
   @@map("discount")
 }
@@ -278,23 +292,30 @@ model CartItem {
 }
 
 model Order {
-  order_id      Int           @id @default(autoincrement())
-  order_number  String?       @unique
-  store_id      Int
-  address_id    Int
-  total_price   Int
-  status        OrderStatus
-  order_date    DateTime
-  profile_id    Int
-  createdAt     DateTime?     @default(now())
-  updatedAt     DateTime?     @updatedAt
-  address       Address       @relation(fields: [address_id], references: [address_id])
-  profile       Profile       @relation(fields: [profile_id], references: [profile_id])
-  store         Store         @relation(fields: [store_id], references: [store_id])
-  order_cancel  OrderCancel?
-  admin_orders  AdminOrder[]
-  order_items   OrderItem[]
-  payment_proof PaymentProof?
+  order_id        Int           @id @default(autoincrement())
+  order_number    String?       @unique
+  store_id        Int
+  address_id      Int
+  total_price     Int
+  shipping_price  Int?
+  total_payment   Int?
+  tracking_number String?
+  discount_id     Int?
+  status          OrderStatus
+  order_date      DateTime
+  profile_id      Int
+  createdAt       DateTime?     @default(now())
+  updatedAt       DateTime?     @updatedAt
+  address         Address       @relation(fields: [address_id], references: [address_id])
+  profile         Profile       @relation(fields: [profile_id], references: [profile_id])
+  store           Store         @relation(fields: [store_id], references: [store_id])
+  discount        Discount?     @relation(fields: [discount_id], references: [discount_id])
+  order_cancel    OrderCancel?
+  admin_orders    AdminOrder[]
+  order_items     OrderItem[]
+  payment_proof   PaymentProof?
+
+  @@map("order")
 }
 
 model OrderItem {
@@ -327,6 +348,8 @@ model OrderCancel {
   reason          String
   canceled_at     DateTime
   order           Order    @relation(fields: [order_id], references: [order_id])
+
+  @@map("order_cancel")
 }
 
 model AdminOrder {
