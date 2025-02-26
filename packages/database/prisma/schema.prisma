@@ -89,15 +89,19 @@ model Referral {
 }
 
 model Address {
-  address_id Int     @id @default(autoincrement())
-  street     String
-  city       String
-  province   String
-  island     String
-  country    String
-  profile_id Int
-  orders     Order[]
-  profile    Profile @relation(fields: [profile_id], references: [profile_id])
+  address_id      Int       @id @default(autoincrement())
+  street          String
+  city            String
+  country         String
+  lat             String
+  lng             String
+  post_code       String
+  address_name    String
+  address_contact String
+  profile_id      Int
+  deleted_at      DateTime?
+  orders          Order[]
+  profile         Profile   @relation(fields: [profile_id], references: [profile_id])
 
   @@map("address")
 }
@@ -109,6 +113,7 @@ model Admin {
   store_id        Int
   phone           String
   position        String
+  deleted_at      DateTime?
   store           Store            @relation(fields: [store_id], references: [store_id])
   admin_orders    AdminOrder[]
   voucher_ongkir  VoucherOngkir[]
@@ -118,13 +123,21 @@ model Admin {
   @@map("admin")
 }
 
+enum adminPosition {
+  store_manager
+  store_delivery
+  store_logistic
+}
+
 model Store {
   store_id       Int            @id @default(autoincrement())
   store_name     String         @unique
   store_address  String
+  country        String
   city           String
   lat            String
   lng            String
+  isActive       Boolean        @default(true)
   orders         Order[]
   admin          Admin[]
   stock          Stock[]

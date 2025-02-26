@@ -14,7 +14,7 @@ export class StoreController {
         return ResponseHandler.success(res, 200, 'get main store success', { ...mainStore, distance: 999 });
       }
 
-      const stores = await prisma.store.findMany();
+      const stores = await prisma.store.findMany({ where: { isActive: true } });
 
       const findDistance = (lat1: any, lat2: any, lng1: any, lng2: any) => {
         const radius = 6371;
@@ -42,6 +42,63 @@ export class StoreController {
       const nearest = storesDistanceData.sort((a, b) => a.distance - b.distance)[0];
 
       return ResponseHandler.success(res, 200, 'get nearest store succeed', nearest);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'server error', error);
+    }
+  }
+
+  async createStore(req: Request, res: Response): Promise<any> {
+    try {
+      const { store_name, store_address, city, lat, lng, country } = req.body;
+
+      await prisma.store.create({
+        data: {
+          store_name,
+          store_address,
+          city,
+          country,
+          lat,
+          lng,
+        },
+      });
+
+      return ResponseHandler.success(res, 200, 'create store success');
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'server error', error);
+    }
+  }
+
+  async deleteStore(req: Request, res: Response): Promise<any> {
+    try {
+      const { store_id } = req.body;
+
+      await prisma.store.update({
+        where: {
+          store_id,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+      return ResponseHandler.success(res, 200, 'delete store success');
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'server error', error);
+    }
+  }
+
+  async updateStore(req: Request, res: Response): Promise<any> {
+    try {
+      const { store_id } = req.body;
+
+      await prisma.store.update({
+        where: {
+          store_id,
+        },
+        data: {
+          ...req.body,
+        },
+      });
+      return ResponseHandler.success(res, 200, 'Update store success');
     } catch (error) {
       return ResponseHandler.error(res, 500, 'server error', error);
     }

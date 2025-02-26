@@ -7,7 +7,7 @@ import { transporter } from '../config/nodemailer';
 import { sign } from 'jsonwebtoken';
 import { findUser } from '../utils/findUser';
 import { signUpSchema } from '../../../schemas/authSchema';
-// import { uploadImage } from '@/utils/cloudinary';
+import { uploadImage } from '../utils/cloudinary';
 
 export class AccountController {
   async signUp(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -240,12 +240,12 @@ export class AccountController {
         return ResponseHandler.error(res, 400, 'file not found');
       }
 
-      // const image: any = await uploadImage(req.file?.path, 'profile_image');
+      const image: any = await uploadImage(req.file?.path, 'profile_image');
 
-      const update = await prisma.user.update({
+      await prisma.user.update({
         where: { email: user.email },
         data: {
-          image: '',
+          image: image.result.secure_url,
         },
       });
 
@@ -254,7 +254,4 @@ export class AccountController {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
   }
-}
-function uploadImage(path: string, arg1: string) {
-  throw new Error('Function not implemented.');
 }

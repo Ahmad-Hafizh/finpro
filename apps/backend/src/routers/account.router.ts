@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AccountController } from '../controllers/account.controller';
 import { verifyToken } from '../middleware/verifyToken';
-// import { upload } from '@/middleware/upload.middleware';
+import { upload } from '../middleware/upload.middleware';
 
 export class AccountRouter {
   private route: Router;
@@ -25,7 +25,7 @@ export class AccountRouter {
     this.route.post('/oauth-signup', this.accountController.createProfileReferral);
 
     this.route.patch('/update-user', this.accountController.updateUser);
-    // this.route.patch('/update-pfp', upload.single('profile_image'), this.accountController.updatePfp);
+    this.route.patch('/update-pfp', upload.single('profile_image'), this.accountController.updatePfp);
   }
 
   public getRouter() {
