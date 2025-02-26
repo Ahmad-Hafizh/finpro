@@ -161,10 +161,14 @@ exports.Prisma.AddressScalarFieldEnum = {
   address_id: 'address_id',
   street: 'street',
   city: 'city',
-  province: 'province',
-  island: 'island',
   country: 'country',
-  profile_id: 'profile_id'
+  lat: 'lat',
+  lng: 'lng',
+  post_code: 'post_code',
+  address_name: 'address_name',
+  address_contact: 'address_contact',
+  profile_id: 'profile_id',
+  deleted_at: 'deleted_at'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
@@ -172,16 +176,19 @@ exports.Prisma.AdminScalarFieldEnum = {
   user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
-  position: 'position'
+  position: 'position',
+  deleted_at: 'deleted_at'
 };
 
 exports.Prisma.StoreScalarFieldEnum = {
   store_id: 'store_id',
   store_name: 'store_name',
   store_address: 'store_address',
+  country: 'country',
   city: 'city',
   lat: 'lat',
-  lng: 'lng'
+  lng: 'lng',
+  isActive: 'isActive'
 };
 
 exports.Prisma.StockScalarFieldEnum = {

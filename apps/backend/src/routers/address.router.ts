@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { AddressController } from "../controllers/address.controller";
+import { Router } from 'express';
+import { AddressController } from '../controllers/address.controller';
 
 export class AddressRouter {
   private route: Router;
@@ -12,9 +12,10 @@ export class AddressRouter {
   }
 
   private initializeRoutes(): void {
-    this.route.get("/", (req, res) =>
-      this.addressController.getAddresses(req, res)
-    );
+    this.route.get('/', (req, res) => this.addressController.getAddresses(req, res));
+    this.route.post('/get-address', this.addressController.getAddresses);
+    this.route.post('/set-address', this.addressController.setDeliveryAddress);
+    this.route.patch('/update-address', this.addressController.updateDeliveryAddress);
   }
 
   public getRouter(): Router {
