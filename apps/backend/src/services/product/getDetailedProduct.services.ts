@@ -1,4 +1,4 @@
-import { prisma } from "../../../../../packages/database/src/client";
+import prisma from "../../prisma";
 
 export const findDetailedProduct = async ({ name }: any): Promise<any> => {
   console.log("This is name", name);

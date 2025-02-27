@@ -1,4 +1,4 @@
-import { prisma } from "../../../../../packages/database/src/client";
+import prisma from "../../prisma";
 
 export const getCategory = async (): Promise<any> => {
   const result = await prisma.productCategory.findMany();

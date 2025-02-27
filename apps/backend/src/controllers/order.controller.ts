@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { prisma } from '../../../../packages/database/src/client';
-import { uploadImage } from '../utils/cloudinary';
+import { Request, Response } from "express";
+import prisma from "../prisma";
+import { uploadImage } from "../utils/cloudinary";
 
 const generateOrderNumber = (date: Date): string => {
   const yyyy = date.getFullYear().toString();
-  const mm = (date.getMonth() + 1).toString().padStart(2, '0');
-  const dd = date.getDate().toString().padStart(2, '0');
+  const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+  const dd = date.getDate().toString().padStart(2, "0");
   const datePrefix = `${yyyy}${mm}${dd}`;
   const randomDigits = Math.floor(1000 + Math.random() * 9000).toString();
   return `${datePrefix}${randomDigits}`;
@@ -13,16 +13,16 @@ const generateOrderNumber = (date: Date): string => {
 export class OrderController {
   // create a new order
   async createOrder(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
-      if (!profile) return res.status(404).json({ error: 'Profile not found' });
+      if (!profile) return res.status(404).json({ error: "Profile not found" });
 
       const { address_id, products, total_price, shipping_price } = req.body;
       if (!products || !Array.isArray(products) || products.length === 0) {
-        return res.status(400).json({ error: 'No products provided' });
+        return res.status(400).json({ error: "No products provided" });
       }
 
       const address = await prisma.address.findFirst({
@@ -31,10 +31,11 @@ export class OrderController {
           profile_id: profile.profile_id,
         },
       });
-      if (!address) return res.status(404).json({ error: 'Address not found' });
+      if (!address) return res.status(404).json({ error: "Address not found" });
 
       const nearestStore = await prisma.store.findFirst();
-      if (!nearestStore) return res.status(400).json({ error: 'No store available' });
+      if (!nearestStore)
+        return res.status(400).json({ error: "No store available" });
 
       for (const item of products) {
         const stock = await prisma.stock.findFirst({
@@ -62,7 +63,7 @@ export class OrderController {
             total_price: 0,
             shipping_price: shipping_price || null,
             total_payment: 0,
-            status: 'menunggu_pembayaran',
+            status: "menunggu_pembayaran",
             order_date: new Date(),
             profile_id: profile.profile_id,
             order_items: {
@@ -110,7 +111,7 @@ export class OrderController {
                   stock_id: stock.stock_id,
                   product_id: item.product_id.toString(),
                   quantity: item.quantity,
-                  type: 'out',
+                  type: "out",
                   notes: `Order ${orderNumber} created - stock deducted`,
                   created_at: new Date(),
                 },
@@ -132,8 +133,8 @@ export class OrderController {
 
       return res.status(201).json(order);
     } catch (error) {
-      console.error('Create Order Error:', error);
-      return res.status(500).json({ error: 'Failed to create order' });
+      console.error("Create Order Error:", error);
+      return res.status(500).json({ error: "Failed to create order" });
     }
   }
 
@@ -141,7 +142,7 @@ export class OrderController {
   async uploadPaymentProof(req: Request, res: Response): Promise<any> {
     try {
       const { order_id } = req.params;
-      if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+      if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
       const uploadedResult = await uploadImage(req.file.path);
       const imageUrl = uploadedResult.secure_url;
@@ -151,44 +152,44 @@ export class OrderController {
           order_id: Number(order_id),
           image_url: imageUrl,
           uploaded_at: new Date(),
-          status: 'pending',
+          status: "pending",
         },
       });
 
       await prisma.order.update({
         where: { order_id: Number(order_id) },
-        data: { status: 'menunggu_konfirmasi' },
+        data: { status: "menunggu_konfirmasi" },
       });
 
       return res.status(200).json({
-        message: 'Payment proof uploaded successfully',
+        message: "Payment proof uploaded successfully",
         paymentProof,
       });
     } catch (error) {
-      console.error('Upload Payment Proof Error:', error);
-      return res.status(500).json({ error: 'Failed to upload payment proof' });
+      console.error("Upload Payment Proof Error:", error);
+      return res.status(500).json({ error: "Failed to upload payment proof" });
     }
   }
 
   // get order list
   async getOrderList(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
-      if (!profile) return res.status(404).json({ error: 'Profile not found' });
+      if (!profile) return res.status(404).json({ error: "Profile not found" });
 
       const { date, order_id } = req.query;
       let whereClause: any = { profile_id: profile.profile_id };
 
       if (order_id) whereClause.order_id = Number(order_id);
       if (date) {
-        const localStart = new Date((date as string) + 'T00:00:00');
-        const localEnd = new Date((date as string) + 'T23:59:59');
+        const localStart = new Date((date as string) + "T00:00:00");
+        const localEnd = new Date((date as string) + "T23:59:59");
         const start = new Date(localStart.getTime() - 7 * 60 * 60 * 1000);
         const end = new Date(localEnd.getTime() - 7 * 60 * 60 * 1000);
-        console.log('Filtering orders with start:', start, 'and end:', end);
+        console.log("Filtering orders with start:", start, "and end:", end);
         whereClause.order_date = { gte: start, lt: end };
       }
 
@@ -201,19 +202,19 @@ export class OrderController {
       });
       return res.status(200).json(orders);
     } catch (error) {
-      console.error('Get Order List Error:', error);
-      return res.status(500).json({ error: 'Failed to fetch orders' });
+      console.error("Get Order List Error:", error);
+      return res.status(500).json({ error: "Failed to fetch orders" });
     }
   }
 
   // cancel order before payment proof upload
   async cancelOrder(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
-      if (!profile) return res.status(404).json({ error: 'Profile not found' });
+      if (!profile) return res.status(404).json({ error: "Profile not found" });
 
       const { order_id } = req.params;
       const order = await prisma.order.findUnique({
@@ -221,10 +222,12 @@ export class OrderController {
         include: { order_items: true },
       });
       if (!order || order.profile_id !== profile.profile_id) {
-        return res.status(404).json({ error: 'Order not found' });
+        return res.status(404).json({ error: "Order not found" });
       }
-      if (order.status !== 'menunggu_pembayaran') {
-        return res.status(400).json({ error: 'Order cannot be canceled at this stage' });
+      if (order.status !== "menunggu_pembayaran") {
+        return res
+          .status(400)
+          .json({ error: "Order cannot be canceled at this stage" });
       }
 
       const { reason } = req.body;
@@ -247,8 +250,8 @@ export class OrderController {
                 stock_id: stock.stock_id,
                 product_id: item.product_id.toString(),
                 quantity: item.quantity,
-                type: 'in',
-                notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || 'No reason provided'}`,
+                type: "in",
+                notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || "No reason provided"}`,
                 created_at: new Date(),
               },
             });
@@ -258,70 +261,72 @@ export class OrderController {
         await tx.orderCancel.create({
           data: {
             order_id: order.order_id,
-            reason: reason || 'User canceled the order',
+            reason: reason || "User canceled the order",
             canceled_at: new Date(),
           },
         });
 
         const updatedOrder = await tx.order.update({
           where: { order_id: order.order_id },
-          data: { status: 'dibatalkan' },
+          data: { status: "dibatalkan" },
         });
         return updatedOrder;
       });
 
       return res.status(200).json({
-        message: 'Order canceled successfully and stock has been returned',
+        message: "Order canceled successfully and stock has been returned",
         order: canceledOrder,
       });
     } catch (error) {
-      console.error('Cancel Order Error:', error);
-      return res.status(500).json({ error: 'Failed to cancel order' });
+      console.error("Cancel Order Error:", error);
+      return res.status(500).json({ error: "Failed to cancel order" });
     }
   }
 
   // confirm order receipt
   async confirmOrder(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
-      if (!profile) return res.status(404).json({ error: 'Profile not found' });
+      if (!profile) return res.status(404).json({ error: "Profile not found" });
 
       const { order_id } = req.params;
       const order = await prisma.order.findUnique({
         where: { order_id: Number(order_id) },
       });
       if (!order || order.profile_id !== profile.profile_id) {
-        return res.status(404).json({ error: 'Order not found' });
+        return res.status(404).json({ error: "Order not found" });
       }
-      if (order.status !== 'dikirim') {
-        return res.status(400).json({ error: 'Order cannot be confirmed at this stage' });
+      if (order.status !== "dikirim") {
+        return res
+          .status(400)
+          .json({ error: "Order cannot be confirmed at this stage" });
       }
 
       const updatedOrder = await prisma.order.update({
         where: { order_id: order.order_id },
-        data: { status: 'pesanan_dikonfirmasi' },
+        data: { status: "pesanan_dikonfirmasi" },
       });
       return res.status(200).json({
-        message: 'Order confirmed successfully',
+        message: "Order confirmed successfully",
         order: updatedOrder,
       });
     } catch (error) {
-      console.error('Confirm Order Error:', error);
-      return res.status(500).json({ error: 'Failed to confirm order' });
+      console.error("Confirm Order Error:", error);
+      return res.status(500).json({ error: "Failed to confirm order" });
     }
   }
   // get order by id
   async getOrderById(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
       if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
+        return res.status(404).json({ error: "Profile not found" });
       }
 
       const { order_id } = req.params;
@@ -336,13 +341,13 @@ export class OrderController {
       });
 
       if (!order || order.profile_id !== profile.profile_id) {
-        return res.status(404).json({ error: 'Order not found' });
+        return res.status(404).json({ error: "Order not found" });
       }
 
       return res.status(200).json(order);
     } catch (error) {
-      console.error('Get Order By Id Error:', error);
-      return res.status(500).json({ error: 'Failed to fetch order details' });
+      console.error("Get Order By Id Error:", error);
+      return res.status(500).json({ error: "Failed to fetch order details" });
     }
   }
   // method auto cancel
@@ -351,7 +356,7 @@ export class OrderController {
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
       const ordersToCancel = await prisma.order.findMany({
         where: {
-          status: 'menunggu_pembayaran',
+          status: "menunggu_pembayaran",
           order_date: { lt: oneHourAgo },
         },
         include: { order_items: true },
@@ -376,7 +381,7 @@ export class OrderController {
                   stock_id: stock.stock_id,
                   product_id: item.product_id.toString(),
                   quantity: item.quantity,
-                  type: 'in',
+                  type: "in",
                   notes: `Auto cancel order ${order.order_number || order.order_id}: stock returned`,
                   created_at: new Date(),
                 },
@@ -386,19 +391,21 @@ export class OrderController {
           await tx.orderCancel.create({
             data: {
               order_id: order.order_id,
-              reason: 'Auto cancelled due to timeout',
+              reason: "Auto cancelled due to timeout",
               canceled_at: new Date(),
             },
           });
           await tx.order.update({
             where: { order_id: order.order_id },
-            data: { status: 'dibatalkan' },
+            data: { status: "dibatalkan" },
           });
         });
-        console.log(`Order ${order.order_id} auto cancelled and stock returned.`);
+        console.log(
+          `Order ${order.order_id} auto cancelled and stock returned.`
+        );
       }
     } catch (error) {
-      console.error('Error auto-cancelling orders:', error);
+      console.error("Error auto-cancelling orders:", error);
     }
   }
 
@@ -408,19 +415,19 @@ export class OrderController {
       const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
       const ordersToConfirm = await prisma.order.findMany({
         where: {
-          status: 'dikirim',
+          status: "dikirim",
           order_date: { lt: twoDaysAgo },
         },
       });
       for (const order of ordersToConfirm) {
         await prisma.order.update({
           where: { order_id: order.order_id },
-          data: { status: 'pesanan_dikonfirmasi' },
+          data: { status: "pesanan_dikonfirmasi" },
         });
         console.log(`Order ${order.order_id} auto confirmed.`);
       }
     } catch (error) {
-      console.error('Error auto-confirming orders:', error);
+      console.error("Error auto-confirming orders:", error);
     }
   }
 }
