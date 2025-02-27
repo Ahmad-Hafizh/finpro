@@ -406,7 +406,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/abdialghi/Documents/Purwadhika/JCWDSBY-0412/finpro-grocery-jc0412/apps/backend/prisma/generated/client",
+      "value": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\apps\\backend\\prisma\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -415,16 +415,17 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/abdialghi/Documents/Purwadhika/JCWDSBY-0412/finpro-grocery-jc0412/apps/backend/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\apps\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../..",
   "clientVersion": "6.4.1",

@@ -177,6 +177,9 @@ const Navbar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem>
+                <Link href="/setting/account">Setting</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <Button onClick={signOutAction}>Sign Out</Button>
               </DropdownMenuItem>
             </DropdownMenuContent>
