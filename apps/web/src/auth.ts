@@ -59,7 +59,7 @@ export const {
       if (!response.data.result) return token;
 
       token.role = response.data.result.role;
-      token.isOauth = !!response.data.result.accounts;
+      token.isOauth = response.data.result.accounts[0] ? true : false;
 
       return token;
     },
