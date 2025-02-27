@@ -338,6 +338,12 @@ exports.Prisma.AdminOrderScalarFieldEnum = {
   action_time: 'action_time'
 };
 
+exports.Prisma.BannerScalarFieldEnum = {
+  banner_id: 'banner_id',
+  url: 'url',
+  image: 'image'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -402,7 +408,8 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   PaymentProof: 'PaymentProof',
   OrderCancel: 'OrderCancel',
-  AdminOrder: 'AdminOrder'
+  AdminOrder: 'AdminOrder',
+  Banner: 'Banner'
 };
 
 /**
