@@ -16,6 +16,7 @@ export class AddressRouter {
     this.route.post('/get-address', this.addressController.getAddresses);
     this.route.post('/set-address', this.addressController.setDeliveryAddress);
     this.route.patch('/update-address', this.addressController.updateDeliveryAddress);
+    this.route.delete('/del-address', this.addressController.deleteAddress);
   }
 
   public getRouter(): Router {

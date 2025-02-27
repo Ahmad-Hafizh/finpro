@@ -364,6 +364,12 @@ model AdminOrder {
   @@map("admin_order")
 }
 
+model Banner {
+  banner_id Int    @id @default(autoincrement())
+  url       String
+  image     String
+}
+
 enum StockType {
   in
   out

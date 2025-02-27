@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import ResponseHandler from '../utils/responseHandler';
 import { prisma } from '../../../../packages/database/src/client';
+import { findDistance } from '../services/store/findDistance';
 
 export class StoreController {
   async findNearestStore(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -15,23 +16,6 @@ export class StoreController {
       }
 
       const stores = await prisma.store.findMany({ where: { isActive: true } });
-
-      const findDistance = (lat1: any, lat2: any, lng1: any, lng2: any) => {
-        const radius = 6371;
-        const radians1 = (parseInt(lat1) * Math.PI) / 180;
-        const radians2 = (parseInt(lat2) * Math.PI) / 180;
-
-        const deltaLat = ((parseInt(lat2) - parseInt(lat1)) * Math.PI) / 180;
-        const deltaLng = ((parseInt(lng2) - parseInt(lng1)) * Math.PI) / 180;
-
-        const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(radians1) * Math.cos(radians2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
-
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        const d = radius * c;
-
-        return d;
-      };
 
       const storesDistanceData = stores.map((e) => {
         const d = findDistance(lat, e.lat, lng, e.lng);
@@ -99,6 +83,24 @@ export class StoreController {
         },
       });
       return ResponseHandler.success(res, 200, 'Update store success');
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'server error', error);
+    }
+  }
+  async getStoreDistance(req: Request, res: Response): Promise<any> {
+    try {
+      const { store_id, lat, lng } = req.body;
+
+      const store = await prisma.store.findUnique({
+        where: { store_id },
+      });
+
+      if (!store) {
+        return ResponseHandler.error(res, 404, 'store not found');
+      }
+      const distance = findDistance(lat, store?.lat, lng, store?.lng);
+
+      return ResponseHandler.success(res, 200, 'get store distance success', { ...store, distance });
     } catch (error) {
       return ResponseHandler.error(res, 500, 'server error', error);
     }
