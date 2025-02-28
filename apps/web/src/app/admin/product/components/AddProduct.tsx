@@ -86,15 +86,6 @@ const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // const payload = {
-    //   product_name: values.name,
-    //   product_price: values.price,
-    //   product_description: values.description,
-    //   product_category: values.category,
-    //   product_image: values.images,
-    // };
-    // console.log("Ini values: ", payload);
-
     const formData = new FormData();
     formData.append("product_name", values.name);
     formData.append("product_price", values.price.toString());
