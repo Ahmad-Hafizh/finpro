@@ -56,6 +56,7 @@ const FilterBoxStoreSelector = ({
 
   useEffect(() => {
     setCategory(categories);
+    console.log("INI CATEOGRY : ", categories);
   }, [categories]);
 
   const dynamicFilter = (key: string, value: string) => {
@@ -84,6 +85,7 @@ const FilterBoxStoreSelector = ({
 
   const handleStoreChange = (value: string) => {
     const storeId = parseInt(value);
+    console.log("INI STORE ID", storeId);
     setSelectedStore(storeId);
     setStoreId(storeId);
   };
@@ -101,7 +103,7 @@ const FilterBoxStoreSelector = ({
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Store</SelectLabel>
-            {dummyStores.map((store) => (
+            {allStore.map((store: any) => (
               <SelectItem
                 key={store.store_id}
                 value={store.store_id.toString()}
@@ -166,39 +168,6 @@ const FilterBoxStoreSelector = ({
                   />
                 </div>
               )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-2">
-          <AccordionTrigger className="font-bold">Status</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between py-2">
-                <label
-                  htmlFor={"true"}
-                  className="w-full text-sm font-medium leading-none"
-                >
-                  Inactive
-                </label>
-                <Checkbox
-                  id={"true"}
-                  checked={isChecked("del", "true")}
-                  onCheckedChange={(checked) => dynamicFilter("del", "true")}
-                />
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <label
-                  htmlFor={"false"}
-                  className="w-full text-sm font-medium leading-none"
-                >
-                  Active
-                </label>
-                <Checkbox
-                  id={"false"}
-                  checked={isChecked("del", "false")}
-                  onCheckedChange={(checked) => dynamicFilter("del", "false")}
-                />
-              </div>
             </div>
           </AccordionContent>
         </AccordionItem>

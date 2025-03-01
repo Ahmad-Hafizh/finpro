@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 export type Product = {
   product_id: number;
@@ -18,7 +20,7 @@ export type Product = {
   product_category_id: number;
   product_description: string | null;
   deletedAt: string | null;
-  stock: Stock;
+  stock: Stock[];
   product_img: any[];
   product_category: ProductCategory;
   voucher: any[];
@@ -41,6 +43,7 @@ export const columns = (
   setAction: (action: string) => void,
   setProductId: (id: number) => void,
   setOpenDialog: (open: boolean) => void,
+  storeId: number,
 ): ColumnDef<Product>[] => [
   {
     accessorKey: "product_name",
@@ -127,7 +130,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "product_stock.quantity",
+    accessorKey: "stock.quantity",
     header: ({ column }) => {
       return (
         <Button
@@ -140,14 +143,17 @@ export const columns = (
     },
     cell: ({ row }) => {
       const product = row.original;
+      console.log("PRODUCT: ", product);
+      const stockForStore = product.stock?.find((s) => s.store_id === storeId);
       return (
-        <div className="text-md font-medium">{product.stock?.quantity}</div>
+        <div className="text-md font-medium">{product.stock[0].quantity}</div>
       );
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
+      const { toast } = useToast();
       const productList = row.original;
 
       console.log("ROW: ", row.original);
@@ -159,10 +165,48 @@ export const columns = (
         setOpenDialog(true);
       };
 
-      const onHandleDelete = () => {
-        setProductId(productList.product_id);
-        setAction("Delete");
-        setOpenDialog(true);
+      const onHandleDelete = async () => {
+        try {
+          if (
+            productList.stock.find((s) => s.store_id === storeId)?.quantity ===
+            0
+          ) {
+            toast({
+              title: "Error",
+              description: "Stock is already empty",
+              variant: "destructive",
+            });
+          } else {
+            const payload = {
+              product_id: productList.product_id,
+              store_id: storeId,
+            };
+            const response = await callAPI.patch("/stock/zero", payload);
+
+            if (response.status === 200) {
+              toast({
+                title: "Success",
+                description: "Emptying Stock Success",
+                className: "bg-gradient-to-r from-green-300 to-green-200",
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            } else {
+              toast({
+                title: "Error",
+                description: "Something went wrong while emptying stock",
+                variant: "destructive",
+              });
+            }
+
+            setProductId(productList.product_id);
+            // setAction("Delete");
+            // setOpenDialog(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       };
 
       return (
@@ -178,6 +222,9 @@ export const columns = (
 
             <DropdownMenuItem onClick={onHandleEdit}>
               Edit Stock
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onHandleDelete}>
+              Empty Stock
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

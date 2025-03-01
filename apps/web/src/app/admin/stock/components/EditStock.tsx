@@ -53,10 +53,12 @@ export type ProductCategory = {
 
 export type IEditStock = {
   products: Product;
+  store_id?: number;
   setOpenDialog: (open: boolean) => void;
 };
 
-const EditStock = ({ products, setOpenDialog }: IEditStock) => {
+const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
+  console.log("INI PRODUCT DARI EDIT STOCK: ", products);
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -68,18 +70,43 @@ const EditStock = ({ products, setOpenDialog }: IEditStock) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       product_id: products.product_id,
-      amount: products.stock.quantity,
+      amount: products?.stock
+        ? products?.stock?.find((stock: any) => stock.store_id === store_id)
+            ?.quantity || 0
+        : 0,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("THIS IS PRODUCTS : lll :  ", products);
+
     const payload = {
       product_id: products.product_id,
-      store_id: products.stock.store_id,
-      stock: values.amount,
+      store_id: store_id,
+      quantity: values.amount,
     };
-
     console.log("THIS IS PAYLOAD : ", payload);
+
+    const response = await callAPI.patch("/stock", payload);
+
+    if (response.status === 200) {
+      toast({
+        title: "Success",
+        description: "Editing Stock Success",
+        className: "bg-gradient-to-r from-green-300 to-green-200",
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } else {
+      toast({
+        title: "Error",
+        description: "Something went wrong while editing stock",
+        variant: "destructive",
+      });
+    }
+
     setOpenDialog(false);
   };
 
@@ -120,6 +147,7 @@ const EditStock = ({ products, setOpenDialog }: IEditStock) => {
                   placeholder={`Current stock : ${products.stock?.quantity || "0"}`}
                   {...field}
                   type="number"
+                  onChange={(e) => field.onChange(Number(e.target.value) || 0)}
                   value={String(field.value)}
                 />
               </FormControl>

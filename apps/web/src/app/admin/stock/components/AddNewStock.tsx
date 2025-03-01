@@ -53,10 +53,11 @@ export type ProductCategory = {
 
 export type IAddStock = {
   products: Product[];
+  store_id?: number;
   setOpenDialog: (open: boolean) => void;
 };
 
-const AddNewStock = ({ products, setOpenDialog }: IAddStock) => {
+const AddNewStock = ({ products, store_id, setOpenDialog }: IAddStock) => {
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -72,14 +73,33 @@ const AddNewStock = ({ products, setOpenDialog }: IAddStock) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const payload = {
       product_id: values.product_id,
-      store_id: 1,
-      amount: values.stock,
+      store_id: store_id,
+      quantity: values.stock,
     };
 
-    console.log("THIS IS PAYLOAD : ", payload);
+    const submitNewStock = await callAPI.post("/stock", payload);
+
+    if (submitNewStock.status === 200) {
+      toast({
+        title: "Success",
+        description: "Adding Stock Success",
+        className: "bg-gradient-to-r from-green-300 to-green-200",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } else {
+      toast({
+        title: "Error",
+        description: "Something went wrong while adding stock",
+        variant: "destructive",
+      });
+    }
+
+    // console.log("THIS IS PAYLOAD : ", payload);
     setOpenDialog(false);
   };
 

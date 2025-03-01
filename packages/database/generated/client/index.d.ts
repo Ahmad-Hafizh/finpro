@@ -3251,6 +3251,7 @@ export namespace Prisma {
     cart_items: number
     order_items: number
     product_img: number
+    stock: number
     voucher: number
   }
 
@@ -3258,6 +3259,7 @@ export namespace Prisma {
     cart_items?: boolean | ProductCountOutputTypeCountCart_itemsArgs
     order_items?: boolean | ProductCountOutputTypeCountOrder_itemsArgs
     product_img?: boolean | ProductCountOutputTypeCountProduct_imgArgs
+    stock?: boolean | ProductCountOutputTypeCountStockArgs
     voucher?: boolean | ProductCountOutputTypeCountVoucherArgs
   }
 
@@ -3291,6 +3293,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountProduct_imgArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductImgWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountStockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockWhereInput
   }
 
   /**
@@ -14333,7 +14342,7 @@ export namespace Prisma {
       order_items: Prisma.$OrderItemPayload<ExtArgs>[]
       product_category: Prisma.$ProductCategoryPayload<ExtArgs>
       product_img: Prisma.$ProductImgPayload<ExtArgs>[]
-      stock: Prisma.$StockPayload<ExtArgs> | null
+      stock: Prisma.$StockPayload<ExtArgs>[]
       voucher: Prisma.$VoucherProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -14741,7 +14750,7 @@ export namespace Prisma {
     order_items<T extends Product$order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     product_category<T extends ProductCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductCategoryDefaultArgs<ExtArgs>>): Prisma__ProductCategoryClient<$Result.GetResult<Prisma.$ProductCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     product_img<T extends Product$product_imgArgs<ExtArgs> = {}>(args?: Subset<T, Product$product_imgArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductImgPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
-    stock<T extends Product$stockArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockArgs<ExtArgs>>): Prisma__StockClient<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    stock<T extends Product$stockArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     voucher<T extends Product$voucherArgs<ExtArgs> = {}>(args?: Subset<T, Product$voucherArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherProductPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -15262,6 +15271,11 @@ export namespace Prisma {
      */
     include?: StockInclude<ExtArgs> | null
     where?: StockWhereInput
+    orderBy?: StockOrderByWithRelationInput | StockOrderByWithRelationInput[]
+    cursor?: StockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockScalarFieldEnum | StockScalarFieldEnum[]
   }
 
   /**
@@ -30942,16 +30956,16 @@ export namespace Prisma {
 
   export type StockWhereUniqueInput = Prisma.AtLeast<{
     stock_id?: number
-    product_id?: number
     AND?: StockWhereInput | StockWhereInput[]
     OR?: StockWhereInput[]
     NOT?: StockWhereInput | StockWhereInput[]
     store_id?: IntFilter<"Stock"> | number
+    product_id?: IntFilter<"Stock"> | number
     quantity?: IntFilter<"Stock"> | number
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
     stock_journal?: StockJournalListRelationFilter
-  }, "stock_id" | "product_id">
+  }, "stock_id">
 
   export type StockOrderByWithAggregationInput = {
     stock_id?: SortOrder
@@ -31064,7 +31078,7 @@ export namespace Prisma {
     order_items?: OrderItemListRelationFilter
     product_category?: XOR<ProductCategoryScalarRelationFilter, ProductCategoryWhereInput>
     product_img?: ProductImgListRelationFilter
-    stock?: XOR<StockNullableScalarRelationFilter, StockWhereInput> | null
+    stock?: StockListRelationFilter
     voucher?: VoucherProductListRelationFilter
   }
 
@@ -31079,7 +31093,7 @@ export namespace Prisma {
     order_items?: OrderItemOrderByRelationAggregateInput
     product_category?: ProductCategoryOrderByWithRelationInput
     product_img?: ProductImgOrderByRelationAggregateInput
-    stock?: StockOrderByWithRelationInput
+    stock?: StockOrderByRelationAggregateInput
     voucher?: VoucherProductOrderByRelationAggregateInput
   }
 
@@ -31097,7 +31111,7 @@ export namespace Prisma {
     order_items?: OrderItemListRelationFilter
     product_category?: XOR<ProductCategoryScalarRelationFilter, ProductCategoryWhereInput>
     product_img?: ProductImgListRelationFilter
-    stock?: XOR<StockNullableScalarRelationFilter, StockWhereInput> | null
+    stock?: StockListRelationFilter
     voucher?: VoucherProductListRelationFilter
   }, "product_id" | "product_name">
 
@@ -32623,7 +32637,7 @@ export namespace Prisma {
     order_items?: OrderItemCreateNestedManyWithoutProductInput
     product_category: ProductCategoryCreateNestedOneWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
     voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
@@ -32637,7 +32651,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
     voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -32650,7 +32664,7 @@ export namespace Prisma {
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
     product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
@@ -32664,7 +32678,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -34197,11 +34211,6 @@ export namespace Prisma {
     every?: ProductImgWhereInput
     some?: ProductImgWhereInput
     none?: ProductImgWhereInput
-  }
-
-  export type StockNullableScalarRelationFilter = {
-    is?: StockWhereInput | null
-    isNot?: StockWhereInput | null
   }
 
   export type CartItemOrderByRelationAggregateInput = {
@@ -35932,10 +35941,11 @@ export namespace Prisma {
     connect?: ProductImgWhereUniqueInput | ProductImgWhereUniqueInput[]
   }
 
-  export type StockCreateNestedOneWithoutProductInput = {
-    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
-    connectOrCreate?: StockCreateOrConnectWithoutProductInput
-    connect?: StockWhereUniqueInput
+  export type StockCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
+    createMany?: StockCreateManyProductInputEnvelope
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
   }
 
   export type VoucherProductCreateNestedManyWithoutProductInput = {
@@ -35966,10 +35976,11 @@ export namespace Prisma {
     connect?: ProductImgWhereUniqueInput | ProductImgWhereUniqueInput[]
   }
 
-  export type StockUncheckedCreateNestedOneWithoutProductInput = {
-    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
-    connectOrCreate?: StockCreateOrConnectWithoutProductInput
-    connect?: StockWhereUniqueInput
+  export type StockUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
+    createMany?: StockCreateManyProductInputEnvelope
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
   }
 
   export type VoucherProductUncheckedCreateNestedManyWithoutProductInput = {
@@ -36029,14 +36040,18 @@ export namespace Prisma {
     deleteMany?: ProductImgScalarWhereInput | ProductImgScalarWhereInput[]
   }
 
-  export type StockUpdateOneWithoutProductNestedInput = {
-    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
-    connectOrCreate?: StockCreateOrConnectWithoutProductInput
-    upsert?: StockUpsertWithoutProductInput
-    disconnect?: StockWhereInput | boolean
-    delete?: StockWhereInput | boolean
-    connect?: StockWhereUniqueInput
-    update?: XOR<XOR<StockUpdateToOneWithWhereWithoutProductInput, StockUpdateWithoutProductInput>, StockUncheckedUpdateWithoutProductInput>
+  export type StockUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
+    upsert?: StockUpsertWithWhereUniqueWithoutProductInput | StockUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockCreateManyProductInputEnvelope
+    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    update?: StockUpdateWithWhereUniqueWithoutProductInput | StockUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockUpdateManyWithWhereWithoutProductInput | StockUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
   }
 
   export type VoucherProductUpdateManyWithoutProductNestedInput = {
@@ -36095,14 +36110,18 @@ export namespace Prisma {
     deleteMany?: ProductImgScalarWhereInput | ProductImgScalarWhereInput[]
   }
 
-  export type StockUncheckedUpdateOneWithoutProductNestedInput = {
-    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
-    connectOrCreate?: StockCreateOrConnectWithoutProductInput
-    upsert?: StockUpsertWithoutProductInput
-    disconnect?: StockWhereInput | boolean
-    delete?: StockWhereInput | boolean
-    connect?: StockWhereUniqueInput
-    update?: XOR<XOR<StockUpdateToOneWithWhereWithoutProductInput, StockUpdateWithoutProductInput>, StockUncheckedUpdateWithoutProductInput>
+  export type StockUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput> | StockCreateWithoutProductInput[] | StockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutProductInput | StockCreateOrConnectWithoutProductInput[]
+    upsert?: StockUpsertWithWhereUniqueWithoutProductInput | StockUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockCreateManyProductInputEnvelope
+    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    update?: StockUpdateWithWhereUniqueWithoutProductInput | StockUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockUpdateManyWithWhereWithoutProductInput | StockUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
   }
 
   export type VoucherProductUncheckedUpdateManyWithoutProductNestedInput = {
@@ -38908,6 +38927,11 @@ export namespace Prisma {
     create: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
   }
 
+  export type StockCreateManyProductInputEnvelope = {
+    data: StockCreateManyProductInput | StockCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type VoucherProductCreateWithoutProductInput = {
     voucher_product_code: string
     voucher_product_nominal: number
@@ -39038,28 +39062,20 @@ export namespace Prisma {
     product_id?: IntFilter<"ProductImg"> | number
   }
 
-  export type StockUpsertWithoutProductInput = {
+  export type StockUpsertWithWhereUniqueWithoutProductInput = {
+    where: StockWhereUniqueInput
     update: XOR<StockUpdateWithoutProductInput, StockUncheckedUpdateWithoutProductInput>
     create: XOR<StockCreateWithoutProductInput, StockUncheckedCreateWithoutProductInput>
-    where?: StockWhereInput
   }
 
-  export type StockUpdateToOneWithWhereWithoutProductInput = {
-    where?: StockWhereInput
+  export type StockUpdateWithWhereUniqueWithoutProductInput = {
+    where: StockWhereUniqueInput
     data: XOR<StockUpdateWithoutProductInput, StockUncheckedUpdateWithoutProductInput>
   }
 
-  export type StockUpdateWithoutProductInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
-    store?: StoreUpdateOneRequiredWithoutStockNestedInput
-    stock_journal?: StockJournalUpdateManyWithoutStockNestedInput
-  }
-
-  export type StockUncheckedUpdateWithoutProductInput = {
-    stock_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
-    stock_journal?: StockJournalUncheckedUpdateManyWithoutStockNestedInput
+  export type StockUpdateManyWithWhereWithoutProductInput = {
+    where: StockScalarWhereInput
+    data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutProductInput>
   }
 
   export type VoucherProductUpsertWithWhereUniqueWithoutProductInput = {
@@ -39086,7 +39102,7 @@ export namespace Prisma {
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
     product_category: ProductCategoryCreateNestedOneWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
     voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
@@ -39099,7 +39115,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
     voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -39127,7 +39143,7 @@ export namespace Prisma {
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
     product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
@@ -39140,7 +39156,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -39152,7 +39168,7 @@ export namespace Prisma {
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     order_items?: OrderItemCreateNestedManyWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
     voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
@@ -39165,7 +39181,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
     voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -39542,7 +39558,7 @@ export namespace Prisma {
     order_items?: OrderItemCreateNestedManyWithoutProductInput
     product_category: ProductCategoryCreateNestedOneWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutVoucherInput = {
@@ -39555,7 +39571,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutVoucherInput = {
@@ -39615,7 +39631,7 @@ export namespace Prisma {
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
     product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutVoucherInput = {
@@ -39628,7 +39644,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CartItemCreateWithoutCartInput = {
@@ -39754,7 +39770,7 @@ export namespace Prisma {
     order_items?: OrderItemCreateNestedManyWithoutProductInput
     product_category: ProductCategoryCreateNestedOneWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
     voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
@@ -39767,7 +39783,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     order_items?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
     voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -39817,7 +39833,7 @@ export namespace Prisma {
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
     product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
@@ -39830,7 +39846,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -40224,7 +40240,7 @@ export namespace Prisma {
     cart_items?: CartItemCreateNestedManyWithoutProductInput
     product_category: ProductCategoryCreateNestedOneWithoutProductInput
     product_img?: ProductImgCreateNestedManyWithoutProductInput
-    stock?: StockCreateNestedOneWithoutProductInput
+    stock?: StockCreateNestedManyWithoutProductInput
     voucher?: VoucherProductCreateNestedManyWithoutProductInput
   }
 
@@ -40237,7 +40253,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     cart_items?: CartItemUncheckedCreateNestedManyWithoutProductInput
     product_img?: ProductImgUncheckedCreateNestedManyWithoutProductInput
-    stock?: StockUncheckedCreateNestedOneWithoutProductInput
+    stock?: StockUncheckedCreateNestedManyWithoutProductInput
     voucher?: VoucherProductUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -40307,7 +40323,7 @@ export namespace Prisma {
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     product_category?: ProductCategoryUpdateOneRequiredWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
@@ -40320,7 +40336,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -41341,6 +41357,12 @@ export namespace Prisma {
     image_url: string
   }
 
+  export type StockCreateManyProductInput = {
+    stock_id?: number
+    store_id: number
+    quantity: number
+  }
+
   export type VoucherProductCreateManyProductInput = {
     voucher_product_id?: number
     voucher_product_code: string
@@ -41405,6 +41427,25 @@ export namespace Prisma {
     image_url?: StringFieldUpdateOperationsInput | string
   }
 
+  export type StockUpdateWithoutProductInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    store?: StoreUpdateOneRequiredWithoutStockNestedInput
+    stock_journal?: StockJournalUpdateManyWithoutStockNestedInput
+  }
+
+  export type StockUncheckedUpdateWithoutProductInput = {
+    stock_id?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    stock_journal?: StockJournalUncheckedUpdateManyWithoutStockNestedInput
+  }
+
+  export type StockUncheckedUpdateManyWithoutProductInput = {
+    stock_id?: IntFieldUpdateOperationsInput | number
+    store_id?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+  }
+
   export type VoucherProductUpdateWithoutProductInput = {
     voucher_product_code?: StringFieldUpdateOperationsInput | string
     voucher_product_nominal?: IntFieldUpdateOperationsInput | number
@@ -41450,7 +41491,7 @@ export namespace Prisma {
     cart_items?: CartItemUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUpdateManyWithoutProductNestedInput
-    stock?: StockUpdateOneWithoutProductNestedInput
+    stock?: StockUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUpdateManyWithoutProductNestedInput
   }
 
@@ -41463,7 +41504,7 @@ export namespace Prisma {
     cart_items?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     order_items?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     product_img?: ProductImgUncheckedUpdateManyWithoutProductNestedInput
-    stock?: StockUncheckedUpdateOneWithoutProductNestedInput
+    stock?: StockUncheckedUpdateManyWithoutProductNestedInput
     voucher?: VoucherProductUncheckedUpdateManyWithoutProductNestedInput
   }
 

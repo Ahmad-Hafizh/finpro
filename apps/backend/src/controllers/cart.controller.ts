@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { prisma } from '../../../../packages/database/src/client';
+import { Request, Response } from "express";
+import { prisma } from "../../../../packages/database/src/client";
 
 export class CartController {
   // add to cart
   async addToCart(req: Request, res: Response): Promise<any> {
     const { product_id, quantity } = req.body;
-    const userId = '1'; // test user id
+    const userId = "1"; // test user id
 
     try {
       const user = await prisma.user.findUnique({
@@ -15,7 +15,7 @@ export class CartController {
 
       if (!user || !user.emailVerified) {
         return res.status(403).json({
-          error: 'User not found or not verified',
+          error: "User not found or not verified",
         });
       }
 
@@ -24,7 +24,7 @@ export class CartController {
       });
 
       if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
+        return res.status(404).json({ error: "Profile not found" });
       }
 
       const stock = await prisma.stock.findFirst({
@@ -33,7 +33,7 @@ export class CartController {
 
       if (!stock || stock.quantity < quantity) {
         return res.status(400).json({
-          error: 'Insufficient product stock',
+          error: "Insufficient product stock",
         });
       }
       let cart = await prisma.cart.findFirst({
@@ -55,7 +55,7 @@ export class CartController {
       }
 
       if (!cart) {
-        return res.status(500).json({ error: 'Failed to create cart' });
+        return res.status(500).json({ error: "Failed to create cart" });
       }
 
       const existingCartItem = await prisma.cartItem.findFirst({
@@ -84,20 +84,20 @@ export class CartController {
       return res.status(201).json(newCartItem);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Failed to add to cart' });
+      return res.status(500).json({ error: "Failed to add to cart" });
     }
   }
 
   // get cart items count
   async getCartItemsCount(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
 
       if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
+        return res.status(404).json({ error: "Profile not found" });
       }
 
       const cart = await prisma.cart.findFirst({
@@ -109,20 +109,20 @@ export class CartController {
       return res.status(200).json({ count: itemCount });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Failed to get item count' });
+      return res.status(500).json({ error: "Failed to get item count" });
     }
   }
 
   // get cart items
   async getCartItems(req: Request, res: Response): Promise<any> {
-    const userId = '1';
+    const userId = "1";
     try {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
 
       if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
+        return res.status(404).json({ error: "Profile not found" });
       }
 
       const cart = await prisma.cart.findFirst({
@@ -149,30 +149,34 @@ export class CartController {
         return res.status(200).json({ items: [] });
       }
 
-      const itemsWithTotal = cart.cart_items.map((item) => ({
-        ...item,
-        subtotal: item.quantity * item.product.product_price,
-        store_name: item.product.stock?.store?.store_name ?? 'Unknown Store',
-        product: {
-          ...item.product,
-          stock: item.product.stock
-            ? {
-                ...item.product.stock,
-                store: item.product.stock.store,
-              }
-            : null,
-        },
-      }));
+      // const itemsWithTotal = cart.cart_items.map((item) => ({
+      //   ...item,
+      //   subtotal: item.quantity * item.product.product_price,
+      //   store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
+      //   product: {
+      //     ...item.product,
+      //     stock: item.product.stock
+      //       ? {
+      //           ...item.product.stock,
+      //           store: item.product.stock.store,
+      //         }
+      //       : null,
+      //   },
+      // }));
 
-      const total = itemsWithTotal.reduce((sum, item) => sum + item.subtotal, 0);
+      // const total = itemsWithTotal.reduce(
+      //   (sum, item) => sum + item.subtotal,
+      //   0
+      // );
 
-      return res.status(200).json({
-        items: itemsWithTotal,
-        total,
-      });
+      return;
+      // res.status(200).json({
+      //   items: itemsWithTotal,
+      //   total,
+      // });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Failed to get items' });
+      return res.status(500).json({ error: "Failed to get items" });
     }
   }
 
@@ -184,7 +188,7 @@ export class CartController {
     try {
       if (quantity < 1) {
         return res.status(400).json({
-          error: 'Quantity should be more than 0',
+          error: "Quantity should be more than 0",
         });
       }
 
@@ -201,7 +205,7 @@ export class CartController {
       });
 
       if (!stock || stock.quantity < quantity) {
-        return res.status(400).json({ error: 'Insufficient stock' });
+        return res.status(400).json({ error: "Insufficient stock" });
       }
 
       const updatedCartItem = await prisma.cartItem.update({
@@ -212,7 +216,7 @@ export class CartController {
       return res.status(200).json(updatedCartItem);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Failed to update item' });
+      return res.status(500).json({ error: "Failed to update item" });
     }
   }
 
@@ -225,10 +229,10 @@ export class CartController {
         where: { cart_item_id: parseInt(cart_item_id, 10) },
       });
 
-      return res.status(200).json({ message: 'Item deleted successfully' });
+      return res.status(200).json({ message: "Item deleted successfully" });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Failed to delete item' });
+      return res.status(500).json({ error: "Failed to delete item" });
     }
   }
 }
