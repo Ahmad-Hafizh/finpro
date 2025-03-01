@@ -13,6 +13,10 @@ export class StoreRouter {
 
   private initializeRoute() {
     this.route.get('/get-store', this.storeController.findNearestStore);
+    this.route.post('/create', this.storeController.createStore);
+    this.route.delete('/delete', this.storeController.deleteStore);
+    this.route.patch('/update', this.storeController.updateStore);
+    this.route.post('/get-distance', this.storeController.getStoreDistance);
   }
 
   public getRouter() {
