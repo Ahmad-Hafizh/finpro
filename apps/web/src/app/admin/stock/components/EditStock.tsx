@@ -59,6 +59,10 @@ export type IEditStock = {
 
 const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
   console.log("INI PRODUCT DARI EDIT STOCK: ", products);
+  console.log(
+    "INI PRODUCT DARI EDIT STOCKKKKKKK: ",
+    Array.isArray(products.stock),
+  );
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -66,14 +70,16 @@ const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
     amount: z.number().min(1, { message: "Cannot zero or negative number!" }),
   });
 
+  const stockArray = Array.isArray(products?.stock) ? products.stock : [];
+  const newStockArray = stockArray.filter(
+    (stock: any) => stock.store_id === store_id,
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       product_id: products.product_id,
-      amount: products?.stock
-        ? products?.stock?.find((stock: any) => stock.store_id === store_id)
-            ?.quantity || 0
-        : 0,
+      amount: newStockArray[0].quantity ?? 0,
     },
   });
 
