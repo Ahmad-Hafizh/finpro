@@ -47,7 +47,7 @@ export class AdminOrderController {
 
   // confirm payment (manual transfer)
   async confirmPayment(req: Request, res: Response): Promise<any> {
-    const userId = "4";
+    const userId = "2";
     try {
       const admin = await prisma.admin.findUnique({
         where: { user_id: userId },
@@ -112,7 +112,7 @@ export class AdminOrderController {
 
   // send user order
   async sendUserOrder(req: Request, res: Response): Promise<any> {
-    const userId = "4";
+    const userId = "2";
     try {
       const admin = await prisma.admin.findUnique({
         where: { user_id: userId },
@@ -165,7 +165,7 @@ export class AdminOrderController {
 
   // cancel user order
   async cancelUserOrder(req: Request, res: Response): Promise<any> {
-    const userId = "4";
+    const userId = "2";
     try {
       const admin = await prisma.admin.findUnique({
         where: { user_id: userId },

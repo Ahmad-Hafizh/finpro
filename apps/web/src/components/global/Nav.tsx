@@ -158,10 +158,11 @@ const Navbar = () => {
           </div>
         </div>
         <div className="flex items-center justify-center gap-4 border-r-2 pr-4">
-          <Link href="/cart">
+          <Link href="/cart" className="relative">
             <IoCartOutline className="text-2xl" />
             {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
+              // <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
+              <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
                 {cartCount}
               </span>
             )}
