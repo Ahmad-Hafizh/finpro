@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { prisma } from '../../../../packages/database/src/client';
-import ResponseHandler from '../utils/responseHandler';
-import { findProduct } from '../services/product/getProduct.services';
-import { createProduct } from '../services/product/createProduct.services';
-import { deleteProduct } from '../services/product/deleteProduct.services';
-import { findDetailedProduct } from '../services/product/getDetailedProduct.services';
-import { uploadImage } from '../utils/cloudinary';
+import { Request, Response } from "express";
+import prisma from "../prisma";
+import ResponseHandler from "../utils/responseHandler";
+import { findProduct } from "../services/product/getProduct.services";
+import { createProduct } from "../services/product/createProduct.services";
+import { deleteProduct } from "../services/product/deleteProduct.services";
+import { findDetailedProduct } from "../services/product/getDetailedProduct.services";
+import { uploadImage } from "../utils/cloudinary";
 
 export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
@@ -32,9 +32,14 @@ export class ProductController {
 
       const result = await findProduct(objectPayload);
 
-      return ResponseHandler.success(res, 200, 'Get Product Data Success', result);
+      return ResponseHandler.success(
+        res,
+        200,
+        "Get Product Data Success",
+        result
+      );
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
 
@@ -47,35 +52,45 @@ export class ProductController {
       const images = req.body.product_image as string[];
 
       if (!req.files) {
-        return res.status(400).json({ error: 'No files uploaded' });
+        return res.status(400).json({ error: "No files uploaded" });
       }
 
       const image = await Promise.all(
         (req.files as Express.Multer.File[]).map(async (file) => {
-          const result = await uploadImage(file.path, 'product_images');
+          const result = await uploadImage(file.path, "product_images");
           return result.secure_url;
         })
       );
 
       const objectPayload = { name, price, description, category, image };
 
-      console.log('This is category :', category);
+      console.log("This is category :", category);
       const result = await createProduct(objectPayload);
 
-      return ResponseHandler.success(res, 200, 'Create Product Success', result);
+      return ResponseHandler.success(
+        res,
+        200,
+        "Create Product Success",
+        result
+      );
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
 
   async deleteProduct(req: Request, res: Response): Promise<any> {
     try {
       const product_id = req.body.product_id as string;
-      console.log('INI PRODUCT ID :', product_id);
+      console.log("INI PRODUCT ID :", product_id);
       const result = await deleteProduct({ product_id });
-      return ResponseHandler.success(res, 200, 'Create Product Success', result);
+      return ResponseHandler.success(
+        res,
+        200,
+        "Create Product Success",
+        result
+      );
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
 
@@ -83,10 +98,15 @@ export class ProductController {
     try {
       const { name } = req.params;
       const result = await findDetailedProduct({ name });
-      return ResponseHandler.success(res, 200, 'Get detailed product success', result);
+      return ResponseHandler.success(
+        res,
+        200,
+        "Get detailed product success",
+        result
+      );
     } catch (error) {
-      console.log('error from get detailed product', error);
-      return ResponseHandler.error(res, 500, 'Internal server error', error);
+      console.log("error from get detailed product", error);
+      return ResponseHandler.error(res, 500, "Internal server error", error);
     }
   }
 }

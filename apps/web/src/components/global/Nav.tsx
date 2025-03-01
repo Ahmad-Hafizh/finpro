@@ -14,13 +14,15 @@ import { setStore } from "@/lib/redux/reducers/storeSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { FaArrowLeft } from "react-icons/fa";
 import { MapPin } from "lucide-react";
-
-// tambahan------------
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/lib/redux/store";
 import { fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
-// ------------------------------------------------------
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { signOutAction } from "@/actions/signOutAction";
 
 const Navbar = () => {
   const pathName = usePathname();
@@ -28,9 +30,9 @@ const Navbar = () => {
   const { data: session } = useSession();
   const splitPath = pathName.split("/");
   const currentPath = splitPath[splitPath.length - 1].replace("-", " ");
-  const dispatch = useAppDispatch();
+  const dispatch: any = useAppDispatch();
   const currStore = useAppSelector((state) => state.store);
-  const cartCount = useSelector((state: RootState) => state.cart.count);
+  const cartCount = useAppSelector((state) => state.cart);
   const { cartVersion } = useCart();
 
   useEffect(() => {
@@ -43,11 +45,9 @@ const Navbar = () => {
         const response = await callAPI.get(
           `/store/get-store?lat=${latitude}&lng=${longitude}`,
         );
-
         dispatch(setStore(response.data.result));
       } else {
         const response = await callAPI.get(`/store/get-store`);
-
         dispatch(setStore(response.data.result));
       }
     } catch (error) {
@@ -98,7 +98,6 @@ const Navbar = () => {
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
   }, [dispatch]);
-  // ------------------------------------------------
 
   return (
     <div
@@ -157,26 +156,43 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center gap-4 border-r-2 pr-4">
-          <Link href="/cart">
-            <IoCartOutline className="text-2xl" />
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-2 py-1 text-xs font-medium text-black">
-                {cartCount}
-              </span>
-            )}
+        <div className={`${session?.user ? "flex" : "hidden"} gap-2`}>
+          <div className="flex items-center justify-center gap-4 border-r-2 pr-4">
+            <Link href="/cart" className="relative">
+              <IoCartOutline className="text-3xl" />
+              {cartCount.count > 0 && (
+                <span className="absolute -right-1 -top-1 rounded-full bg-[#80ED99] px-1 text-sm font-medium text-black">
+                  {cartCount.count}
+                </span>
+              )}
+            </Link>
+            <Link href="/order">
+              <FiPackage className="text-3xl" />
+            </Link>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex gap-2">
+              <MdOutlineAccountCircle className="text-3xl" />
+              <p className="text-xl">{session?.user?.name}</p>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Link href="/setting/account">Setting</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Button onClick={signOutAction}>Sign Out</Button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className={`${session?.user ? "hidden" : "flex"} gap-2`}>
+          <Link href="/auth/signin">
+            <Button>Sign In</Button>
           </Link>
-          <Link href="/order">
-            <FiPackage className="text-2xl" />
+          <Link href="/auth/signup">
+            <Button>Sign Up</Button>
           </Link>
         </div>
-        <Link
-          href="setting"
-          className={`${session?.user ? "flex" : "hidden"} items-center justify-start gap-2`}
-        >
-          <MdOutlineAccountCircle className="text-2xl" />
-          <p className="text-xl">{session?.user?.name}</p>
-        </Link>
       </div>
     </div>
   );
