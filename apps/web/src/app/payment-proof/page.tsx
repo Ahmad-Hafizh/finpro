@@ -1,7 +1,27 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { callAPI } from "@/config/axios";
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  Alert,
+  CircularProgress,
+  Stack,
+  Card,
+  CardContent,
+  Divider,
+  Button,
+  Chip,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./[order_id]/theme";
+import Navbar from "@/components/global/Nav";
+import PaymentProofCard from "./components/PaymentProofCard";
 
 interface Order {
   order_id: number;
@@ -13,7 +33,7 @@ interface Order {
 const PaymentProofListPage: React.FC = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchOrders = async () => {
@@ -36,49 +56,101 @@ const PaymentProofListPage: React.FC = () => {
     fetchOrders();
   }, []);
 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(dateString).toLocaleDateString("id-ID", options);
+  };
+
   return (
-    <div className="min-h-screen bg-white px-4 py-8">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-center text-3xl font-bold text-[#57CC99]">
-          Order Menunggu Pembayaran
-        </h1>
-        {loading && (
-          <p className="text-center text-gray-600">Memuat order...</p>
-        )}
-        {error && <p className="text-center text-red-500">{error}</p>}
-        {orders.length === 0 && !loading ? (
-          <p className="text-center text-gray-600">
-            Tidak ada order yang membutuhkan pembayaran.
-          </p>
-        ) : (
-          orders.map((order) => (
-            <div
-              key={order.order_id}
-              className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md"
-            >
-              <p className="mb-2 text-lg">
-                <span className="font-semibold">Order ID:</span>{" "}
-                {order.order_id}
-              </p>
-              <p className="mb-2 text-lg">
-                <span className="font-semibold">Total Harga:</span> Rp{" "}
-                {order.total_price.toLocaleString()}
-              </p>
-              <p className="mb-4 text-lg">
-                <span className="font-semibold">Tanggal:</span>{" "}
-                {new Date(order.order_date).toLocaleString()}
-              </p>
-              <button
-                onClick={() => router.push(`/payment-proof/${order.order_id}`)}
-                className="w-full rounded-md bg-[#57CC99] py-2 text-lg font-semibold text-white transition-colors duration-200 hover:bg-[#80ED99]"
-              >
-                Upload Bukti Pembayaran
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+        <Navbar />
+        <Container maxWidth="md" sx={{ py: 6 }}>
+          <Paper
+            elevation={3}
+            sx={{ p: { xs: 2, md: 4 }, borderRadius: 3, position: "relative" }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "8px",
+                bgcolor: "primary.main",
+              }}
+            />
+            <Box sx={{ textAlign: "center", mb: 5, pt: 2 }}>
+              <Typography variant="h4" color="primary.dark" gutterBottom>
+                Order Menunggu Pembayaran
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Upload bukti pembayaran untuk pesanan yang belum dibayar
+              </Typography>
+            </Box>
+            {loading && (
+              <Stack spacing={3}>
+                {[1, 2, 3].map((item) => (
+                  <Card
+                    key={item}
+                    variant="outlined"
+                    sx={{
+                      borderRadius: 3,
+                      border: "1px solid #e0e0e0",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <CardContent sx={{ p: 3 }}>
+                      <Typography variant="h6">Loading...</Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+            )}
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
+            {!loading && orders.length === 0 && (
+              <Box sx={{ textAlign: "center", py: 6, px: 2 }}>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  Tidak ada order yang membutuhkan pembayaran
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => router.push("/")}
+                >
+                  Kembali ke Beranda
+                </Button>
+              </Box>
+            )}
+            {!loading && orders.length > 0 && (
+              <Grid container spacing={3}>
+                {orders.map((order) => (
+                  <Grid size={12} key={order.order_id}>
+                    <PaymentProofCard
+                      order={order}
+                      formatDate={formatDate}
+                      onUpload={() =>
+                        router.push(`/payment-proof/${order.order_id}`)
+                      }
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </Paper>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };
 
