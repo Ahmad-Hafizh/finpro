@@ -1,19 +1,19 @@
-
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import { CartRouter } from './routers/cart.router';
-import { AccountRouter } from './routers/account.router';
-import { AdminRouter } from './routers/admin.router';
-import { ProductRouter } from './routers/product.router';
-import { CategoryRouter } from './routers/category.router';
-import { OrderRouter } from './routers/order.router';
-import { AddressRouter } from './routers/address.router';
-import { StoreRouter } from './routers/store.router';
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import { CartRouter } from "./routers/cart.router";
+import { AccountRouter } from "./routers/account.router";
+import { AdminRouter } from "./routers/admin.router";
+import { ProductRouter } from "./routers/product.router";
+import { CategoryRouter } from "./routers/category.router";
+import { OrderRouter } from "./routers/order.router";
+import { AddressRouter } from "./routers/address.router";
+import { StoreRouter } from "./routers/store.router";
 import { AdminOrderRouter } from "./routers/adminOrder.router";
-import dotenv from 'dotenv';
+import { StockRouter } from "./routers/stock.router";
+import dotenv from "dotenv";
 dotenv.config();
 
-import './utils/scheduler';
+import "./utils/scheduler";
 
 const PORT = 8090;
 class App {
@@ -61,6 +61,9 @@ class App {
 
     const adminOrderRouter = new AdminOrderRouter();
     this.app.use("/admin-order", adminOrderRouter.getRouter());
+
+    const stockRouter = new StockRouter();
+    this.app.use("/stock", stockRouter.getRouter());
   }
 
   public start() {
