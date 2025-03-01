@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ResponseHandler from "../utils/responseHandler";
-import { prisma } from "../../../../packages/database/src/client";
+import prisma from "../prisma";
 import { findProduct } from "../services/product/getProduct.services";
 
 export class StockController {

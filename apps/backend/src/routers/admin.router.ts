@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { AdminController } from "../controllers/admin.controller";
+import { Router } from 'express';
+import { AdminController } from '../controllers/admin.controller';
 
 export class AdminRouter {
   private route: Router;
@@ -12,8 +12,10 @@ export class AdminRouter {
   }
 
   private initializeRoutes() {
-    this.route.get("/", this.adminController.getAdmin);
-    this.route.patch("/", this.adminController.updateAdmin);
+    this.route.get('/', this.adminController.getAdmin);
+    this.route.patch('/', this.adminController.updateAdmin);
+    this.route.post('/create', this.adminController.createAdmin);
+    this.route.post('/assign-store', this.adminController.assignStoreAdmin);
   }
 
   public getRouter() {

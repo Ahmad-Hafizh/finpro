@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../../packages/database/src/client";
+import prisma from "../prisma";
 import { uploadImage } from "../utils/cloudinary";
 
 const generateOrderNumber = (date: Date): string => {
@@ -20,7 +20,7 @@ export class OrderController {
       });
       if (!profile) return res.status(404).json({ error: "Profile not found" });
 
-      const { address_id, products, total_price } = req.body;
+      const { address_id, products, total_price, shipping_price } = req.body;
       if (!products || !Array.isArray(products) || products.length === 0) {
         return res.status(400).json({ error: "No products provided" });
       }
@@ -33,9 +33,16 @@ export class OrderController {
       });
       if (!address) return res.status(404).json({ error: "Address not found" });
 
+      const nearestStore = await prisma.store.findFirst();
+      if (!nearestStore)
+        return res.status(400).json({ error: "No store available" });
+
       for (const item of products) {
         const stock = await prisma.stock.findFirst({
-          where: { product_id: Number(item.product_id) },
+          where: {
+            product_id: Number(item.product_id),
+            store_id: nearestStore.store_id,
+          },
         });
         if (!stock || stock.quantity < item.quantity) {
           return res.status(400).json({
@@ -44,62 +51,87 @@ export class OrderController {
         }
       }
 
-      const nearestStore = await prisma.store.findFirst();
-      if (!nearestStore)
-        return res.status(400).json({ error: "No store available" });
-
       const now = new Date();
       const orderNumber = generateOrderNumber(now);
 
-      const order = await prisma.order.create({
-        data: {
-          order_number: orderNumber,
-          store_id: nearestStore.store_id,
-          address_id: address.address_id,
-          total_price: total_price || 0,
-          status: "menunggu_pembayaran",
-          order_date: new Date(),
-          profile_id: profile.profile_id,
-          order_items: {
-            create: products.map((item: any) => ({
-              product_id: Number(item.product_id),
-              quantity: Number(item.quantity),
-              price: 0,
-              subtotal: 0,
-            })),
-          },
-        },
-        include: { order_items: true },
-      });
-
-      for (const item of order.order_items) {
-        const product = await prisma.product.findUnique({
-          where: { product_id: item.product_id },
-        });
-        if (product) {
-          await prisma.orderItem.update({
-            where: { order_item_id: item.order_item_id },
-            data: {
-              price: product.product_price,
-              subtotal: product.product_price * item.quantity,
+      const order = await prisma.$transaction(async (tx) => {
+        const createdOrder = await tx.order.create({
+          data: {
+            order_number: orderNumber,
+            store_id: nearestStore.store_id,
+            address_id: address.address_id,
+            total_price: 0,
+            shipping_price: shipping_price || null,
+            total_payment: 0,
+            status: "menunggu_pembayaran",
+            order_date: new Date(),
+            profile_id: profile.profile_id,
+            order_items: {
+              create: products.map((item: any) => ({
+                product_id: Number(item.product_id),
+                quantity: Number(item.quantity),
+                price: 0,
+                subtotal: 0,
+              })),
             },
+          },
+          include: { order_items: true },
+        });
+
+        let total = 0;
+
+        for (const item of createdOrder.order_items) {
+          const product = await tx.product.findUnique({
+            where: { product_id: item.product_id },
           });
+          if (product) {
+            const price = product.product_price;
+            const subtotal = price * item.quantity;
+            total += subtotal;
+
+            await tx.orderItem.update({
+              where: { order_item_id: item.order_item_id },
+              data: { price, subtotal },
+            });
+
+            const stock = await tx.stock.findFirst({
+              where: {
+                product_id: item.product_id,
+                store_id: nearestStore.store_id,
+              },
+            });
+            if (stock) {
+              await tx.stock.update({
+                where: { stock_id: stock.stock_id },
+                data: { quantity: stock.quantity - item.quantity },
+              });
+              await tx.stockJournal.create({
+                data: {
+                  store_id: nearestStore.store_id,
+                  stock_id: stock.stock_id,
+                  product_id: item.product_id.toString(),
+                  quantity: item.quantity,
+                  type: "out",
+                  notes: `Order ${orderNumber} created - stock deducted`,
+                  created_at: new Date(),
+                },
+              });
+            }
+          }
         }
-      }
 
-      const updatedOrderItems = await prisma.orderItem.findMany({
-        where: { order_id: order.order_id },
-      });
-      const total = updatedOrderItems.reduce(
-        (sum, curr) => sum + curr.subtotal,
-        0
-      );
-      const updatedOrder = await prisma.order.update({
-        where: { order_id: order.order_id },
-        data: { total_price: total },
+        const totalPayment = total + (shipping_price || 0);
+
+        const updatedOrder = await tx.order.update({
+          where: { order_id: createdOrder.order_id },
+          data: { total_price: total, total_payment: totalPayment },
+          include: { order_items: true },
+        });
+
+        return updatedOrder;
       });
 
-      return res.status(201).json(updatedOrder);
+      return res.status(201).json(order);
     } catch (error) {
       console.error("Create Order Error:", error);
       return res.status(500).json({ error: "Failed to create order" });
@@ -187,6 +219,7 @@ export class OrderController {
       const { order_id } = req.params;
       const order = await prisma.order.findUnique({
         where: { order_id: Number(order_id) },
+        include: { order_items: true },
       });
       if (!order || order.profile_id !== profile.profile_id) {
         return res.status(404).json({ error: "Order not found" });
@@ -198,21 +231,51 @@ export class OrderController {
       }
 
       const { reason } = req.body;
-      await prisma.orderCancel.create({
-        data: {
-          order_id: order.order_id,
-          reason: reason || "User canceled the order",
-          canceled_at: new Date(),
-        },
+      const canceledOrder = await prisma.$transaction(async (tx) => {
+        for (const item of order.order_items) {
+          const stock = await tx.stock.findFirst({
+            where: {
+              product_id: item.product_id,
+              store_id: order.store_id,
+            },
+          });
+          if (stock) {
+            await tx.stock.update({
+              where: { stock_id: stock.stock_id },
+              data: { quantity: stock.quantity + item.quantity },
+            });
+            await tx.stockJournal.create({
+              data: {
+                store_id: order.store_id,
+                stock_id: stock.stock_id,
+                product_id: item.product_id.toString(),
+                quantity: item.quantity,
+                type: "in",
+                notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || "No reason provided"}`,
+                created_at: new Date(),
+              },
+            });
+          }
+        }
+
+        await tx.orderCancel.create({
+          data: {
+            order_id: order.order_id,
+            reason: reason || "User canceled the order",
+            canceled_at: new Date(),
+          },
+        });
+
+        const updatedOrder = await tx.order.update({
+          where: { order_id: order.order_id },
+          data: { status: "dibatalkan" },
+        });
+        return updatedOrder;
       });
 
-      const updatedOrder = await prisma.order.update({
-        where: { order_id: order.order_id },
-        data: { status: "dibatalkan" },
-      });
       return res.status(200).json({
-        message: "Order canceled successfully",
-        order: updatedOrder,
+        message: "Order canceled successfully and stock has been returned",
+        order: canceledOrder,
       });
     } catch (error) {
       console.error("Cancel Order Error:", error);
@@ -296,13 +359,50 @@ export class OrderController {
           status: "menunggu_pembayaran",
           order_date: { lt: oneHourAgo },
         },
+        include: { order_items: true },
       });
       for (const order of ordersToCancel) {
-        await prisma.order.update({
-          where: { order_id: order.order_id },
-          data: { status: "dibatalkan" },
+        await prisma.$transaction(async (tx) => {
+          for (const item of order.order_items) {
+            const stock = await tx.stock.findFirst({
+              where: {
+                product_id: item.product_id,
+                store_id: order.store_id,
+              },
+            });
+            if (stock) {
+              await tx.stock.update({
+                where: { stock_id: stock.stock_id },
+                data: { quantity: stock.quantity + item.quantity },
+              });
+              await tx.stockJournal.create({
+                data: {
+                  store_id: order.store_id,
+                  stock_id: stock.stock_id,
+                  product_id: item.product_id.toString(),
+                  quantity: item.quantity,
+                  type: "in",
+                  notes: `Auto cancel order ${order.order_number || order.order_id}: stock returned`,
+                  created_at: new Date(),
+                },
+              });
+            }
+          }
+          await tx.orderCancel.create({
+            data: {
+              order_id: order.order_id,
+              reason: "Auto cancelled due to timeout",
+              canceled_at: new Date(),
+            },
+          });
+          await tx.order.update({
+            where: { order_id: order.order_id },
+            data: { status: "dibatalkan" },
+          });
         });
-        console.log(`Order ${order.order_id} canceled automatically.`);
+        console.log(
+          `Order ${order.order_id} auto cancelled and stock returned.`
+        );
       }
     } catch (error) {
       console.error("Error auto-cancelling orders:", error);

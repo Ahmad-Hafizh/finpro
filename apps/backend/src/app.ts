@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import { prisma } from "../../../packages/database/src/client";
 import { CartRouter } from "./routers/cart.router";
 import { AccountRouter } from "./routers/account.router";
 import { AdminRouter } from "./routers/admin.router";
@@ -9,8 +8,13 @@ import { CategoryRouter } from "./routers/category.router";
 import { OrderRouter } from "./routers/order.router";
 import { AddressRouter } from "./routers/address.router";
 import { StoreRouter } from "./routers/store.router";
-import "./utils/scheduler";
+import { AdminOrderRouter } from "./routers/adminOrder.router";
 import { StockRouter } from "./routers/stock.router";
+import dotenv from "dotenv";
+dotenv.config();
+
+import "./utils/scheduler";
+
 const PORT = 8090;
 class App {
   readonly app: Application;
@@ -54,6 +58,9 @@ class App {
 
     const addressRouter = new AddressRouter();
     this.app.use("/address", addressRouter.getRouter());
+
+    const adminOrderRouter = new AdminOrderRouter();
+    this.app.use("/admin-order", adminOrderRouter.getRouter());
 
     const stockRouter = new StockRouter();
     this.app.use("/stock", stockRouter.getRouter());

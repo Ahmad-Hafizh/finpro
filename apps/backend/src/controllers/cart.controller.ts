@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../../packages/database/src/client";
+import prisma from "../prisma";
 
 export class CartController {
   // add to cart
@@ -149,31 +149,30 @@ export class CartController {
         return res.status(200).json({ items: [] });
       }
 
-      // const itemsWithTotal = cart.cart_items.map((item) => ({
-      //   ...item,
-      //   subtotal: item.quantity * item.product.product_price,
-      //   store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
-      //   product: {
-      //     ...item.product,
-      //     stock: item.product.stock
-      //       ? {
-      //           ...item.product.stock,
-      //           store: item.product.stock.store,
-      //         }
-      //       : null,
-      //   },
-      // }));
+      const itemsWithTotal = cart.cart_items.map((item) => ({
+        ...item,
+        subtotal: item.quantity * item.product.product_price,
+        store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
+        product: {
+          ...item.product,
+          stock: item.product.stock
+            ? {
+                ...item.product.stock,
+                store: item.product.stock.store,
+              }
+            : null,
+        },
+      }));
 
-      // const total = itemsWithTotal.reduce(
-      //   (sum, item) => sum + item.subtotal,
-      //   0
-      // );
+      const total = itemsWithTotal.reduce(
+        (sum, item) => sum + item.subtotal,
+        0
+      );
 
-      return;
-      // res.status(200).json({
-      //   items: itemsWithTotal,
-      //   total,
-      // });
+      return res.status(200).json({
+        items: itemsWithTotal,
+        total,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Failed to get items" });

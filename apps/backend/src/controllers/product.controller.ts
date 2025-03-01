@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../../packages/database/src/client";
+import prisma from "../prisma";
 import ResponseHandler from "../utils/responseHandler";
 import { findProduct } from "../services/product/getProduct.services";
 import { createProduct } from "../services/product/createProduct.services";
