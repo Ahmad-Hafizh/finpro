@@ -14,6 +14,7 @@ const order_router_1 = require("./routers/order.router");
 const address_router_1 = require("./routers/address.router");
 const store_router_1 = require("./routers/store.router");
 const adminOrder_router_1 = require("./routers/adminOrder.router");
+const stock_router_1 = require("./routers/stock.router");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 require("./utils/scheduler");
@@ -50,6 +51,8 @@ class App {
         this.app.use("/address", addressRouter.getRouter());
         const adminOrderRouter = new adminOrder_router_1.AdminOrderRouter();
         this.app.use("/admin-order", adminOrderRouter.getRouter());
+        const stockRouter = new stock_router_1.StockRouter();
+        this.app.use("/stock", stockRouter.getRouter());
     }
     start() {
         this.app.listen(PORT, () => {

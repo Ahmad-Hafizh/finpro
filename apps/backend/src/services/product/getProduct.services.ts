@@ -52,7 +52,7 @@ export const findProduct = async ({
           : deletedAt === "false"
             ? { deletedAt: null }
             : {},
-        theStore ? { stock: { some: { store_id: parseInt(theStore) } } } : {},
+        theStore ? { stock: { store_id: parseInt(theStore) } } : {},
       ],
     },
     orderBy: sortBy
