@@ -20,7 +20,7 @@ export type Product = {
   product_category_id: number;
   product_description: string | null;
   deletedAt: string | null;
-  stock: Stock[];
+  stock: any;
   product_img: any[];
   product_category: ProductCategory;
   voucher: any[];
@@ -144,9 +144,9 @@ export const columns = (
     cell: ({ row }) => {
       const product = row.original;
       console.log("PRODUCT: ", product);
-      const stockForStore = product.stock?.find((s) => s.store_id === storeId);
+      // const stockForStore = product.stock?.find((s) => s.store_id === storeId);
       return (
-        <div className="text-md font-medium">{product.stock[0].quantity}</div>
+        <div className="text-md font-medium">{product.stock?.quantity}</div>
       );
     },
   },
@@ -168,8 +168,8 @@ export const columns = (
       const onHandleDelete = async () => {
         try {
           if (
-            productList.stock.find((s) => s.store_id === storeId)?.quantity ===
-            0
+            productList.stock.find((s: any) => s.store_id === storeId)
+              ?.quantity === 0
           ) {
             toast({
               title: "Error",

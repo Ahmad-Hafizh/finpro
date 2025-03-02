@@ -75,11 +75,13 @@ const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
     (stock: any) => stock.store_id === store_id,
   );
 
+  console.log("INI NEW STOCK ARRAY : ", newStockArray);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       product_id: products.product_id,
-      amount: newStockArray[0].quantity ?? 0,
+      amount: products.stock.quantity,
     },
   });
 
