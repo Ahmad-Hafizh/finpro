@@ -144,9 +144,12 @@ export const columns = (
     cell: ({ row }) => {
       const product = row.original;
       console.log("PRODUCT: ", product);
-      // const stockForStore = product.stock?.find((s) => s.store_id === storeId);
+      const stockForStore = product.stock?.find(
+        (s: any) => s.store_id === storeId,
+      );
+      console.log("stockForStore: ", stockForStore);
       return (
-        <div className="text-md font-medium">{product.stock?.quantity}</div>
+        <div className="text-md font-medium">{stockForStore.quantity}</div>
       );
     },
   },

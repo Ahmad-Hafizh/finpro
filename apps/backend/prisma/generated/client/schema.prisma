@@ -151,12 +151,13 @@ model Store {
 model Stock {
   stock_id      Int            @id @default(autoincrement())
   store_id      Int
-  product_id    Int            @unique
+  product_id    Int
   quantity      Int
   product       Product        @relation(fields: [product_id], references: [product_id])
   store         Store          @relation(fields: [store_id], references: [store_id])
   stock_journal StockJournal[]
 
+  @@unique([store_id, product_id])
   @@map("stock")
 }
 
@@ -186,7 +187,7 @@ model Product {
   order_items         OrderItem[]
   product_category    ProductCategory  @relation(fields: [product_category_id], references: [product_category_id])
   product_img         ProductImg[]
-  stock               Stock?
+  stock               Stock[]
   voucher             VoucherProduct[]
 
   @@map("product")
