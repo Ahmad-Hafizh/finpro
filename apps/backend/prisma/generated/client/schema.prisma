@@ -341,12 +341,6 @@ model AdminOrder {
   @@map("admin_order")
 }
 
-model Banner {
-  banner_id Int    @id @default(autoincrement())
-  url       String
-  image     String
-}
-
 enum Role {
   user
   admin
@@ -357,6 +351,12 @@ enum adminPosition {
   store_manager
   store_delivery
   store_logistic
+}
+
+model Banner {
+  banner_id Int    @id @default(autoincrement())
+  url       String
+  image     String
 }
 
 enum StockType {
