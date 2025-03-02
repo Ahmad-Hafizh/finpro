@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD:packages/database/generated/client/package.json
+  "name": "prisma-client-f048f225b0e19ef77b2d590052ef02feb67ef93ee79557fd1ea2d21331d9feef",
+=======
   "name": "prisma-client-b7c8e82da01a84bfaf95a4655fcd6c0d5821f3bf235246436b733e766a923b18",
+>>>>>>> 0b17cd88a68736a101d4fd58a7ace9c280dccf3a:apps/backend/prisma/generated/client/package.json
   "main": "index.js",
   "types": "index.d.ts",
   "browser": "index-browser.js",

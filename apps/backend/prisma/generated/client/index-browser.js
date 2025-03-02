@@ -121,15 +121,14 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image',
   password: 'password',
+  image: 'image',
   role: 'role',
+  emailVerified: 'emailVerified',
   updateAt: 'updateAt'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
   type: 'type',
   provider: 'provider',
   providerAccountId: 'providerAccountId',
@@ -140,15 +139,16 @@ exports.Prisma.AccountScalarFieldEnum = {
   scope: 'scope',
   id_token: 'id_token',
   session_state: 'session_state',
-  userId: 'userId'
+  userId: 'userId',
+  id: 'id'
 };
 
 exports.Prisma.ProfileScalarFieldEnum = {
   profile_id: 'profile_id',
   user_id: 'user_id',
+  referred_id: 'referred_id',
   phone: 'phone',
-  pfp_url: 'pfp_url',
-  referred_id: 'referred_id'
+  pfp_url: 'pfp_url'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
@@ -162,21 +162,21 @@ exports.Prisma.AddressScalarFieldEnum = {
   street: 'street',
   city: 'city',
   country: 'country',
+  profile_id: 'profile_id',
+  address_contact: 'address_contact',
+  address_name: 'address_name',
+  deleted_at: 'deleted_at',
   lat: 'lat',
   lng: 'lng',
-  post_code: 'post_code',
-  address_name: 'address_name',
-  address_contact: 'address_contact',
-  profile_id: 'profile_id',
-  deleted_at: 'deleted_at'
+  post_code: 'post_code'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
   admin_id: 'admin_id',
-  user_id: 'user_id',
   store_id: 'store_id',
   phone: 'phone',
   position: 'position',
+  user_id: 'user_id',
   deleted_at: 'deleted_at'
 };
 
@@ -184,10 +184,10 @@ exports.Prisma.StoreScalarFieldEnum = {
   store_id: 'store_id',
   store_name: 'store_name',
   store_address: 'store_address',
-  country: 'country',
   city: 'city',
   lat: 'lat',
   lng: 'lng',
+  country: 'country',
   isActive: 'isActive'
 };
 
