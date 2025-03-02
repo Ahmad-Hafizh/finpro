@@ -24,6 +24,24 @@ export class AdminOrderController {
         }
       }
 
+      if (req.query.orderNumber) {
+        whereClause.order_number = {
+          contains: req.query.orderNumber as string,
+          mode: "insensitive",
+        };
+      }
+      if (req.query.orderDate) {
+        const orderDate = new Date(req.query.orderDate as string);
+        const startDate = new Date(orderDate);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(orderDate);
+        endDate.setHours(23, 59, 59, 999);
+        whereClause.order_date = {
+          gte: startDate,
+          lte: endDate,
+        };
+      }
+
       const totalCount = await prisma.order.count({ where: whereClause });
       const totalPages = Math.ceil(totalCount / pageSize);
       const orders = await prisma.order.findMany({

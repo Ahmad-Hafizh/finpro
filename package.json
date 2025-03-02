@@ -1,7 +1,7 @@
 {
   "private": true,
   "prisma": {
-    "schema": "packages/database/prisma/schema.prisma",
+    "schema": "apps/backend/prisma/schema.prisma",
     "seed": "tsx packages/database/src/seed.ts"
   },
   "scripts": {

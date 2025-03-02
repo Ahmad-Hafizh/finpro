@@ -36513,12 +36513,6 @@ export namespace Prisma {
     _max?: NestedEnumActionEnumFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD:packages/database/generated/client/index.d.ts
-  export type AccountCreateNestedOneWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput
-    connect?: AccountWhereUniqueInput
-=======
   export type BannerCountOrderByAggregateInput = {
     banner_id?: SortOrder
     url?: SortOrder
@@ -36545,18 +36539,10 @@ export namespace Prisma {
     banner_id?: SortOrder
   }
 
-  export type AccountCreateNestedManyWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    createMany?: AccountCreateManyUserInputEnvelope
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-  }
-
-  export type ProfileCreateNestedOneWithoutUserInput = {
-    create?: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: ProfileCreateOrConnectWithoutUserInput
-    connect?: ProfileWhereUniqueInput
->>>>>>> 0b17cd88a68736a101d4fd58a7ace9c280dccf3a:apps/backend/prisma/generated/client/index.d.ts
+  export type AccountCreateNestedOneWithoutUserInput = {
+    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutUserInput
+    connect?: AccountWhereUniqueInput
   }
 
   export type AdminCreateNestedOneWithoutUserInput = {
