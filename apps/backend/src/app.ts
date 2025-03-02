@@ -1,19 +1,18 @@
-
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import { CartRouter } from './routers/cart.router';
-import { AccountRouter } from './routers/account.router';
-import { AdminRouter } from './routers/admin.router';
-import { ProductRouter } from './routers/product.router';
-import { CategoryRouter } from './routers/category.router';
-import { OrderRouter } from './routers/order.router';
-import { AddressRouter } from './routers/address.router';
-import { StoreRouter } from './routers/store.router';
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import { CartRouter } from "./routers/cart.router";
+import { AccountRouter } from "./routers/account.router";
+import { AdminRouter } from "./routers/admin.router";
+import { ProductRouter } from "./routers/product.router";
+import { CategoryRouter } from "./routers/category.router";
+import { OrderRouter } from "./routers/order.router";
+import { AddressRouter } from "./routers/address.router";
+import { StoreRouter } from "./routers/store.router";
 import { AdminOrderRouter } from "./routers/adminOrder.router";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-import './utils/scheduler';
+import "./utils/scheduler";
 
 const PORT = 8090;
 class App {
