@@ -341,7 +341,12 @@ model AdminOrder {
   @@map("admin_order")
 }
 
-<<<<<<< HEAD:packages/database/prisma/schema.prisma
+model Banner {
+  banner_id Int    @id @default(autoincrement())
+  url       String
+  image     String
+}
+
 enum Role {
   user
   admin
@@ -352,12 +357,6 @@ enum adminPosition {
   store_manager
   store_delivery
   store_logistic
-=======
-model Banner {
-  banner_id Int    @id @default(autoincrement())
-  url       String
-  image     String
->>>>>>> 0b17cd88a68736a101d4fd58a7ace9c280dccf3a:apps/backend/prisma/schema.prisma
 }
 
 enum StockType {
