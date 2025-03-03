@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 const { auth } = NextAuth(authConfig);
 export default auth(async (req) => {
   const isLoggedIn = !!req.auth;
+
   const { nextUrl } = req;
   const fe_url = "http://localhost:3000";
 
@@ -26,7 +27,7 @@ export default auth(async (req) => {
     return NextResponse.redirect(`${fe_url}/`);
   }
 
-  if (isAdminRoute && !isLoggedIn) {
+  if (isAdminRoute && !isLoggedIn && req.auth?.user.role != "user") {
     return NextResponse.redirect(`${fe_url}/auth/signin`);
   }
 });

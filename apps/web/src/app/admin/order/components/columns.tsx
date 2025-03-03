@@ -32,6 +32,7 @@ export const createColumns = ({
     {
       accessorKey: "order_date",
       header: "Order Date",
+      enableSorting: true,
       cell: ({ row }) => {
         const date = new Date(row.original.order_date);
         return date.toLocaleDateString();

@@ -1,67 +1,73 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Container,
+  Box,
+  Typography,
+  Stepper,
+  Step,
+  StepLabel,
+  useMediaQuery,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import { ThemeProvider } from "@mui/material/styles";
 import { callAPI } from "@/config/axios";
-
-interface CartItem {
-  cart_item_id: number;
-  quantity: number;
-  product: {
-    product_id: number;
-    product_name: string;
-    product_price: number;
-    product_img?: { url: string }[];
-  };
-}
-
-interface Address {
-  address_id: number;
-  street: string;
-  city: string;
-  province: string;
-}
+import { useToast } from "@/hooks/use-toast";
+import { theme } from "./themes";
+import OrderDetails from "./components/OrderDetails";
+import ShippingAddress from "./components/ShippingAddress";
+import OrderSummary from "./components/OrderSummary";
+import EmptyCart from "./components/EmptyCart";
+import { CartItem, Address } from "./types";
+import { calculateSubtotal } from "./utils";
 
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
-
+  const { toast } = useToast();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeStep] = useState(1);
+
+  const subtotal = calculateSubtotal(selectedItems);
+  const shippingCost = 15000;
+  const totalPrice = subtotal + shippingCost;
 
   useEffect(() => {
+    loadCartItems();
+    fetchAddresses();
+  }, []);
+  const loadCartItems = () => {
     const items = localStorage.getItem("selectedCartItems");
     if (items) {
       try {
-        const parsed = JSON.parse(items);
-        setSelectedItems(parsed);
+        setSelectedItems(JSON.parse(items));
       } catch (err) {
         console.error("Error parsing selectedCartItems", err);
       }
     }
-  }, []);
+  };
 
-  const totalPrice = selectedItems.reduce(
-    (sum, item) => sum + item.product.product_price * item.quantity,
-    0,
-  );
-
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const response = await callAPI.get("/address");
-        setAddresses(response.data);
-        if (response.data && response.data.length > 0) {
-          setSelectedAddress(response.data[0].address_id);
-        }
-      } catch (err: any) {
-        console.error("Error fetching addresses:", err);
-        setError(err.response?.data?.message || err.message);
+  const fetchAddresses = async () => {
+    try {
+      const response = await callAPI.get("/address");
+      setAddresses(response.data);
+      if (response.data && response.data.length > 0) {
+        setSelectedAddress(response.data[0].address_id);
       }
-    };
-    fetchAddresses();
-  }, []);
+    } catch (err: any) {
+      console.error("Error fetching addresses:", err);
+      setError(err.response?.data?.message || err.message);
+    }
+  };
+
+  const handleAddressChange = (addressId: number | "") => {
+    setSelectedAddress(addressId);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,12 +75,14 @@ const CheckoutPage: React.FC = () => {
       setError("Pilih alamat pengiriman");
       return;
     }
+
     setError(null);
     setLoading(true);
 
     const payload = {
       address_id: Number(selectedAddress),
       total_price: totalPrice,
+      shipping_price: shippingCost,
       products: selectedItems.map((item) => ({
         product_id: item.product.product_id,
         quantity: item.quantity,
@@ -82,109 +90,98 @@ const CheckoutPage: React.FC = () => {
     };
 
     try {
-      const response = await callAPI.post("/order/new", payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await callAPI.post("/order/new", payload);
       const createdOrder = response.data;
+
       localStorage.removeItem("selectedCartItems");
+
+      toast({
+        title: "Pesanan berhasil dibuat",
+        description: "Anda akan diarahkan ke halaman pembayaran",
+        variant: "default",
+      });
+
       router.push(`/payment-proof/${createdOrder.order_id}`);
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message);
+      const errorMessage = err.response?.data?.error || err.message;
+      setError(errorMessage);
+
+      toast({
+        title: "Gagal membuat pesanan",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
-
   if (selectedItems.length === 0) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white p-4">
-        <p className="text-xl text-gray-600">
-          Tidak ada item yang dipilih untuk checkout.
-        </p>
-      </div>
-    );
+    return <EmptyCart />;
   }
 
   return (
-    <div className="min-h-screen bg-white px-4 py-8">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-center text-3xl font-bold text-[#57CC99]">
-          Checkout Pesanan
-        </h1>
-        <div className="mb-6">
-          <h2 className="mb-4 text-xl font-semibold text-gray-800">
-            Detail Pesanan
-          </h2>
-          <ul className="space-y-4">
-            {selectedItems.map((item) => (
-              <li
-                key={item.cart_item_id}
-                className="flex items-center rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-              >
-                {item.product.product_img &&
-                item.product.product_img.length > 0 ? (
-                  <img
-                    src={item.product.product_img[0].url}
-                    alt={item.product.product_name}
-                    className="mr-4 h-20 w-20 rounded object-cover"
-                  />
-                ) : (
-                  <div className="mr-4 h-20 w-20 rounded bg-gray-100" />
-                )}
-                <div className="flex-1">
-                  <p className="mb-1 text-lg font-semibold text-gray-800">
-                    {item.product.product_name}
-                  </p>
-                  <p className="text-gray-600">
-                    Harga: Rp {item.product.product_price.toLocaleString()}
-                  </p>
-                  <p className="text-gray-600">Jumlah: {item.quantity}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-right text-2xl font-bold text-gray-800">
-            Total Harga: Rp {totalPrice.toLocaleString()}
-          </p>
-        </div>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <div>
-            <label className="mb-2 block text-lg font-semibold text-gray-800">
-              Pilih Alamat Pengiriman
-            </label>
-            {addresses.length > 0 ? (
-              <select
-                value={selectedAddress || ""}
-                onChange={(e) => setSelectedAddress(Number(e.target.value))}
-                className="w-full rounded-md border border-gray-300 p-3 focus:border-[#57CC99] focus:ring focus:ring-[#57CC99] focus:ring-opacity-50"
-                required
-              >
-                {addresses.map((address) => (
-                  <option key={address.address_id} value={address.address_id}>
-                    {address.street}, {address.city}, {address.province}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <p className="text-sm text-gray-500">
-                Belum ada alamat. Silahkan tambahkan alamat terlebih dahulu.
-              </p>
-            )}
-          </div>
-          {error && <p className="text-center text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-[#57CC99] py-3 text-center text-xl font-semibold text-white transition-colors duration-200 hover:bg-[#80ED99]"
-          >
-            {loading ? "Memproses pesanan…" : "Buat Pesanan"}
-          </button>
-        </form>
-      </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          pt: "80px",
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          py: { xs: 2, md: 6 },
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{ color: "primary.dark", mb: 1 }}
+            >
+              Checkout
+            </Typography>
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel
+              sx={{ mt: 3, display: { xs: "none", md: "flex" } }}
+            >
+              <Step>
+                <StepLabel>Keranjang</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Pengiriman</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Pembayaran</StepLabel>
+              </Step>
+            </Stepper>
+          </Box>
+          <Grid container spacing={4}>
+            <Grid size={{ xs: 12, md: 7 }}>
+              <OrderDetails items={selectedItems} />
+              <ShippingAddress
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                onAddressChange={handleAddressChange}
+                onAddNewAddress={() => router.push("/address/new")}
+                error={error}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 5 }}>
+              <OrderSummary
+                items={selectedItems}
+                subtotal={subtotal}
+                shippingCost={shippingCost}
+                totalPrice={totalPrice}
+                loading={loading}
+                onSubmit={handleSubmit}
+                disableSubmit={loading || selectedAddress === ""}
+                onBackToCart={() => router.push("/cart")}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };
 

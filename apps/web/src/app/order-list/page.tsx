@@ -1,79 +1,46 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Box,
+  Typography,
+  Paper,
+  CircularProgress,
+  Alert,
+  Stack,
+} from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { callAPI } from "@/config/axios";
-
-interface OrderItem {
-  order_item_id: number;
-  product_id: number;
-  quantity: number;
-  price: number;
-  subtotal: number;
-  product: {
-    product_name: string;
-    product_price: number;
-    product_img?: { url: string }[];
-  };
-}
-
-interface PaymentProof {
-  payment_proof_id: number;
-  image_url: string;
-  uploaded_at: string;
-  status: string;
-}
-
-interface Order {
-  order_id: number;
-  order_number?: string;
-  total_price: number;
-  status: string;
-  order_date: string;
-  order_items: OrderItem[];
-  payment_proof?: PaymentProof;
-}
-
-const statuses = [
-  { value: "menunggu_pembayaran", label: "Menunggu Pembayaran" },
-  { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi" },
-  { value: "diproses", label: "Diproses" },
-  { value: "dikirim", label: "Dikirim" },
-  { value: "pesanan_dikonfirmasi", label: "Pesanan Dikonfirmasi" },
-  { value: "dibatalkan", label: "Dibatalkan" },
-];
-
-const formatTime = (ms: number): string => {
-  if (ms <= 0) return "Waktu habis";
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-};
-
+import { useToast } from "@/hooks/use-toast";
+import theme from "./theme";
+import OrderFilters from "./components/OrderFilters";
+import OrderTabs from "./components/OrderTabs";
+import OrderCard from "./components/OrderCard";
+import CancelOrderDialog from "./components/CancelOrderDialog";
+import ConfirmOrderDialog from "./components/ConfirmOrderDialog";
+import ImagePreviewDialog from "./components/ImagePreviewDialog";
 const OrderListPage: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string>(
-    "menunggu_pembayaran",
-  );
-  const [searchDate, setSearchDate] = useState<string>("");
-  const [searchOrderNumber, setSearchOrderNumber] = useState<string>("");
-  const [currentTime, setCurrentTime] = useState<number>(Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const fetchOrders = async (params?: {
-    date?: string;
-    order_number?: string;
-  }) => {
+  const [selectedStatus, setSelectedStatus] = useState("menunggu_pembayaran");
+  const [searchParams, setSearchParams] = useState({
+    date: "",
+    orderNumber: "",
+  });
+  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  const [cancelDialog, setCancelDialog] = useState({
+    open: false,
+    orderId: null as number | null,
+    reason: "",
+  });
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    orderId: null as number | null,
+  });
+  const [imageDialog, setImageDialog] = useState({ open: false, imageUrl: "" });
+  const fetchOrders = async (params = {}) => {
     setLoading(true);
     try {
       const response = await callAPI.get("/order", { params });
@@ -84,211 +51,177 @@ const OrderListPage: React.FC = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  const filteredOrders = orders.filter(
-    (order) => order.status === selectedStatus,
+  const orderCounts = orders.reduce(
+    (counts, order) => {
+      counts[order.status] = (counts[order.status] || 0) + 1;
+      return counts;
+    },
+    {} as { [key: string]: number },
   );
-
-  const handleCancelOrder = async (orderId: number) => {
-    const reason = prompt("Masukkan alasan pembatalan pesanan:");
-    if (!reason) return;
-    try {
-      await callAPI.post(
-        `/order/${orderId}/cancel`,
-        { reason },
-        { headers: { "Content-Type": "application/json" } },
-      );
-      alert("Pesanan berhasil dibatalkan.");
-      fetchOrders();
-    } catch (err: any) {
-      alert(err.response?.data?.error || err.message);
-    }
-  };
-
-  const handleConfirmOrder = async (orderId: number) => {
-    try {
-      await callAPI.post(`/order/${orderId}/confirm`);
-      alert("Pesanan berhasil dikonfirmasi.");
-      fetchOrders();
-    } catch (err: any) {
-      alert(err.response?.data?.error || err.message);
-    }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchOrders({ date: searchDate, order_number: searchOrderNumber });
-  };
-
-  const handleReset = () => {
-    setSearchDate("");
-    setSearchOrderNumber("");
-    fetchOrders();
-  };
-
   return (
-    <div className="mx-auto max-w-3xl p-4">
-      <h1 className="mb-6 text-center text-2xl font-bold">Daftar Pesanan</h1>
-
-      {/* form Pencarian */}
-      <form
-        onSubmit={handleSearch}
-        className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center"
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          py: { xs: 3, md: 6 },
+        }}
       >
-        <div>
-          <label
-            htmlFor="orderNumber"
-            className="block text-sm font-medium text-gray-700"
+        <Container maxWidth="lg">
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{ mb: { xs: 3, md: 5 }, color: "primary.dark" }}
           >
-            No Order:
-          </label>
-          <input
-            id="orderNumber"
-            type="text"
-            value={searchOrderNumber}
-            onChange={(e) => setSearchOrderNumber(e.target.value)}
-            placeholder="Masukkan no order"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#57CC99] focus:ring focus:ring-[#57CC99] focus:ring-opacity-50 sm:text-sm"
+            Daftar Pesanan
+          </Typography>
+          <OrderFilters
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+            onSearch={() => fetchOrders(searchParams)}
+            onReset={() => {
+              setSearchParams({ date: "", orderNumber: "" });
+              fetchOrders();
+            }}
           />
-        </div>
-        <div>
-          <label
-            htmlFor="orderDate"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Tanggal:
-          </label>
-          <input
-            id="orderDate"
-            type="date"
-            value={searchDate}
-            onChange={(e) => setSearchDate(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#57CC99] focus:ring focus:ring-[#57CC99] focus:ring-opacity-50 sm:text-sm"
+          <OrderTabs
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
+            orderCounts={orderCounts}
           />
-        </div>
-        <div className="flex items-end gap-2">
-          <button
-            type="submit"
-            className="rounded bg-[#57CC99] px-4 py-2 text-white transition-colors duration-200 hover:bg-[#80ED99]"
-          >
-            Cari
-          </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="rounded bg-gray-400 px-4 py-2 text-white transition-colors duration-200 hover:bg-gray-500"
-          >
-            Reset Filter
-          </button>
-        </div>
-      </form>
-
-      {/* tab navigasi */}
-      <div className="mb-6 flex flex-wrap justify-center gap-2">
-        {statuses.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setSelectedStatus(tab.value)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-              selectedStatus === tab.value
-                ? "bg-[#57CC99] text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {loading && <p className="text-center">Memuat pesanan...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      {filteredOrders.length === 0 && !loading ? (
-        <p className="text-center text-gray-600">
-          Tidak ada pesanan untuk status ini.
-        </p>
-      ) : (
-        filteredOrders.map((order) => {
-          const deadline =
-            new Date(order.order_date).getTime() + 60 * 60 * 1000;
-          const remainingTime = deadline - currentTime;
-          return (
-            <div
-              key={order.order_id}
-              className="mb-4 rounded-lg border p-4 shadow-sm"
-            >
-              <p className="mb-1 text-lg font-semibold">
-                Order Number:{" "}
-                {order.order_number
-                  ? order.order_number
-                  : "order number doesn't exist"}
-              </p>
-              <p className="mb-1 text-lg font-semibold">
-                Total Harga: Rp {order.total_price.toLocaleString()}
-              </p>
-              <p className="mb-1 text-gray-600">
-                Status: {order.status.replace("_", " ")}
-              </p>
-              <p className="mb-3 text-gray-600">
-                Tanggal: {new Date(order.order_date).toLocaleString()}
-              </p>
-              {/* countdown */}
-              {order.status === "menunggu_pembayaran" && (
-                <p className="mb-3 text-red-600">
-                  Waktu pembayaran tersisa: {formatTime(remainingTime)}
-                </p>
-              )}
-              {order.payment_proof && (
-                <div className="mb-3">
-                  <p className="font-semibold">Bukti Pembayaran:</p>
-                  <img
-                    src={order.payment_proof.image_url}
-                    alt="Bukti Pembayaran"
-                    className="w-40 rounded"
-                  />
-                </div>
-              )}
-              <div className="mb-3">
-                <p className="font-semibold">Item Pesanan:</p>
-                <ul className="list-disc pl-5">
-                  {order.order_items.map((item) => (
-                    <li key={item.order_item_id} className="text-gray-700">
-                      <span>
-                        {item.product?.product_name || "Produk tidak ditemukan"}
-                      </span>{" "}
-                      | Jumlah: {item.quantity} | Subtotal: Rp{" "}
-                      {item.subtotal.toLocaleString()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex space-x-2">
-                {order.status === "menunggu_pembayaran" && (
-                  <button
-                    onClick={() => handleCancelOrder(order.order_id)}
-                    className="rounded bg-[#22577A] px-4 py-2 text-white transition-colors duration-200 hover:bg-[#2f78a8]"
-                  >
-                    Cancel Order
-                  </button>
-                )}
-                {order.status === "dikirim" && (
-                  <button
-                    onClick={() => handleConfirmOrder(order.order_id)}
-                    className="rounded bg-[#22577A] px-4 py-2 text-white transition-colors duration-200 hover:bg-[#2f78a8]"
-                  >
-                    Confirm Order
-                  </button>
-                )}
-              </div>
-            </div>
-          );
-        })
-      )}
-    </div>
+          {loading && (
+            <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+              <CircularProgress color="primary" />
+            </Box>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+          {!loading &&
+            orders.filter((order) => order.status === selectedStatus).length ===
+              0 && (
+              <Paper
+                sx={{
+                  p: 5,
+                  borderRadius: 3,
+                  textAlign: "center",
+                  border: "1px solid #e0e0e0",
+                }}
+              >
+                <Typography variant="h6" color="text.secondary">
+                  Belum ada pesanan {selectedStatus.replace(/_/g, " ")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Pesanan akan muncul disini ketika statusnya berubah
+                </Typography>
+              </Paper>
+            )}
+          <Stack spacing={3}>
+            {orders
+              .filter((order) => order.status === selectedStatus)
+              .map((order) => (
+                <OrderCard
+                  key={order.order_id}
+                  order={order}
+                  expanded={expandedOrderId === order.order_id}
+                  onToggle={() =>
+                    setExpandedOrderId(
+                      expandedOrderId === order.order_id
+                        ? null
+                        : order.order_id,
+                    )
+                  }
+                  onCancel={() =>
+                    setCancelDialog({
+                      open: true,
+                      orderId: order.order_id,
+                      reason: "",
+                    })
+                  }
+                  onConfirm={() =>
+                    setConfirmDialog({ open: true, orderId: order.order_id })
+                  }
+                  onImageClick={(url) =>
+                    setImageDialog({ open: true, imageUrl: url })
+                  }
+                />
+              ))}
+          </Stack>
+        </Container>
+      </Box>
+      <CancelOrderDialog
+        open={cancelDialog.open}
+        orderId={cancelDialog.orderId}
+        reason={cancelDialog.reason}
+        onReasonChange={(reason) =>
+          setCancelDialog({ ...cancelDialog, reason })
+        }
+        onClose={() =>
+          setCancelDialog({ open: false, orderId: null, reason: "" })
+        }
+        onCancelOrder={async () => {
+          if (!cancelDialog.orderId || !cancelDialog.reason.trim()) return;
+          setLoading(true);
+          try {
+            await callAPI.post(
+              `/order/${cancelDialog.orderId}/cancel`,
+              { reason: cancelDialog.reason },
+              { headers: { "Content-Type": "application/json" } },
+            );
+            toast({
+              title: "Pesanan dibatalkan",
+              description: "Pesanan berhasil dibatalkan.",
+            });
+            fetchOrders();
+            setCancelDialog({ open: false, orderId: null, reason: "" });
+          } catch (err: any) {
+            toast({
+              title: "Gagal membatalkan pesanan",
+              description: err.response?.data?.error || err.message,
+              variant: "destructive",
+            });
+          } finally {
+            setLoading(false);
+          }
+        }}
+      />
+      <ConfirmOrderDialog
+        open={confirmDialog.open}
+        orderId={confirmDialog.orderId}
+        onClose={() => setConfirmDialog({ open: false, orderId: null })}
+        onConfirmOrder={async () => {
+          if (!confirmDialog.orderId) return;
+          setLoading(true);
+          try {
+            await callAPI.post(`/order/${confirmDialog.orderId}/confirm`);
+            toast({
+              title: "Pesanan dikonfirmasi",
+              description: "Pesanan berhasil dikonfirmasi.",
+            });
+            fetchOrders();
+            setConfirmDialog({ open: false, orderId: null });
+          } catch (err: any) {
+            toast({
+              title: "Gagal mengkonfirmasi pesanan",
+              description: err.response?.data?.error || err.message,
+              variant: "destructive",
+            });
+          } finally {
+            setLoading(false);
+          }
+        }}
+      />
+      <ImagePreviewDialog
+        open={imageDialog.open}
+        imageUrl={imageDialog.imageUrl}
+        onClose={() => setImageDialog({ open: false, imageUrl: "" })}
+      />
+    </ThemeProvider>
   );
 };
-
 export default OrderListPage;
