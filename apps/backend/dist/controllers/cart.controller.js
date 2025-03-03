@@ -149,16 +149,29 @@ class CartController {
                 if (!cart) {
                     return res.status(200).json({ items: [] });
                 }
-                const itemsWithTotal = cart.cart_items.map((item) => {
-                    var _a, _b, _c;
-                    return (Object.assign(Object.assign({}, item), { subtotal: item.quantity * item.product.product_price, store_name: (_c = (_b = (_a = item.product.stock) === null || _a === void 0 ? void 0 : _a.store) === null || _b === void 0 ? void 0 : _b.store_name) !== null && _c !== void 0 ? _c : "Unknown Store", product: Object.assign(Object.assign({}, item.product), { stock: item.product.stock
-                                ? Object.assign(Object.assign({}, item.product.stock), { store: item.product.stock.store }) : null }) }));
-                });
-                const total = itemsWithTotal.reduce((sum, item) => sum + item.subtotal, 0);
-                return res.status(200).json({
-                    items: itemsWithTotal,
-                    total,
-                });
+                // const itemsWithTotal = cart.cart_items.map((item) => ({
+                //   ...item,
+                //   subtotal: item.quantity * item.product.product_price,
+                //   store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
+                //   product: {
+                //     ...item.product,
+                //     stock: item.product.stock
+                //       ? {
+                //           ...item.product.stock,
+                //           store: item.product.stock.store,
+                //         }
+                //       : null,
+                //   },
+                // }));
+                // const total = itemsWithTotal.reduce(
+                //   (sum, item) => sum + item.subtotal,
+                //   0
+                // );
+                return;
+                // res.status(200).json({
+                //   items: itemsWithTotal,
+                //   total,
+                // });
             }
             catch (error) {
                 console.error(error);

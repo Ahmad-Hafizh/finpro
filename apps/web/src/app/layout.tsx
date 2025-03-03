@@ -38,9 +38,9 @@ export default function RootLayout({
             <StoreProvider>
               {/* <CartProvider> */}
               <Navbar />
-              <div className="container relative mx-auto max-w-7xl px-[5%]">
-                {children}
-              </div>
+              {/* <div className="container relative mx-auto max-w-7xl px-[5%]"> */}
+              {children}
+              {/* </div> */}
               <Toaster />
               <Botbar />
               {/* </CartProvider> */}

@@ -22,15 +22,22 @@ export const findProduct = async ({
   console.log("category in services :", category);
   console.log("Sort by :", sortBy);
   console.log("Deleted at :", deletedAt);
+
+  const categories = category
+    ? Array.isArray(category)
+      ? category.map(String)
+      : (category as string).split(",")
+    : [];
+
   const result = await prisma.product.findMany({
     skip: (pageNumber - 1) * pageSize,
     take: pageSize,
     where: {
       AND: [
-        category
+        categories.length > 0
           ? {
               product_category: {
-                product_category_name: category as string,
+                product_category_name: { in: categories },
               },
             }
           : {},
@@ -52,7 +59,7 @@ export const findProduct = async ({
           : deletedAt === "false"
             ? { deletedAt: null }
             : {},
-        theStore ? { stock: { store_id: parseInt(theStore) } } : {},
+        theStore ? { stock: { some: { store_id: parseInt(theStore) } } } : {},
       ],
     },
     orderBy: sortBy

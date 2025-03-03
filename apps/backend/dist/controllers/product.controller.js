@@ -45,6 +45,7 @@ class ProductController {
                 return responseHandler_1.default.success(res, 200, "Get Product Data Success", result);
             }
             catch (error) {
+                console.log("error from get product", error);
                 return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
             }
         });

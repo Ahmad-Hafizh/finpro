@@ -39,6 +39,7 @@ export class ProductController {
         result
       );
     } catch (error) {
+      console.log("error from get product", error);
       return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
