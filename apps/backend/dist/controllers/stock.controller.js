@@ -61,8 +61,13 @@ class StockController {
                             },
                             quantity: parseInt(quantity),
                             type: "in",
-                            product_id: product_id,
+
+                            product: {
+                                connect: { product_id: parseInt(product_id) },
+                            },
                             notes: `Admin ${admin} create new stock: stock added`,
+                            stock_result: createStock.quantity,
+
                         },
                     });
                     return { createStock, newStockJournal };
@@ -110,10 +115,15 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: updateOrDelete,
-                            product_id: product_id,
+
+                            product: {
+                                connect: { product_id: parseInt(product_id) },
+                            },
                             notes: updateOrDelete === "in"
                                 ? `Admin ${admin} updating new stock: stock added`
                                 : `Admin ${admin} updating new stock: stock reduced`,
+                            stock_result: updateStock.quantity,
+
                         },
                     });
                     return updateStock;
@@ -161,8 +171,13 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: "out",
-                            product_id: product_id,
+
+                            product: {
+                                connect: { product_id: parseInt(product_id) },
+                            },
                             notes: `Admin ${admin} updating new stock: stock reduced`,
+                            stock_result: 0,
+
                         },
                     });
                 }));

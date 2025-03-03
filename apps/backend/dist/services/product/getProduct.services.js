@@ -18,15 +18,20 @@ const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ categor
     console.log("category in services :", category);
     console.log("Sort by :", sortBy);
     console.log("Deleted at :", deletedAt);
+    const categories = category
+        ? Array.isArray(category)
+            ? category.map(String)
+            : category.split(",")
+        : [];
     const result = yield prisma_1.default.product.findMany({
         skip: (pageNumber - 1) * pageSize,
         take: pageSize,
         where: {
             AND: [
-                category
+                categories.length > 0
                     ? {
                         product_category: {
-                            product_category_name: category,
+                            product_category_name: { in: categories },
                         },
                     }
                     : {},
