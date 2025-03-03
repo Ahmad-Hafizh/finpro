@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import prisma from '../prisma';
-import ResponseHandler from '../utils/responseHandler';
+import { Request, Response } from "express";
+import prisma from "../prisma";
+import ResponseHandler from "../utils/responseHandler";
 
 export class AddressController {
   async getAddresses(req: Request, res: Response): Promise<any> {
@@ -14,15 +14,21 @@ export class AddressController {
           profile: true,
         },
       });
-      if (!user?.profile) return ResponseHandler.error(res, 404, 'user not found');
+      if (!user?.profile)
+        return ResponseHandler.error(res, 404, "user not found");
 
       const addresses = await prisma.address.findMany({
         where: { profile_id: user.profile.profile_id, deleted_at: null },
       });
 
-      return ResponseHandler.success(res, 200, 'get address success', addresses);
+      return ResponseHandler.success(
+        res,
+        200,
+        "get address success",
+        addresses
+      );
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'internal server error', error);
+      return ResponseHandler.error(res, 500, "internal server error", error);
     }
   }
   // async getAddresses(req: Request, res: Response): Promise<any> {
@@ -57,7 +63,7 @@ export class AddressController {
       });
 
       if (!user?.profile?.profile_id) {
-        return ResponseHandler.error(res, 400, 'user not found');
+        return ResponseHandler.error(res, 400, "user not found");
       }
 
       await prisma.address.create({
@@ -73,9 +79,9 @@ export class AddressController {
           lng: req.body.lng,
         },
       });
-      return ResponseHandler.success(res, 201, 'add address success');
+      return ResponseHandler.success(res, 201, "add address success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'internal server error', error);
+      return ResponseHandler.error(res, 500, "internal server error", error);
     }
   }
   async updateDeliveryAddress(req: Request, res: Response): Promise<any> {
@@ -101,9 +107,9 @@ export class AddressController {
           ...req.body,
         },
       });
-      return ResponseHandler.success(res, 201, 'update address success');
+      return ResponseHandler.success(res, 201, "update address success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'internal server error', error);
+      return ResponseHandler.error(res, 500, "internal server error", error);
     }
   }
   async deleteAddress(req: Request, res: Response): Promise<any> {
@@ -120,7 +126,7 @@ export class AddressController {
       });
 
       if (!user) {
-        return ResponseHandler.error(res, 404, 'User not found');
+        return ResponseHandler.error(res, 404, "User not found");
       }
 
       await prisma.address.update({
@@ -130,9 +136,9 @@ export class AddressController {
         },
       });
 
-      return ResponseHandler.success(res, 200, 'Delete Address Success');
+      return ResponseHandler.success(res, 200, "Delete Address Success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'internal server error', error);
+      return ResponseHandler.error(res, 500, "internal server error", error);
     }
   }
 }

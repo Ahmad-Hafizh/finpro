@@ -12,7 +12,7 @@ import {
 import { ThemeProvider } from "@mui/material/styles";
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
-import theme from "./theme";
+import { theme } from "../../config/theme";
 import OrderFilters from "./components/OrderFilters";
 import OrderTabs from "./components/OrderTabs";
 import OrderCard from "./components/OrderCard";

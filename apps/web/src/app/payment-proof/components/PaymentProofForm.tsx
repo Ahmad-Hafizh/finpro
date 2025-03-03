@@ -47,7 +47,7 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      setError("Silakan pilih file bukti pembayaran terlebih dahulu");
+      setError("Please choose the file for payment proof first.");
       return;
     }
     setError(null);
@@ -56,14 +56,12 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
     const allowedExtensions = ["jpg", "jpeg", "png"];
     const fileExt = file.name.split(".").pop()?.toLowerCase();
     if (!fileExt || !allowedExtensions.includes(fileExt)) {
-      setError(
-        "Format file tidak valid. Hanya .jpg, .jpeg, .png yang diperbolehkan.",
-      );
+      setError("Format Invalid. Only .jpg, .jpeg, .png are allowed.");
       setLoading(false);
       return;
     }
     if (file.size > 1024 * 1024) {
-      setError("Ukuran file melebihi batas maksimum 1MB.");
+      setError("File size exceeds maximum 1MB.");
       setLoading(false);
       return;
     }
@@ -75,7 +73,7 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
       await callAPI.post(`/order/${orderId}/payment-proof`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setMessage("Bukti pembayaran berhasil diupload!");
+      setMessage("Payment proof is successfully uploaded!");
       setTimeout(() => {
         router.push("/payment-proof");
       }, 1500);
@@ -99,15 +97,14 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
             alignItems: "center",
           }}
         >
-          <CloudUploadIcon sx={{ mr: 1, fontSize: 20 }} /> Upload Bukti
-          Pembayaran
+          <CloudUploadIcon sx={{ mr: 1, fontSize: 20 }} /> Upload Payment Proof
         </InputLabel>
         <Typography
           variant="caption"
           color="text.secondary"
           sx={{ display: "block", mb: 2 }}
         >
-          Format yang diperbolehkan: JPG, JPEG, PNG (Maks. 1MB)
+          Allowed format: JPG, JPEG, PNG (Maks. 1MB)
         </Typography>
         <Box
           sx={{
@@ -130,7 +127,7 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
             </Typography>
           ) : (
             <Typography color="text.secondary">
-              Klik untuk memilih file atau tarik dan lepas file di sini
+              Click or drag here to choose the file.
             </Typography>
           )}
           <Button
@@ -143,7 +140,7 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
             }}
             startIcon={<CloudUploadIcon />}
           >
-            {file ? "Ganti File" : "Pilih File"}
+            {file ? "Change File" : "Choose File"}
             <VisuallyHiddenInput
               id="payment-proof"
               type="file"
@@ -179,7 +176,7 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
           loading ? <CircularProgress size={20} color="inherit" /> : null
         }
       >
-        {loading ? "Sedang Mengupload..." : "Konfirmasi Pembayaran"}
+        {loading ? "Is Uploading..." : "Confirm the Payment"}
       </Button>
     </form>
   );

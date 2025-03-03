@@ -13,7 +13,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { ThemeProvider } from "@mui/material/styles";
 import { Container, Box, CircularProgress } from "@mui/material";
-import theme from "./theme";
+import { theme } from "../../config/theme";
 import CartHeader from "./components/CartHeader";
 import CartItemsList from "./components/CartItemList";
 import CartCheckoutBar from "./components/CartCheckoutBar";

@@ -14,7 +14,7 @@ import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
-import { theme } from "./themes";
+import { theme } from "../../config/theme";
 import OrderDetails from "./components/OrderDetails";
 import ShippingAddress from "./components/ShippingAddress";
 import OrderSummary from "./components/OrderSummary";
