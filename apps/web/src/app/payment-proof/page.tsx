@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "./[order_id]/theme";
+import { theme } from "../../config/theme";
 import Navbar from "@/components/global/Nav";
 import PaymentProofCard from "./components/PaymentProofCard";
 
