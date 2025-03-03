@@ -48,7 +48,7 @@ const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ categor
                     : deletedAt === "false"
                         ? { deletedAt: null }
                         : {},
-                theStore ? { stock: { store_id: parseInt(theStore) } } : {},
+                theStore ? { stock: { some: { store_id: parseInt(theStore) } } } : {},
             ],
         },
         orderBy: sortBy

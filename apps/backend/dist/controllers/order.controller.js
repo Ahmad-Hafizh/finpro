@@ -115,7 +115,7 @@ class OrderController {
                                     data: {
                                         store_id: nearestStore.store_id,
                                         stock_id: stock.stock_id,
-                                        product_id: item.product_id.toString(),
+                                        product_id: item.product_id,
                                         quantity: item.quantity,
                                         type: "out",
                                         notes: `Order ${orderNumber} created - stock deducted`,
@@ -251,7 +251,7 @@ class OrderController {
                                 data: {
                                     store_id: order.store_id,
                                     stock_id: stock.stock_id,
-                                    product_id: item.product_id.toString(),
+                                    product_id: item.product_id,
                                     quantity: item.quantity,
                                     type: "in",
                                     notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || "No reason provided"}`,
@@ -383,7 +383,7 @@ class OrderController {
                                     data: {
                                         store_id: order.store_id,
                                         stock_id: stock.stock_id,
-                                        product_id: item.product_id.toString(),
+                                        product_id: item.product_id,
                                         quantity: item.quantity,
                                         type: "in",
                                         notes: `Auto cancel order ${order.order_number || order.order_id}: stock returned`,

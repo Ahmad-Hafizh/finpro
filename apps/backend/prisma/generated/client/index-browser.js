@@ -204,6 +204,7 @@ exports.Prisma.StockJournalScalarFieldEnum = {
   stock_id: 'stock_id',
   product_id: 'product_id',
   quantity: 'quantity',
+  stock_result: 'stock_result',
   type: 'type',
   notes: 'notes',
   created_at: 'created_at'
