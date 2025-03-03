@@ -13,12 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StockReportController = void 0;
+
 const responseHandler_1 = __importDefault(require("../utils/responseHandler"));
+
 const prisma_1 = __importDefault(require("../prisma"));
 class StockReportController {
     getStockReport(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+
                 const { store, product, sort, cat, search, page = 1, pageSize = 8, } = req.query;
                 const pages = parseInt(page) || 1;
                 const size = parseInt(pageSize) || 10;
@@ -175,6 +178,7 @@ class StockReportController {
             catch (error) {
                 console.log(error);
                 return responseHandler_1.default.error(res, 500, "Internal server error", error);
+
             }
         });
     }
