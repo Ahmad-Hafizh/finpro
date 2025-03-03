@@ -120,6 +120,7 @@ class OrderController {
                                         type: "out",
                                         notes: `Order ${orderNumber} created - stock deducted`,
                                         created_at: new Date(),
+                                        stock_result: stock.quantity - item.quantity,
                                     },
                                 });
                             }
@@ -256,6 +257,7 @@ class OrderController {
                                     type: "in",
                                     notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || "No reason provided"}`,
                                     created_at: new Date(),
+                                    stock_result: stock.quantity + item.quantity,
                                 },
                             });
                         }
@@ -388,6 +390,7 @@ class OrderController {
                                         type: "in",
                                         notes: `Auto cancel order ${order.order_number || order.order_id}: stock returned`,
                                         created_at: new Date(),
+                                        stock_result: stock.quantity + item.quantity,
                                     },
                                 });
                             }
