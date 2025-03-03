@@ -216,11 +216,12 @@ export class AdminOrderController {
             data: {
               store_id: order.store_id,
               stock_id: stock.stock_id,
-              product_id: item.product_id.toString(),
+              product_id: item.product_id,
               quantity: item.quantity,
               type: "in",
               notes: `Order ${order.order_number || order.order_id} dibatalkan: ${reason || "Alasan tidak diberikan"}`,
               created_at: new Date(),
+              stock_result: stock.quantity + item.quantity,
             },
           });
         }

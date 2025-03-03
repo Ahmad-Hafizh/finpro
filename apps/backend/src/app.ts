@@ -10,6 +10,8 @@ import { AddressRouter } from "./routers/address.router";
 import { StoreRouter } from "./routers/store.router";
 import { AdminOrderRouter } from "./routers/adminOrder.router";
 import { StockRouter } from "./routers/stock.router";
+import { StockReportRouter } from "./routers/stockReport.router";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -64,6 +66,9 @@ class App {
 
     const stockRouter = new StockRouter();
     this.app.use("/stock", stockRouter.getRouter());
+
+    const stockReportRouter = new StockReportRouter();
+    this.app.use("/stockreport", stockReportRouter.getRouter());
   }
 
   public start() {

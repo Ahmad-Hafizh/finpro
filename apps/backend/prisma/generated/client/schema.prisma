@@ -165,13 +165,15 @@ model StockJournal {
   stock_journal_id Int      @id @default(autoincrement())
   store_id         Int
   stock_id         Int
-  product_id       String
+  product_id       Int
   quantity         Int
+  stock_result     Int
   type             String
   notes            String
   created_at       DateTime
   stock            Stock    @relation(fields: [stock_id], references: [stock_id])
   store            Store    @relation(fields: [store_id], references: [store_id])
+  product          Product  @relation(fields: [product_id], references: [product_id])
 
   @@map("stock_journal")
 }
@@ -189,6 +191,7 @@ model Product {
   product_img         ProductImg[]
   stock               Stock[]
   voucher             VoucherProduct[]
+  stockJournal        StockJournal[]
 
   @@map("product")
 }

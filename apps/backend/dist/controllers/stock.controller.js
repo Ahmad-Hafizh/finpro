@@ -61,7 +61,7 @@ class StockController {
                             },
                             quantity: parseInt(quantity),
                             type: "in",
-                            product_id: product_id.toString(),
+                            product_id: product_id,
                             notes: `Admin ${admin} create new stock: stock added`,
                         },
                     });
@@ -110,7 +110,7 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: updateOrDelete,
-                            product_id: product_id.toString(),
+                            product_id: product_id,
                             notes: updateOrDelete === "in"
                                 ? `Admin ${admin} updating new stock: stock added`
                                 : `Admin ${admin} updating new stock: stock reduced`,
@@ -161,7 +161,7 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: "out",
-                            product_id: product_id.toString(),
+                            product_id: product_id,
                             notes: `Admin ${admin} updating new stock: stock reduced`,
                         },
                     });
