@@ -78,7 +78,7 @@ const stockPage = () => {
 
   const getAllProduct = async (currentProduct: any) => {
     try {
-      const response = await callAPI.get(`product`);
+      const response = await callAPI.get(`product/dropdown`);
       const data = response.data.result.products;
       const productIds = currentProduct.map((p: any) => p.product_id);
       console.log("data : ", data);

@@ -13,6 +13,7 @@ export class ProductRouter {
   }
 
   private initializeRoutes() {
+    this.route.get("/dropdown", this.productRouter.getProductDropdown);
     this.route.get("/", this.productRouter.getProduct);
     this.route.post(
       "/",

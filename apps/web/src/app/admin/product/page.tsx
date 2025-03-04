@@ -109,6 +109,36 @@ const productPage = () => {
     { product_category_id: 5, product_category_name: "Nut" },
   ];
 
+  const fetchUserData = [
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "ahmad",
+      role: "user",
+    },
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "satrio",
+      role: "admin",
+    },
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "satrio",
+      role: "super_admin",
+    },
+  ];
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />

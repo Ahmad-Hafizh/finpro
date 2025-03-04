@@ -141,13 +141,13 @@ export const columns = (
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem onClick={onHandleEdit}>
-              Edit Admin
+              Edit Product
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuItem onClick={onHandleDelete}>
-              Delete Admin
+              Delete Product
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

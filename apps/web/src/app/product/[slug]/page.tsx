@@ -132,7 +132,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
           </Badge>
         </div>
       </div>
-      <div className="product cart h-full w-full bg-blue-700 lg:col-span-1 lg:px-20 lg:py-10">
+      <div className="product cart h-full w-full lg:col-span-1 lg:px-20 lg:py-10">
         {/* TOMBOL ADD TO CART HERE */}
         {/* -------------------------------------- */}
         <div className="rounded border bg-white p-4 shadow-sm">
