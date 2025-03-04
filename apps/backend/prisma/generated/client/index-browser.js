@@ -259,7 +259,6 @@ exports.Prisma.VoucherOngkirScalarFieldEnum = {
 exports.Prisma.VoucherProductScalarFieldEnum = {
   voucher_product_id: 'voucher_product_id',
   voucher_product_code: 'voucher_product_code',
-  voucher_product_nominal: 'voucher_product_nominal',
   voucher_product_startdate: 'voucher_product_startdate',
   voucher_product_enddate: 'voucher_product_enddate',
   created_at: 'created_at',

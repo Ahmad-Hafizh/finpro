@@ -107,19 +107,19 @@ model Admin {
 }
 
 model Store {
-  store_id       Int            @id @default(autoincrement())
-  store_name     String         @unique
+  store_id       Int             @id @default(autoincrement())
+  store_name     String          @unique
   store_address  String
   city           String
   lat            String
   lng            String
   country        String
-  isActive       Boolean        @default(true)
+  isActive       Boolean         @default(true)
   admin          Admin[]
   orders         Order[]
   stock          Stock[]
   stock_journal  StockJournal[]
-  voucher_ongkir VoucherOngkir?
+  voucher_ongkir VoucherOngkir[]
   voucher_stores VoucherStore[]
 
   @@map("store")
@@ -218,7 +218,7 @@ model VoucherOngkir {
   voucher_ongkir_enddate   DateTime
   created_at               DateTime
   admin_responsible        Int
-  store_id                 Int      @unique
+  store_id                 Int
   admin                    Admin    @relation(fields: [admin_responsible], references: [admin_id])
   store                    Store    @relation(fields: [store_id], references: [store_id])
 
@@ -228,7 +228,6 @@ model VoucherOngkir {
 model VoucherProduct {
   voucher_product_id        Int      @id @default(autoincrement())
   voucher_product_code      String   @unique
-  voucher_product_nominal   Int
   voucher_product_startdate DateTime
   voucher_product_enddate   DateTime
   created_at                DateTime
