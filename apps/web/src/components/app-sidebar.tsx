@@ -74,8 +74,8 @@ const data = {
       icon: SquareTerminal,
     },
     {
-      title: "Store Management",
-      url: "/admin/store",
+      title: "Voucher Management",
+      url: "/admin/voucher",
       icon: Bot,
     },
     {
