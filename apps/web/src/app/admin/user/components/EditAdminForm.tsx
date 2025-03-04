@@ -39,70 +39,22 @@ const formSchema = z.object({
 });
 
 interface EditAdminFormProps {
-  adminData: any[];
+  adminData: any;
+  storeData: any[];
   setOpenDialog: (open: boolean) => void;
 }
 
-const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
+const EditAdminForm = ({
+  adminData,
+  storeData,
+  setOpenDialog,
+}: EditAdminFormProps) => {
   const { toast } = useToast();
   const [admin, setAdmin] = useState<any>([]);
 
   useEffect(() => {
     setAdmin(adminData);
   }, [adminData]);
-
-  const dummyData = [
-    {
-      store_id: 1,
-      store_name: "Good Store",
-      store_address: "123 Main St",
-    },
-    {
-      store_id: 2,
-      store_name: "SuperMart",
-      store_address: "456 Oak Ave",
-    },
-    {
-      store_id: 3,
-      store_name: "Budget Buy",
-      store_address: "789 Pine Rd",
-    },
-    {
-      store_id: 4,
-      store_name: "Mega Store",
-      store_address: "101 Elm St",
-    },
-    {
-      store_id: 5,
-      store_name: "Quick Stop",
-      store_address: "202 Birch Blvd",
-    },
-    {
-      store_id: 6,
-      store_name: "Daily Needs",
-      store_address: "303 Cedar Ln",
-    },
-    {
-      store_id: 7,
-      store_name: "Smart Mart",
-      store_address: "404 Willow Way",
-    },
-    {
-      store_id: 8,
-      store_name: "Eco Store",
-      store_address: "505 Maple Dr",
-    },
-    {
-      store_id: 9,
-      store_name: "Fresh Market",
-      store_address: "606 Cherry Ct",
-    },
-    {
-      store_id: 10,
-      store_name: "Value Shop",
-      store_address: "707 Spruce Ter",
-    },
-  ];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -112,15 +64,17 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
     },
   });
 
+  console.log("ADMIN DATA : ", admin);
   function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("ini test : ", admin);
     const updatedValues = {
       admin_id: admin.admin_id,
-      account_id: admin.account_id,
+      user_id: admin.user_id,
       store_id: parseInt(values.store as string) || admin.store_id,
       position: values.position || admin.position,
     };
-    submitApi(updatedValues);
     console.log("Payload Edit:", updatedValues);
+    submitApi(updatedValues);
   }
 
   const submitApi = async (updatedValues: any) => {
@@ -158,7 +112,7 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder={admin ? admin?.account?.name : "Name"}
+                  placeholder={admin ? adminData[0]?.user?.name : "Name"}
                   {...field}
                   disabled
                 />
@@ -174,30 +128,7 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={admin ? admin.phone : "Phone"}
-                  {...field}
-                  disabled
-                />
-              </FormControl>
-              <FormDescription>
-                Admin Phone Number (
-                <span className="underline">
-                  <a>only account owner can change personal information.</a>
-                </span>
-                ).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="position"
@@ -230,7 +161,7 @@ const EditAdminForm = ({ adminData, setOpenDialog }: EditAdminFormProps) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {dummyData.map((store) => {
+                  {storeData.map((store: any) => {
                     return (
                       <SelectItem
                         key={store.store_id}
