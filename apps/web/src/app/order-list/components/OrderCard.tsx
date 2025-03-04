@@ -19,45 +19,8 @@ import {
   Cancel as CancelIcon,
   CheckCircle as CheckCircleIcon,
 } from "@mui/icons-material";
-
-interface OrderItem {
-  order_item_id: number;
-  product_id: number;
-  quantity: number;
-  price: number;
-  subtotal: number;
-  product: {
-    product_name: string;
-    product_price: number;
-    product_img?: { url: string }[];
-  };
-}
-
-interface PaymentProof {
-  payment_proof_id: number;
-  image_url: string;
-  uploaded_at: string;
-  status: string;
-}
-
-export interface Order {
-  order_id: number;
-  order_number?: string;
-  total_price: number;
-  status: string;
-  order_date: string;
-  order_items: OrderItem[];
-  payment_proof?: PaymentProof;
-}
-
-interface OrderCardProps {
-  order: Order;
-  expanded: boolean;
-  onToggle: () => void;
-  onCancel: () => void;
-  onConfirm: () => void;
-  onImageClick: (url: string) => void;
-}
+import { formatTime, useCountdown } from "../utils";
+import { Order, OrderCardProps } from "../types";
 
 const formatDate = (dateString: string): string => {
   const options: Intl.DateTimeFormatOptions = {
@@ -78,18 +41,9 @@ const OrderCard: React.FC<OrderCardProps> = ({
   onConfirm,
   onImageClick,
 }) => {
-  // Contoh waktu sisa (misalnya 1 jam)
-  const remainingTime = 3600000;
-  const formatTime = (ms: number): string => {
-    if (ms <= 0) return "Waktu habis";
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
+  const orderTime = new Date(order.order_date).getTime();
+  const deadline = orderTime + 3600000;
+  const remainingTime = useCountdown(deadline);
 
   return (
     <Card

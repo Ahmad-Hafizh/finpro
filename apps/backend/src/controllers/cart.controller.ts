@@ -152,15 +152,17 @@ export class CartController {
       const itemsWithTotal = cart.cart_items.map((item) => ({
         ...item,
         subtotal: item.quantity * item.product.product_price,
-        store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
+        store_name: item.product.stock[0]?.store?.store_name ?? "Unknown Store",
+
         product: {
           ...item.product,
-          stock: item.product.stock
-            ? {
-                ...item.product.stock,
-                store: item.product.stock.store,
-              }
-            : null,
+          stock:
+            item.product.stock.length > 0
+              ? {
+                  ...item.product.stock[0],
+                  store: item.product.stock[0].store,
+                }
+              : null,
         },
       }));
 
@@ -169,7 +171,7 @@ export class CartController {
         0
       );
 
-      return res.status(200).json({
+      res.status(200).json({
         items: itemsWithTotal,
         total,
       });

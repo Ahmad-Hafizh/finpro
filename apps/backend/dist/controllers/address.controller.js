@@ -29,17 +29,33 @@ class AddressController {
                     },
                 });
                 if (!(user === null || user === void 0 ? void 0 : user.profile))
-                    return responseHandler_1.default.error(res, 404, "user not found");
+                    return responseHandler_1.default.error(res, 404, 'user not found');
                 const addresses = yield prisma_1.default.address.findMany({
                     where: { profile_id: user.profile.profile_id, deleted_at: null },
                 });
-                return responseHandler_1.default.success(res, 200, "get address success", addresses);
+                return responseHandler_1.default.success(res, 200, 'get address success', addresses);
             }
             catch (error) {
-                return responseHandler_1.default.error(res, 500, "internal server error", error);
+                return responseHandler_1.default.error(res, 500, 'internal server error', error);
             }
         });
     }
+    // async getAddresses(req: Request, res: Response): Promise<any> {
+    //   const userId = "1";
+    //   try {
+    //     const profile = await prisma.profile.findUnique({
+    //       where: { user_id: userId },
+    //     });
+    //     if (!profile) return res.status(404).json({ error: "Profile not found" });
+    //     const addresses = await prisma.address.findMany({
+    //       where: { profile_id: profile.profile_id },
+    //     });
+    //     return res.status(200).json(addresses);
+    //   } catch (error) {
+    //     console.error("Get Addresses Error:", error);
+    //     return res.status(500).json({ error: "Failed to fetch addresses" });
+    //   }
+    // }
     setDeliveryAddress(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -53,13 +69,26 @@ class AddressController {
                         profile: true,
                     },
                 });
+                if (!((_a = user === null || user === void 0 ? void 0 : user.profile) === null || _a === void 0 ? void 0 : _a.profile_id)) {
+                    return responseHandler_1.default.error(res, 400, 'user not found');
+                }
                 yield prisma_1.default.address.create({
-                    data: Object.assign(Object.assign({}, req.body), { profile_id: (_a = user === null || user === void 0 ? void 0 : user.profile) === null || _a === void 0 ? void 0 : _a.profile_id }),
+                    data: {
+                        profile_id: user.profile.profile_id,
+                        address_name: req.body.address_name,
+                        address_contact: req.body.address_contact,
+                        country: req.body.country,
+                        city: req.body.city,
+                        street: req.body.street,
+                        post_code: req.body.post_code,
+                        lat: req.body.lat,
+                        lng: req.body.lng,
+                    },
                 });
-                return responseHandler_1.default.success(res, 201, "add address success");
+                return responseHandler_1.default.success(res, 201, 'add address success');
             }
             catch (error) {
-                return responseHandler_1.default.error(res, 500, "internal server error", error);
+                return responseHandler_1.default.error(res, 500, 'internal server error', error);
             }
         });
     }
@@ -84,17 +113,17 @@ class AddressController {
                     },
                     data: Object.assign({}, req.body),
                 });
-                return responseHandler_1.default.success(res, 201, "update address success");
+                return responseHandler_1.default.success(res, 201, 'update address success');
             }
             catch (error) {
-                return responseHandler_1.default.error(res, 500, "internal server error", error);
+                return responseHandler_1.default.error(res, 500, 'internal server error', error);
             }
         });
     }
     deleteAddress(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email, address_id } = req.body;
+                const { email, address_id } = req.params;
                 const user = yield prisma_1.default.user.findUnique({
                     where: {
                         email,
@@ -104,18 +133,18 @@ class AddressController {
                     },
                 });
                 if (!user) {
-                    return responseHandler_1.default.error(res, 404, "User not found");
+                    return responseHandler_1.default.error(res, 404, 'User not found');
                 }
                 yield prisma_1.default.address.update({
-                    where: { address_id },
+                    where: { address_id: parseInt(address_id) },
                     data: {
                         deleted_at: new Date().toISOString(),
                     },
                 });
-                return responseHandler_1.default.success(res, 200, "Delete Address Success");
+                return responseHandler_1.default.success(res, 200, 'Delete Address Success');
             }
             catch (error) {
-                return responseHandler_1.default.error(res, 500, "internal server error", error);
+                return responseHandler_1.default.error(res, 500, 'internal server error', error);
             }
         });
     }

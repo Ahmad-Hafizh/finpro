@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import Grid from "@mui/material/Grid2";
-import { OrderDetail } from "../[order_id]/page"; // Sesuaikan path jika perlu
+import { OrderDetail } from "../[order_id]/page";
 
 interface PaymentProofSummaryProps {
   orderDetail: OrderDetail;
@@ -22,7 +22,7 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
     <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
       <ReceiptIcon color="primary" sx={{ mr: 1 }} />
       <Typography variant="h6" color="text.primary">
-        Ringkasan Pesanan
+        Payment summary
       </Typography>
     </Box>
     <Divider sx={{ mb: 3 }} />
@@ -67,7 +67,8 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
               </Grid>
               <Grid size={{ xs: 9, sm: 10 }}>
                 <Typography variant="subtitle1" fontWeight={600}>
-                  {item.product?.product_name || "Produk tidak tersedia"}
+                  {item.product?.product_name ||
+                    "The product is not available."}
                 </Typography>
                 <Box
                   sx={{
@@ -110,7 +111,7 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
       }}
     >
       <Typography variant="subtitle1" fontWeight={600}>
-        Total Pembayaran
+        Total Payment
       </Typography>
       <Typography variant="h6" fontWeight={700}>
         Rp {orderDetail.total_price.toLocaleString()}

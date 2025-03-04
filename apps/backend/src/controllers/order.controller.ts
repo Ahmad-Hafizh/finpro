@@ -53,7 +53,9 @@ export class OrderController {
 
       const now = new Date();
       const orderNumber = generateOrderNumber(now);
-
+      // akses informasi dari voucher code,
+      //  jika tipe voucher mengurangi pembayaran, total payment dikurangi nilai voucher
+      // jika tipe voucher mengurangi ongkir, shipping price dikurangi nilai voucher
       const order = await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
           data: {
@@ -109,11 +111,12 @@ export class OrderController {
                 data: {
                   store_id: nearestStore.store_id,
                   stock_id: stock.stock_id,
-                  product_id: item.product_id.toString(),
+                  product_id: item.product_id,
                   quantity: item.quantity,
                   type: "out",
                   notes: `Order ${orderNumber} created - stock deducted`,
                   created_at: new Date(),
+                  stock_result: stock.quantity - item.quantity,
                 },
               });
             }
@@ -140,6 +143,8 @@ export class OrderController {
 
   // upload payment proof, cloudinary
   async uploadPaymentProof(req: Request, res: Response): Promise<any> {
+    console.log(req.file);
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     try {
       const { order_id } = req.params;
       if (!req.file) return res.status(400).json({ error: "No file uploaded" });
@@ -248,11 +253,12 @@ export class OrderController {
               data: {
                 store_id: order.store_id,
                 stock_id: stock.stock_id,
-                product_id: item.product_id.toString(),
+                product_id: item.product_id,
                 quantity: item.quantity,
                 type: "in",
                 notes: `Order ${order.order_number || order.order_id} canceled by user: ${reason || "No reason provided"}`,
                 created_at: new Date(),
+                stock_result: stock.quantity + item.quantity,
               },
             });
           }
@@ -379,11 +385,12 @@ export class OrderController {
                 data: {
                   store_id: order.store_id,
                   stock_id: stock.stock_id,
-                  product_id: item.product_id.toString(),
+                  product_id: item.product_id,
                   quantity: item.quantity,
                   type: "in",
                   notes: `Auto cancel order ${order.order_number || order.order_id}: stock returned`,
                   created_at: new Date(),
+                  stock_result: stock.quantity + item.quantity,
                 },
               });
             }

@@ -204,6 +204,7 @@ exports.Prisma.StockJournalScalarFieldEnum = {
   stock_id: 'stock_id',
   product_id: 'product_id',
   quantity: 'quantity',
+  stock_result: 'stock_result',
   type: 'type',
   notes: 'notes',
   created_at: 'created_at'
@@ -258,7 +259,6 @@ exports.Prisma.VoucherOngkirScalarFieldEnum = {
 exports.Prisma.VoucherProductScalarFieldEnum = {
   voucher_product_id: 'voucher_product_id',
   voucher_product_code: 'voucher_product_code',
-  voucher_product_nominal: 'voucher_product_nominal',
   voucher_product_startdate: 'voucher_product_startdate',
   voucher_product_enddate: 'voucher_product_enddate',
   created_at: 'created_at',

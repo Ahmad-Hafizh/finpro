@@ -37,6 +37,23 @@ class AdminOrderController {
                         whereClause.store_id = Number(req.query.store_id);
                     }
                 }
+                if (req.query.orderNumber) {
+                    whereClause.order_number = {
+                        contains: req.query.orderNumber,
+                        mode: "insensitive",
+                    };
+                }
+                if (req.query.orderDate) {
+                    const orderDate = new Date(req.query.orderDate);
+                    const startDate = new Date(orderDate);
+                    startDate.setHours(0, 0, 0, 0);
+                    const endDate = new Date(orderDate);
+                    endDate.setHours(23, 59, 59, 999);
+                    whereClause.order_date = {
+                        gte: startDate,
+                        lte: endDate,
+                    };
+                }
                 const totalCount = yield prisma_1.default.order.count({ where: whereClause });
                 const totalPages = Math.ceil(totalCount / pageSize);
                 const orders = yield prisma_1.default.order.findMany({
@@ -61,7 +78,7 @@ class AdminOrderController {
     // confirm payment (manual transfer)
     confirmPayment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = "4";
+            const userId = "2";
             try {
                 const admin = yield prisma_1.default.admin.findUnique({
                     where: { user_id: userId },
@@ -125,7 +142,7 @@ class AdminOrderController {
     // send user order
     sendUserOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = "4";
+            const userId = "2";
             try {
                 const admin = yield prisma_1.default.admin.findUnique({
                     where: { user_id: userId },
@@ -175,7 +192,7 @@ class AdminOrderController {
     // cancel user order
     cancelUserOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = "4";
+            const userId = "2";
             try {
                 const admin = yield prisma_1.default.admin.findUnique({
                     where: { user_id: userId },
@@ -219,11 +236,12 @@ class AdminOrderController {
                             data: {
                                 store_id: order.store_id,
                                 stock_id: stock.stock_id,
-                                product_id: item.product_id.toString(),
+                                product_id: item.product_id,
                                 quantity: item.quantity,
                                 type: "in",
                                 notes: `Order ${order.order_number || order.order_id} dibatalkan: ${reason || "Alasan tidak diberikan"}`,
                                 created_at: new Date(),
+                                stock_result: stock.quantity + item.quantity,
                             },
                         });
                     }
