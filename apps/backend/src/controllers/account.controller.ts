@@ -83,8 +83,6 @@ export class AccountController {
   }
   async signIn(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      // const validateData = signInSchema.parse(req.body);
-      // const { email, password } = validateData;
       const { email, password } = req.body;
       const userExist = await findUser(email);
 
@@ -125,6 +123,22 @@ export class AccountController {
       const authToken = sign({ email: user.email, id: user.id }, process.env.TOKEN_KEY || 'secretkey', { expiresIn: '1h' });
 
       return ResponseHandler.success(res, 200, 'Sign in is success', { ...user, auth_token: authToken });
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
+  async getRoleByEmail(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: req.body.email,
+        },
+      });
+
+      if (!user) {
+        return ResponseHandler.error(res, 404, 'User not found');
+      }
+      return ResponseHandler.success(res, 200, 'Sign in is success', { role: user.role });
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }

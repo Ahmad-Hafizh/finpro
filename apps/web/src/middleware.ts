@@ -1,6 +1,7 @@
 import authConfig from "./auth.config";
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
+import { callAPI } from "./config/axios";
 
 const { auth } = NextAuth(authConfig);
 export default auth(async (req) => {
@@ -35,8 +36,14 @@ export default auth(async (req) => {
     return NextResponse.redirect(`${fe_url}/`);
   }
 
-  if (isAdminRoute && !isLoggedIn && req.auth?.user.role != "user") {
-    return NextResponse.redirect(`${fe_url}/auth/signin`);
+  if (isAdminRoute) {
+    const response = await callAPI.post("/account/get-role", {
+      email: req.auth?.user.email,
+    });
+
+    if (response.data.result.role == "user") {
+      return NextResponse.redirect(`${fe_url}/`);
+    }
   }
 });
 
