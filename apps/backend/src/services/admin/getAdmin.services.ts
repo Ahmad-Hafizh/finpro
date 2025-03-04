@@ -23,6 +23,10 @@ export const findAdmin = async ({
   const result = await prisma.admin.findMany({
     skip: (pageNumber - 1) * pageSize,
     take: pageSize,
+    include: {
+      user: true,
+      store: true,
+    },
   });
 
   return result;
