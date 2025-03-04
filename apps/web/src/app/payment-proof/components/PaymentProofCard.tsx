@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -10,8 +12,8 @@ import {
 } from "@mui/material";
 import {
   CalendarToday as CalendarTodayIcon,
-  Payment as PaymentIcon,
   CloudUpload as CloudUploadIcon,
+  AccessTime as AccessTimeIcon,
 } from "@mui/icons-material";
 
 interface Order {
@@ -32,6 +34,35 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
   formatDate,
   onUpload,
 }) => {
+  const [remainingTime, setRemainingTime] = useState<number>(0);
+
+  useEffect(() => {
+    const orderTime = new Date(order.order_date).getTime();
+    const deadline = orderTime + 3600000;
+
+    const updateRemainingTime = () => {
+      const now = new Date().getTime();
+      const timeLeft = deadline - now;
+      setRemainingTime(timeLeft > 0 ? timeLeft : 0);
+    };
+
+    updateRemainingTime();
+    const intervalId = setInterval(updateRemainingTime, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [order.order_date]);
+
+  const formatTime = (ms: number): string => {
+    if (ms <= 0) return "Waktu habis";
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   return (
     <Card
       sx={{
@@ -75,7 +106,7 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
           }}
         >
           <Chip
-            label="Menunggu Pembayaran"
+            label="Waiting for Payment"
             color="warning"
             variant="outlined"
             sx={{ fontWeight: 500, borderWidth: 2 }}
@@ -84,6 +115,14 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
             Rp {order.total_price.toLocaleString()}
           </Typography>
         </Box>
+        {order.status === "menunggu_pembayaran" && (
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            <AccessTimeIcon fontSize="small" sx={{ mr: 1 }} />
+            <Typography variant="body2" fontWeight={600}>
+              {formatTime(remainingTime)}
+            </Typography>
+          </Box>
+        )}
         <Box sx={{ mt: 3 }}>
           <Button
             fullWidth
@@ -98,7 +137,7 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
               "&:hover": { bgcolor: "primary.dark" },
             }}
           >
-            Upload Bukti Pembayaran
+            Upload Payment Proof
           </Button>
         </Box>
       </CardContent>

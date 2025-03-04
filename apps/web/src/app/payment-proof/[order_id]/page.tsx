@@ -14,7 +14,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "./theme";
+import { theme } from "../../../config/theme";
 import PaymentProofSummary from "../components/PaymentProofSummary";
 import PaymentProofForm from "../components/PaymentProofForm";
 
@@ -75,7 +75,7 @@ const PaymentProofUploadPage: React.FC = () => {
             />
             <Box sx={{ textAlign: "center", mb: 4, pt: 2 }}>
               <Typography variant="h4" color="primary.dark" gutterBottom>
-                Upload Bukti Pembayaran
+                Upload Payment Proof
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Order ID: #{orderId}

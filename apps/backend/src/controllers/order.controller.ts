@@ -141,6 +141,8 @@ export class OrderController {
 
   // upload payment proof, cloudinary
   async uploadPaymentProof(req: Request, res: Response): Promise<any> {
+    console.log(req.file);
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     try {
       const { order_id } = req.params;
       if (!req.file) return res.status(400).json({ error: "No file uploaded" });
