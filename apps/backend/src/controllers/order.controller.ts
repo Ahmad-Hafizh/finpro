@@ -53,7 +53,9 @@ export class OrderController {
 
       const now = new Date();
       const orderNumber = generateOrderNumber(now);
-
+      // akses informasi dari voucher code,
+      //  jika tipe voucher mengurangi pembayaran, total payment dikurangi nilai voucher
+      // jika tipe voucher mengurangi ongkir, shipping price dikurangi nilai voucher
       const order = await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
           data: {
