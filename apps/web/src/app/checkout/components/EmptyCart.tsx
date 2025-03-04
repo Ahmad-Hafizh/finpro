@@ -5,7 +5,7 @@ import { Container, Box, Typography, Button } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useRouter } from "next/navigation";
-import { theme } from "../themes";
+import { theme } from "../../../config/theme";
 
 const EmptyCart: React.FC = () => {
   const router = useRouter();

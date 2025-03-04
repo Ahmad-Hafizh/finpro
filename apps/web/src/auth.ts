@@ -4,12 +4,14 @@ import authConfig from "./auth.config";
 import { callAPI } from "./config/axios";
 import { redirect } from "next/navigation";
 import prisma from "./prisma";
+import { sign } from "jsonwebtoken";
 
 declare module "next-auth" {
   interface Session {
     user: {
       role: string;
       isOauth: boolean;
+      auth_token: string;
     } & DefaultSession["user"];
   }
 }
@@ -59,7 +61,8 @@ export const {
       if (!response.data.result) return token;
 
       token.role = response.data.result.role;
-      token.isOauth = response.data.result.accounts[0] ? true : false;
+      token.isOauth = response.data.result.accounts ? true : false;
+      token.auth_token = response.data.result.auth_token;
 
       return token;
     },
@@ -71,6 +74,7 @@ export const {
           ...session.user,
           role: token.role,
           isOauth: token.isOauth,
+          auth_token: token.auth_token,
         },
       };
     },

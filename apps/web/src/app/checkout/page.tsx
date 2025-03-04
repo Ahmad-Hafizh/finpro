@@ -14,13 +14,15 @@ import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
-import { theme } from "./themes";
+import { theme } from "../../config/theme";
 import OrderDetails from "./components/OrderDetails";
 import ShippingAddress from "./components/ShippingAddress";
 import OrderSummary from "./components/OrderSummary";
 import EmptyCart from "./components/EmptyCart";
 import { CartItem, Address } from "./types";
 import { calculateSubtotal } from "./utils";
+import { useSession } from "next-auth/react";
+import ShippingCourier from "./components/ShippingCourier";
 
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
@@ -37,10 +39,15 @@ const CheckoutPage: React.FC = () => {
   const shippingCost = 15000;
   const totalPrice = subtotal + shippingCost;
 
+  const session = useSession();
+
   useEffect(() => {
     loadCartItems();
-    fetchAddresses();
-  }, []);
+    if (session.status === "authenticated" && session.data) {
+      fetchAddresses();
+    }
+  }, [session]);
+
   const loadCartItems = () => {
     const items = localStorage.getItem("selectedCartItems");
     if (items) {
@@ -54,10 +61,13 @@ const CheckoutPage: React.FC = () => {
 
   const fetchAddresses = async () => {
     try {
-      const response = await callAPI.get("/address");
-      setAddresses(response.data);
-      if (response.data && response.data.length > 0) {
-        setSelectedAddress(response.data[0].address_id);
+      const token = session?.data?.user.auth_token;
+      const response = await callAPI.get("/address/get-address", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setAddresses(response.data.result);
+      if (response.data.result && response.data.result.length > 0) {
+        setSelectedAddress(response.data.result[0].address_id);
       }
     } catch (err: any) {
       console.error("Error fetching addresses:", err);
@@ -158,6 +168,13 @@ const CheckoutPage: React.FC = () => {
             <Grid size={{ xs: 12, md: 7 }}>
               <OrderDetails items={selectedItems} />
               <ShippingAddress
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                onAddressChange={handleAddressChange}
+                onAddNewAddress={() => router.push("/address/new")}
+                error={error}
+              />
+              <ShippingCourier
                 addresses={addresses}
                 selectedAddress={selectedAddress}
                 onAddressChange={handleAddressChange}

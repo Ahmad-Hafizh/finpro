@@ -149,31 +149,32 @@ export class CartController {
         return res.status(200).json({ items: [] });
       }
 
-      // const itemsWithTotal = cart.cart_items.map((item) => ({
-      //   ...item,
-      //   subtotal: item.quantity * item.product.product_price,
-      //   store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
-      //   product: {
-      //     ...item.product,
-      //     stock: item.product.stock
-      //       ? {
-      //           ...item.product.stock,
-      //           store: item.product.stock.store,
-      //         }
-      //       : null,
-      //   },
-      // }));
+      const itemsWithTotal = cart.cart_items.map((item) => ({
+        ...item,
+        subtotal: item.quantity * item.product.product_price,
+        store_name: item.product.stock[0]?.store?.store_name ?? "Unknown Store",
 
-      // const total = itemsWithTotal.reduce(
-      //   (sum, item) => sum + item.subtotal,
-      //   0
-      // );
+        product: {
+          ...item.product,
+          stock:
+            item.product.stock.length > 0
+              ? {
+                  ...item.product.stock[0],
+                  store: item.product.stock[0].store,
+                }
+              : null,
+        },
+      }));
 
-      return;
-      // res.status(200).json({
-      //   items: itemsWithTotal,
-      //   total,
-      // });
+      const total = itemsWithTotal.reduce(
+        (sum, item) => sum + item.subtotal,
+        0
+      );
+
+      res.status(200).json({
+        items: itemsWithTotal,
+        total,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Failed to get items" });

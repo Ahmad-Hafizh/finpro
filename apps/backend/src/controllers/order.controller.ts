@@ -53,7 +53,9 @@ export class OrderController {
 
       const now = new Date();
       const orderNumber = generateOrderNumber(now);
-
+      // akses informasi dari voucher code,
+      //  jika tipe voucher mengurangi pembayaran, total payment dikurangi nilai voucher
+      // jika tipe voucher mengurangi ongkir, shipping price dikurangi nilai voucher
       const order = await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
           data: {
@@ -141,6 +143,8 @@ export class OrderController {
 
   // upload payment proof, cloudinary
   async uploadPaymentProof(req: Request, res: Response): Promise<any> {
+    console.log(req.file);
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     try {
       const { order_id } = req.params;
       if (!req.file) return res.status(400).json({ error: "No file uploaded" });

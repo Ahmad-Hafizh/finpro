@@ -1,6 +1,5 @@
 import authConfig from "./auth.config";
 import NextAuth from "next-auth";
-import { privateRoutes } from "./route";
 import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
@@ -9,6 +8,15 @@ export default auth(async (req) => {
 
   const { nextUrl } = req;
   const fe_url = "http://localhost:3000";
+
+  const privateRoutes = [
+    "/setting",
+    "/cart",
+    "/order",
+    "/admin",
+    "/setting/address",
+    "/setting/account",
+  ];
 
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = nextUrl.pathname.includes("/auth");

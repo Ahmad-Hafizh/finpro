@@ -13,6 +13,7 @@ import {
   Settings2,
   SquareTerminal,
   ChartSpline,
+  Wallet,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -87,6 +88,11 @@ const data = {
       title: "User Management",
       url: "/admin/user",
       icon: Settings2,
+    },
+    {
+      title: "Order Management",
+      url: "/admin/order",
+      icon: Wallet,
     },
   ],
   projects: [
