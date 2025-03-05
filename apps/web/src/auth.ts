@@ -6,11 +6,20 @@ import { redirect } from "next/navigation";
 import prisma from "./prisma";
 
 declare module "next-auth" {
+  interface User {
+    role?: string;
+  }
   interface Session {
-    user: {
+    user: User & {
       role: string;
       isOauth: boolean;
+      auth_token: string;
     } & DefaultSession["user"];
+  }
+  interface jwt {
+    user: User & {
+      role: string;
+    };
   }
 }
 
@@ -31,6 +40,7 @@ export const {
           id: user.id,
         });
 
+        user.role = "user";
         return true;
       }
 
@@ -38,6 +48,8 @@ export const {
       const response = await callAPI.post("/account/get-user-by-id", {
         id: user.id,
       });
+
+      user.role = response.data.result.role;
 
       if (
         !response.data.result.emailVerified &&
@@ -59,7 +71,8 @@ export const {
       if (!response.data.result) return token;
 
       token.role = response.data.result.role;
-      token.isOauth = response.data.result.accounts[0] ? true : false;
+      token.isOauth = response.data.result.accounts ? true : false;
+      token.auth_token = response.data.result.auth_token;
 
       return token;
     },
@@ -69,8 +82,9 @@ export const {
         ...session,
         user: {
           ...session.user,
-          role: token.role,
-          isOauth: token.isOauth,
+          role: token.role as string,
+          isOauth: token.isOauth as boolean,
+          auth_token: token.auth_token as string,
         },
       };
     },

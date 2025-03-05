@@ -48,7 +48,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
             <TextField
               fullWidth
               id="orderNumber"
-              label="Nomor Order"
+              label="Order Number"
               variant="outlined"
               value={searchParams.orderNumber}
               onChange={(e) =>
@@ -57,7 +57,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
                   orderNumber: e.target.value,
                 })
               }
-              placeholder="Cari nomor order"
+              placeholder="Search Order Number"
               size="small"
               slotProps={{
                 input: {
@@ -88,7 +88,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
             <TextField
               fullWidth
               id="orderDate"
-              label="Tanggal Order"
+              label="Order Date"
               type="date"
               variant="outlined"
               value={searchParams.date}
@@ -130,7 +130,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
                 startIcon={<SearchIcon />}
                 fullWidth
               >
-                Cari
+                Search
               </Button>
               <Button
                 type="button"

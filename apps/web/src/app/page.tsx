@@ -1,13 +1,13 @@
 import { CategoryCarousel } from "@/components/global/CategoryCarousel";
 import { LargeCarousel } from "@/components/global/LargeCarousel";
 import { ProductCarousel } from "@/components/global/ProductCarousel";
-import StorePick from "@/components/global/StorePick";
+// import StorePick from "@/components/global/StorePick";
 import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-6 py-24">
-      <StorePick />
+      {/* <StorePick /> */}
       <div className="overflow-hidden rounded-xl md:px-0">
         <LargeCarousel />
       </div>

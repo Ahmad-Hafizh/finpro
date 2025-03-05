@@ -1,34 +1,30 @@
-import { Request, Response } from "express";
-import prisma from "../prisma";
-import ResponseHandler from "../utils/responseHandler";
+import { Request, Response } from 'express';
+import prisma from '../prisma';
+import ResponseHandler from '../utils/responseHandler';
 
 export class AddressController {
   async getAddresses(req: Request, res: Response): Promise<any> {
     try {
-      const { email } = req.body;
+      const authUser = res.locals.user;
+
       const user = await prisma.user.findUnique({
         where: {
-          email,
+          email: authUser.email,
         },
         include: {
           profile: true,
         },
       });
-      if (!user?.profile)
-        return ResponseHandler.error(res, 404, "user not found");
+
+      if (!user?.profile) return ResponseHandler.error(res, 404, 'user not found');
 
       const addresses = await prisma.address.findMany({
         where: { profile_id: user.profile.profile_id, deleted_at: null },
       });
 
-      return ResponseHandler.success(
-        res,
-        200,
-        "get address success",
-        addresses
-      );
+      return ResponseHandler.success(res, 200, 'get address success', addresses);
     } catch (error) {
-      return ResponseHandler.error(res, 500, "internal server error", error);
+      return ResponseHandler.error(res, 500, 'internal server error', error);
     }
   }
   // async getAddresses(req: Request, res: Response): Promise<any> {
@@ -63,7 +59,7 @@ export class AddressController {
       });
 
       if (!user?.profile?.profile_id) {
-        return ResponseHandler.error(res, 400, "user not found");
+        return ResponseHandler.error(res, 400, 'user not found');
       }
 
       await prisma.address.create({
@@ -79,9 +75,9 @@ export class AddressController {
           lng: req.body.lng,
         },
       });
-      return ResponseHandler.success(res, 201, "add address success");
+      return ResponseHandler.success(res, 201, 'add address success');
     } catch (error) {
-      return ResponseHandler.error(res, 500, "internal server error", error);
+      return ResponseHandler.error(res, 500, 'internal server error', error);
     }
   }
   async updateDeliveryAddress(req: Request, res: Response): Promise<any> {
@@ -104,41 +100,69 @@ export class AddressController {
           deleted_at: null,
         },
         data: {
-          ...req.body,
+          address_name: req.body.address_name,
+          address_contact: req.body.address_contact,
+          country: req.body.country,
+          city: req.body.city,
+          street: req.body.city,
+          post_code: req.body.post_code,
+          lat: req.body.lat,
+          lng: req.body.lng,
         },
       });
-      return ResponseHandler.success(res, 201, "update address success");
+      return ResponseHandler.success(res, 201, 'update address success');
     } catch (error) {
-      return ResponseHandler.error(res, 500, "internal server error", error);
+      return ResponseHandler.error(res, 500, 'internal server error', error);
     }
   }
   async deleteAddress(req: Request, res: Response): Promise<any> {
     try {
-      const { email, address_id } = req.params;
+      const { address_id } = req.params;
+      const authUser = res.locals.user;
 
-      const user = await prisma.user.findUnique({
+      const profile = await prisma.profile.findUnique({
         where: {
-          email,
-        },
-        include: {
-          profile: true,
+          user_id: authUser.id,
         },
       });
 
-      if (!user) {
-        return ResponseHandler.error(res, 404, "User not found");
+      if (!profile) {
+        return ResponseHandler.error(res, 404, 'User not found');
       }
 
       await prisma.address.update({
-        where: { address_id: parseInt(address_id) },
+        where: { address_id: parseInt(address_id), profile_id: profile.profile_id },
         data: {
           deleted_at: new Date().toISOString(),
         },
       });
 
-      return ResponseHandler.success(res, 200, "Delete Address Success");
+      return ResponseHandler.success(res, 200, 'Delete Address Success');
     } catch (error) {
-      return ResponseHandler.error(res, 500, "internal server error", error);
+      return ResponseHandler.error(res, 500, 'internal server error', error);
+    }
+  }
+  async getAddressDetail(req: Request, res: Response): Promise<any> {
+    try {
+      const { address_id } = req.params;
+      const authUser = res.locals.user;
+
+      const profile = await prisma.profile.findUnique({
+        where: {
+          user_id: authUser.id,
+        },
+      });
+
+      if (!profile) {
+        return ResponseHandler.error(res, 404, 'User not found');
+      }
+
+      const address = await prisma.address.findUnique({
+        where: { address_id: parseInt(address_id) },
+      });
+      return ResponseHandler.success(res, 200, 'Get Address Success', address);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'internal server error', error);
     }
   }
 }

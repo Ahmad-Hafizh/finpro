@@ -36,16 +36,16 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({
       },
     }}
   >
-    <DialogTitle id="cancel-dialog-title">Batalkan Pesanan</DialogTitle>
+    <DialogTitle id="cancel-dialog-title">Cancel Order</DialogTitle>
     <DialogContent>
       <DialogContentText sx={{ mb: 2 }}>
-        Berikan alasan untuk pembatalan pesanan ini.
+        Please provide a reason for canceling this order.
       </DialogContentText>
       <TextField
         autoFocus
         margin="dense"
         id="reason"
-        label="Alasan Pembatalan"
+        label="Cancellation Reason"
         type="text"
         fullWidth
         variant="outlined"
@@ -58,7 +58,7 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({
     </DialogContent>
     <DialogActions sx={{ px: 3, pb: 3 }}>
       <Button onClick={onClose} color="inherit">
-        Batal
+        Cancel
       </Button>
       <Button
         onClick={onCancelOrder}
@@ -66,7 +66,7 @@ const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({
         variant="contained"
         disabled={!reason.trim()}
       >
-        Batalkan Pesanan
+        Cancel Order
       </Button>
     </DialogActions>
   </Dialog>

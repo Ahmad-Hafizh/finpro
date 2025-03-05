@@ -65,7 +65,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             fontWeight={600}
             color="text.secondary"
           >
-            Unit Price
+            Product Price
           </Typography>
         </Grid>
         <Grid size={{ xs: 2 }} sx={{ textAlign: "center" }}>

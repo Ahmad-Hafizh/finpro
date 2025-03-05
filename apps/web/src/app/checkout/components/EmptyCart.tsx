@@ -35,14 +35,15 @@ const EmptyCart: React.FC = () => {
               sx={{ fontSize: 80, color: "text.disabled", mb: 2 }}
             />
             <Typography variant="h5" color="text.secondary" gutterBottom>
-              Tidak ada item yang dipilih untuk checkout
+              There is no item to checkout
             </Typography>
             <Typography
               variant="body1"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: 500, mx: "auto" }}
             >
-              Silahkan kembali ke keranjang dan pilih produk yang ingin dibeli
+              Please go back to cart and choose the products that you want to
+              buy
             </Typography>
             <Button
               variant="contained"
@@ -51,7 +52,7 @@ const EmptyCart: React.FC = () => {
               onClick={() => router.push("/cart")}
               sx={{ px: 4, py: 1.5 }}
             >
-              Kembali ke Keranjang
+              Back to Cart
             </Button>
           </Box>
         </Container>

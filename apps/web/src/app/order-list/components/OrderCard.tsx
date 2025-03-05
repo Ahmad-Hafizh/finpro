@@ -155,7 +155,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         <Collapse in={expanded}>
           <Box sx={{ px: 3, py: 2, bgcolor: "rgba(0,0,0,0.02)" }}>
             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
-              Item Pesanan:
+              Order Item:
             </Typography>
             <List disablePadding sx={{ mb: 3 }}>
               {order.order_items.map((item) => (
@@ -188,8 +188,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                           {item.product?.product_name?.charAt(0)}
                         </Avatar>
                         <Typography variant="body2" fontWeight={500}>
-                          {item.product?.product_name ||
-                            "Produk tidak ditemukan"}
+                          {item.product?.product_name || "Product not found"}
                         </Typography>
                       </Box>
                     </Grid>
@@ -224,12 +223,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
             {order.payment_proof && (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
-                  Bukti Pembayaran:
+                  Payment Proof:
                 </Typography>
                 <Box
                   component="img"
                   src={order.payment_proof.image_url}
-                  alt="Bukti Pembayaran"
+                  alt="Payment Proof"
                   sx={{
                     width: 120,
                     height: 120,
@@ -250,7 +249,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   color="text.secondary"
                   sx={{ mt: 0.5 }}
                 >
-                  Diunggah pada:{" "}
+                  Uploaded at:{" "}
                   {new Date(order.payment_proof.uploaded_at).toLocaleString()}
                 </Typography>
               </Box>
@@ -270,7 +269,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   onClick={onCancel}
                   startIcon={<CancelIcon />}
                 >
-                  Batalkan Pesanan
+                  Cancel Order
                 </Button>
               )}
               {order.status === "dikirim" && (
@@ -280,7 +279,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   onClick={onConfirm}
                   startIcon={<CheckCircleIcon />}
                 >
-                  Konfirmasi Penerimaan
+                  Confirm Delivery
                 </Button>
               )}
             </Box>

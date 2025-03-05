@@ -58,7 +58,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <PaymentIcon sx={{ color: "primary.main", mr: 1.5, fontSize: 24 }} />
         <Typography variant="h5" component="h2">
-          Ringkasan Pembayaran
+          Payment Summary
         </Typography>
       </Box>
 
@@ -92,7 +92,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <LocalShippingIcon
               sx={{ fontSize: 18, mr: 1, color: "text.secondary" }}
             />
-            <Typography variant="body1">Biaya Pengiriman</Typography>
+            <Typography variant="body1">Shipping Cost</Typography>
           </Box>
           <Typography variant="body1" fontWeight={500}>
             Rp {shippingCost.toLocaleString()}
@@ -130,7 +130,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         {loading ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
-          "Konfirmasi Pesanan"
+          "Confirm Order"
         )}
       </Button>
 
@@ -141,7 +141,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           onClick={onBackToCart}
           sx={{ color: "text.secondary" }}
         >
-          Kembali ke Keranjang
+          Back to Cart
         </Button>
       </Box>
     </Paper>

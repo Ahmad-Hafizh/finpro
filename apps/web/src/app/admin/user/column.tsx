@@ -32,10 +32,10 @@ export type StoreAdmin = {
 export const columns = (
   setAction: (action: string) => void,
   setAdminId: (id: number) => void,
-  setOpenDialog: (open: boolean) => void
-): ColumnDef<StoreAdmin>[] => [
+  setOpenDialog: (open: boolean) => void,
+): ColumnDef<any>[] => [
   {
-    accessorKey: "account.name",
+    accessorKey: "user.name",
     header: ({ column }) => {
       return (
         <Button
@@ -50,7 +50,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "store_id",
+    accessorKey: "store.store_name",
     header: ({ column }) => {
       return (
         <Button
@@ -58,14 +58,14 @@ export const columns = (
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Store Id
+          Store
           <AiOutlineSortAscending />{" "}
         </Button>
       );
     },
   },
   {
-    accessorKey: "phone",
+    accessorKey: "user.email",
     header: ({ column }) => {
       return (
         <Button
@@ -73,7 +73,7 @@ export const columns = (
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Phone
+          Email
           <AiOutlineSortAscending />{" "}
         </Button>
       );

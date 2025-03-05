@@ -90,7 +90,7 @@ const Cart: React.FC = () => {
       (item) => selectedItems[item.cart_item_id],
     );
     if (itemsToCheckout.length === 0) {
-      alert("Pilih item untuk checkout.");
+      alert("Choose item to checkout.");
       return;
     }
     localStorage.setItem("selectedCartItems", JSON.stringify(itemsToCheckout));
