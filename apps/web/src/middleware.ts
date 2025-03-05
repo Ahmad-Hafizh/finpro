@@ -28,7 +28,7 @@ export default auth(async (req) => {
     return;
   }
 
-  if (isPrivateRoute && !isLoggedIn) {
+  if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
     return NextResponse.redirect(`${fe_url}/auth/signin`);
   }
 
@@ -36,7 +36,7 @@ export default auth(async (req) => {
     return NextResponse.redirect(`${fe_url}/`);
   }
 
-  if (isAdminRoute) {
+  if (isAdminRoute && isLoggedIn) {
     const response = await callAPI.post("/account/get-role", {
       email: req.auth?.user.email,
     });

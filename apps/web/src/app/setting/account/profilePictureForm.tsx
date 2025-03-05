@@ -1,51 +1,72 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { callAPI } from "@/config/axios";
-import { zfd } from "zod-form-data";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import z from "zod";
+import { useSession } from "next-auth/react";
 
 interface IProfilePictureFormProps {
   image: string;
   isOauth: boolean;
 }
 
-const profileSchema = zfd
-  .file()
-  .refine((file) => file.size < 1000000, {
-    message: "File can't be bigger than 1MB.",
-  })
-  .refine(
-    (file) =>
-      ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(file.type),
-    {
-      message: "File format must be either jpg, jpeg, png or gif.",
-    },
-  );
+const profileSchema = z.object({
+  profile_image: z
+    .instanceof(File)
+    .refine((file) => file, { message: "file is required" })
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(
+          file.type,
+        ),
+      {
+        message: "File format must be either jpg, jpeg, png or gif.",
+      },
+    )
+    .refine((file) => file.size < 1000000, {
+      message: "File can't be bigger than 1MB.",
+    }),
+});
 
 const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
   image,
   isOauth,
 }) => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
   });
+  const { data: session, status } = useSession();
+  const [imageUrl, setImageUrl] = useState("");
 
-  const imageRef = useRef<HTMLInputElement>(null);
-  const onSubmit = async () => {
+  const onSubmit = async (values: z.infer<typeof profileSchema>) => {
+    console.log(values.profile_image);
+
+    if (!values.profile_image) return null;
+
+    const formData = new FormData();
+    formData.append("profile_image", values.profile_image);
+
+    console.log(formData);
+
     try {
-      console.log(imageRef.current?.files);
-      const response = await callAPI.patch("/account/update-pfp", {
-        profile_image: imageRef.current?.files?.[0],
-      });
-      console.log(response);
+      if (status == "authenticated") {
+        const response = await callAPI.patch("/account/update-pfp", formData, {
+          headers: { Authorization: `Bearer ${session.user.auth_token}` },
+        });
+        console.log(response);
+      }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onCheckSubmit = () => {
+    console.log("submited");
   };
   return (
     <>
@@ -75,15 +96,22 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
                       type="file"
                       placeholder="profile picture"
                       disabled={isOauth}
-                      {...field}
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        const file = files?.[0];
+                        field.onChange(file || null);
+
+                        if (file) {
+                          const fileUrl = URL.createObjectURL(file);
+                          setImageUrl(fileUrl);
+                        }
+                      }}
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isOauth} onClick={onSubmit}>
-              Submit
-            </Button>
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </div>

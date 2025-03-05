@@ -91,7 +91,9 @@ const Navbar = () => {
       className={`${pathName.startsWith("/auth") ? "hidden" : "block"} fixed top-0 z-50 mx-auto w-full`}
     >
       {/* mobile */}
-      <div className="h-20 w-full justify-center border-b bg-white px-[5%] md:hidden">
+      <div
+        className={`${pathName.startsWith("/admin") ? "hidden" : "block"} a h-20 w-full justify-center border-b bg-white px-[5%] md:hidden`}
+      >
         <MobileNav
           store_name={currStore.store_name}
           user_image={session?.user.image}
@@ -100,7 +102,7 @@ const Navbar = () => {
 
       {/* desktop */}
       <div
-        className={`${pathName.startsWith("/admin") ? "hidden" : "block"} h-20 w-full justify-center border-b bg-white px-[5%]`}
+        className={`${pathName.startsWith("/admin") ? "hidden" : "md:block"} hidden h-20 w-full justify-center border-b bg-white px-[5%]`}
       >
         <DesktopNav
           store_name={currStore.store_name}

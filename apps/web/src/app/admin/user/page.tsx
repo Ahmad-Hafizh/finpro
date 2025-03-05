@@ -13,6 +13,7 @@ import EditAdminForm from "./components/EditAdminForm";
 import FilterBox from "./components/FilterBox";
 import SearchBox from "./components/SearchBox";
 import { callAPI } from "@/config/axios";
+import { useSession } from "next-auth/react";
 
 const userPage = () => {
   const [action, setAction] = useState<string | null>(null);
@@ -21,6 +22,9 @@ const userPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [store, setStore] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
+  const { data: session, status } = useSession();
+
+  console.log(session?.user);
 
   const getData = async () => {
     try {
@@ -96,11 +100,16 @@ const userPage = () => {
                     ) : (
                       <>
                         <DialogTitle>Edit Admin Role</DialogTitle>
-                        <EditAdminForm
-                          adminData={filteredData}
-                          setOpenDialog={setOpenDialog}
-                          storeData={store}
-                        />
+                        {status == "authenticated" ? (
+                          <EditAdminForm
+                            superAdminAccessToken={session?.user.auth_token}
+                            adminData={adminId}
+                            setOpenDialog={setOpenDialog}
+                            storeData={store}
+                          />
+                        ) : (
+                          <p>loading</p>
+                        )}
                       </>
                     )}
                   </DialogContent>

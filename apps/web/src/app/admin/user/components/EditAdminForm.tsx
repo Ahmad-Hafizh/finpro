@@ -39,12 +39,14 @@ const formSchema = z.object({
 });
 
 interface EditAdminFormProps {
+  superAdminAccessToken: string;
   adminData: any;
   storeData: any[];
   setOpenDialog: (open: boolean) => void;
 }
 
 const EditAdminForm = ({
+  superAdminAccessToken,
   adminData,
   storeData,
   setOpenDialog,
@@ -64,22 +66,13 @@ const EditAdminForm = ({
     },
   });
 
-  console.log("ADMIN DATA : ", admin);
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("ini test : ", admin);
-    const updatedValues = {
-      admin_id: admin.admin_id,
-      user_id: admin.user_id,
-      store_id: parseInt(values.store as string) || admin.store_id,
-      position: values.position || admin.position,
-    };
-    console.log("Payload Edit:", updatedValues);
-    submitApi(updatedValues);
-  }
-
-  const submitApi = async (updatedValues: any) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const submit = await callAPI.patch("/admin", updatedValues);
+      const submit = await callAPI.patch(
+        "/admin",
+        { admin_id: admin, position: values.position, store_id: values.store },
+        { headers: { Authorization: `Bearer ${superAdminAccessToken}` } },
+      );
       console.log("INI SUBMIT", submit);
       if (submit.data.isSuccess) {
         toast({
