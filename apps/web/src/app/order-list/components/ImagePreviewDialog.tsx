@@ -30,13 +30,13 @@ const ImagePreviewDialog: React.FC<ImagePreviewDialogProps> = ({
       <Box
         component="img"
         src={imageUrl}
-        alt="Bukti Pembayaran"
+        alt="Payment proof"
         sx={{ width: "100%", maxHeight: "80vh", objectFit: "contain" }}
       />
     </DialogContent>
     <DialogActions sx={{ p: 2 }}>
       <Button onClick={onClose} color="primary" variant="contained">
-        Tutup
+        Close
       </Button>
     </DialogActions>
   </Dialog>

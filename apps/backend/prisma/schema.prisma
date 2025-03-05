@@ -247,7 +247,6 @@ model Discount {
   discount_startdate DateTime
   discount_enddate   DateTime
   isActive           Boolean
-  orders             Order[]
 
   @@map("discount")
 }
@@ -280,7 +279,7 @@ model Order {
   shipping_price  Int?
   total_payment   Int?
   tracking_number String?
-  discount_id     Int?
+  voucher_code    String?
   status          OrderStatus
   order_date      DateTime
   profile_id      Int
@@ -288,7 +287,6 @@ model Order {
   updatedAt       DateTime?     @updatedAt
   admin_orders    AdminOrder[]
   address         Address       @relation(fields: [address_id], references: [address_id])
-  discount        Discount?     @relation(fields: [discount_id], references: [discount_id])
   profile         Profile       @relation(fields: [profile_id], references: [profile_id])
   store           Store         @relation(fields: [store_id], references: [store_id])
   order_cancel    OrderCancel?

@@ -9,6 +9,11 @@ import {
   Step,
   StepLabel,
   useMediaQuery,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
@@ -32,6 +37,8 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeStep] = useState(1);
+  const [voucherType, setVoucherType] = useState<"ongkir" | "payment" | "">("");
+  const [voucherCode, setVoucherCode] = useState("");
 
   const subtotal = calculateSubtotal(selectedItems);
   const shippingCost = 15000;
@@ -72,7 +79,7 @@ const CheckoutPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedAddress) {
-      setError("Pilih alamat pengiriman");
+      setError("Choose delivery address");
       return;
     }
 
@@ -87,6 +94,8 @@ const CheckoutPage: React.FC = () => {
         product_id: item.product.product_id,
         quantity: item.quantity,
       })),
+      voucherType: voucherType || undefined,
+      voucher_code: voucherCode || undefined,
     };
 
     try {
@@ -96,8 +105,8 @@ const CheckoutPage: React.FC = () => {
       localStorage.removeItem("selectedCartItems");
 
       toast({
-        title: "Pesanan berhasil dibuat",
-        description: "Anda akan diarahkan ke halaman pembayaran",
+        title: "Order is created successfully",
+        description: "You will be directed to payment page",
         variant: "default",
       });
 
@@ -107,7 +116,7 @@ const CheckoutPage: React.FC = () => {
       setError(errorMessage);
 
       toast({
-        title: "Gagal membuat pesanan",
+        title: "Failed to create order",
         description: errorMessage,
         variant: "destructive",
       });
@@ -144,13 +153,13 @@ const CheckoutPage: React.FC = () => {
               sx={{ mt: 3, display: { xs: "none", md: "flex" } }}
             >
               <Step>
-                <StepLabel>Keranjang</StepLabel>
+                <StepLabel>Cart</StepLabel>
               </Step>
               <Step>
-                <StepLabel>Pengiriman</StepLabel>
+                <StepLabel>Shipping</StepLabel>
               </Step>
               <Step>
-                <StepLabel>Pembayaran</StepLabel>
+                <StepLabel>Payment</StepLabel>
               </Step>
             </Stepper>
           </Box>
@@ -161,12 +170,39 @@ const CheckoutPage: React.FC = () => {
                 addresses={addresses}
                 selectedAddress={selectedAddress}
                 onAddressChange={handleAddressChange}
-                onAddNewAddress={() => router.push("/address/new")}
+                // onAddNewAddress={() => router.push("/address/new")}
                 error={error}
               />
             </Grid>
 
             <Grid size={{ xs: 12, md: 5 }}>
+              <Box sx={{ mb: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="voucher-type-label">Voucher Type</InputLabel>
+                  <Select
+                    labelId="voucher-type-label"
+                    id="voucher-type-select"
+                    value={voucherType}
+                    label="Voucher Type"
+                    onChange={(e) =>
+                      setVoucherType(
+                        e.target.value as "ongkir" | "payment" | "",
+                      )
+                    }
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="ongkir">Shipping Voucher</MenuItem>
+                    <MenuItem value="payment">Payment Voucher</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  fullWidth
+                  label="Voucher Code"
+                  value={voucherCode}
+                  onChange={(e) => setVoucherCode(e.target.value)}
+                  sx={{ mt: 2 }}
+                />
+              </Box>
               <OrderSummary
                 items={selectedItems}
                 subtotal={subtotal}

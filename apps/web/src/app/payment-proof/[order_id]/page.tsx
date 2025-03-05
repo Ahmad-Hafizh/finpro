@@ -20,6 +20,7 @@ import PaymentProofForm from "../components/PaymentProofForm";
 
 export interface OrderDetail {
   order_id: number;
+  order_number: string;
   total_price: number;
   order_items: {
     order_item_id: number;
@@ -78,7 +79,8 @@ const PaymentProofUploadPage: React.FC = () => {
                 Upload Payment Proof
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Order ID: #{orderId}
+                Order Number: #
+                {orderDetail?.order_number || "Order number is not available."}
               </Typography>
             </Box>
             {error && (

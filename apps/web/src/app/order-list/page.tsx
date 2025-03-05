@@ -76,7 +76,7 @@ const OrderListPage: React.FC = () => {
             align="center"
             sx={{ mb: { xs: 3, md: 5 }, color: "primary.dark" }}
           >
-            Daftar Pesanan
+            Order List
           </Typography>
           <OrderFilters
             searchParams={searchParams}
@@ -114,10 +114,10 @@ const OrderListPage: React.FC = () => {
                 }}
               >
                 <Typography variant="h6" color="text.secondary">
-                  Belum ada pesanan {selectedStatus.replace(/_/g, " ")}
+                  There is no order yet {selectedStatus.replace(/_/g, " ")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Pesanan akan muncul disini ketika statusnya berubah
+                  Orders will appear here when the status changed
                 </Typography>
               </Paper>
             )}
@@ -174,14 +174,14 @@ const OrderListPage: React.FC = () => {
               { headers: { "Content-Type": "application/json" } },
             );
             toast({
-              title: "Pesanan dibatalkan",
-              description: "Pesanan berhasil dibatalkan.",
+              title: "Order is cancelled",
+              description: "Order is successfully cancelled.",
             });
             fetchOrders();
             setCancelDialog({ open: false, orderId: null, reason: "" });
           } catch (err: any) {
             toast({
-              title: "Gagal membatalkan pesanan",
+              title: "Failed to cancel order",
               description: err.response?.data?.error || err.message,
               variant: "destructive",
             });
@@ -200,14 +200,14 @@ const OrderListPage: React.FC = () => {
           try {
             await callAPI.post(`/order/${confirmDialog.orderId}/confirm`);
             toast({
-              title: "Pesanan dikonfirmasi",
-              description: "Pesanan berhasil dikonfirmasi.",
+              title: "Order is confirmed",
+              description: "Order is successfully confirmed.",
             });
             fetchOrders();
             setConfirmDialog({ open: false, orderId: null });
           } catch (err: any) {
             toast({
-              title: "Gagal mengkonfirmasi pesanan",
+              title: "Failed to confirm order",
               description: err.response?.data?.error || err.message,
               variant: "destructive",
             });
