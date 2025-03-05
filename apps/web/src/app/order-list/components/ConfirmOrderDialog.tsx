@@ -31,13 +31,10 @@ const ConfirmOrderDialog: React.FC<ConfirmOrderDialogProps> = ({
       },
     }}
   >
-    <DialogTitle id="confirm-dialog-title">
-      Konfirmasi Penerimaan Pesanan
-    </DialogTitle>
+    <DialogTitle id="confirm-dialog-title">Delivery Confirmation</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Apakah Anda yakin ingin mengonfirmasi penerimaan pesanan ini? Tindakan
-        ini tidak dapat dibatalkan.
+        Are you sure to confirm this delivery? The action can not be undone.
       </DialogContentText>
     </DialogContent>
     <DialogActions sx={{ px: 3, pb: 3 }}>
@@ -45,7 +42,7 @@ const ConfirmOrderDialog: React.FC<ConfirmOrderDialogProps> = ({
         Batal
       </Button>
       <Button onClick={onConfirmOrder} color="primary" variant="contained">
-        Konfirmasi Penerimaan
+        Confirm Delivery
       </Button>
     </DialogActions>
   </Dialog>

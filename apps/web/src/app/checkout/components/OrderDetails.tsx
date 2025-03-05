@@ -45,7 +45,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ items }) => {
           sx={{ color: "primary.main", mr: 1.5, fontSize: 24 }}
         />
         <Typography variant="h5" component="h2">
-          Detail Pesanan
+          Order Detail
         </Typography>
       </Box>
 
@@ -131,11 +131,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ items }) => {
                     >
                       <Box>
                         <Typography variant="body2" color="text.secondary">
-                          Harga: Rp{" "}
+                          Price: Rp{" "}
                           {item.product.product_price.toLocaleString()}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Jumlah: {item.quantity}
+                          Amount: {item.quantity}
                         </Typography>
                       </Box>
                       <Typography

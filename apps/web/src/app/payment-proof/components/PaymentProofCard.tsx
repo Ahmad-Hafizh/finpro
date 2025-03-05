@@ -53,7 +53,7 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
   }, [order.order_date]);
 
   const formatTime = (ms: number): string => {
-    if (ms <= 0) return "Waktu habis";
+    if (ms <= 0) return "Time is up";
     const totalSeconds = Math.floor(ms / 1000);
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -90,7 +90,7 @@ const PaymentProofCard: React.FC<PaymentProofCardProps> = ({
               sx={{ color: "text.secondary", mr: 1, fontSize: 18 }}
             />
             <Typography variant="body2" color="text.secondary">
-              Tanggal Order:
+              Order Date:
             </Typography>
           </Box>
           <Typography variant="body1" fontWeight={500}>

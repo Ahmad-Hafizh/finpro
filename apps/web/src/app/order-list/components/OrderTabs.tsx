@@ -11,32 +11,32 @@ import {
 const statuses = [
   {
     value: "menunggu_pembayaran",
-    label: "Menunggu Pembayaran",
+    label: "Waiting for Payment",
     icon: <PaymentsIcon fontSize="small" />,
   },
   {
     value: "menunggu_konfirmasi",
-    label: "Menunggu Konfirmasi",
+    label: "Waiting for Confirmation",
     icon: <AccessTimeIcon fontSize="small" />,
   },
   {
     value: "diproses",
-    label: "Diproses",
+    label: "Processed",
     icon: <AccessTimeIcon fontSize="small" />,
   },
   {
     value: "dikirim",
-    label: "Dikirim",
+    label: "Shipped",
     icon: <ShippingIcon fontSize="small" />,
   },
   {
     value: "pesanan_dikonfirmasi",
-    label: "Pesanan Dikonfirmasi",
+    label: "Confirmed",
     icon: <CheckCircleIcon fontSize="small" />,
   },
   {
     value: "dibatalkan",
-    label: "Dibatalkan",
+    label: "Cancelled",
     icon: <CancelIcon fontSize="small" />,
   },
 ];

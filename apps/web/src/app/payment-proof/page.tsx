@@ -88,10 +88,10 @@ const PaymentProofListPage: React.FC = () => {
             />
             <Box sx={{ textAlign: "center", mb: 5, pt: 2 }}>
               <Typography variant="h4" color="primary.dark" gutterBottom>
-                Order Menunggu Pembayaran
+                Order Waiting for Payment
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Upload bukti pembayaran untuk pesanan yang belum dibayar
+                Upload payment proof for orders that is not paid yet
               </Typography>
             </Box>
             {loading && (
@@ -121,14 +121,14 @@ const PaymentProofListPage: React.FC = () => {
             {!loading && orders.length === 0 && (
               <Box sx={{ textAlign: "center", py: 6, px: 2 }}>
                 <Typography variant="h6" color="text.secondary" gutterBottom>
-                  Tidak ada order yang membutuhkan pembayaran
+                  There is no order that should be paid
                 </Typography>
                 <Button
                   variant="outlined"
                   color="primary"
                   onClick={() => router.push("/")}
                 >
-                  Kembali ke Beranda
+                  Back to Home
                 </Button>
               </Box>
             )}

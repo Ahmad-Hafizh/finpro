@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
 import { uploadImage } from "../utils/cloudinary";
+import { getVoucher } from "../services/voucher/voucher.service";
 
 const generateOrderNumber = (date: Date): string => {
   const yyyy = date.getFullYear().toString();
@@ -18,9 +19,18 @@ export class OrderController {
       const profile = await prisma.profile.findUnique({
         where: { user_id: userId },
       });
-      if (!profile) return res.status(404).json({ error: "Profile not found" });
+      if (!profile) {
+        return res.status(404).json({ error: "Profile not found" });
+      }
 
-      const { address_id, products, total_price, shipping_price } = req.body;
+      const {
+        address_id,
+        products,
+        total_price,
+        shipping_price,
+        voucherType,
+        voucher_code,
+      } = req.body;
       if (!products || !Array.isArray(products) || products.length === 0) {
         return res.status(400).json({ error: "No products provided" });
       }
@@ -31,12 +41,14 @@ export class OrderController {
           profile_id: profile.profile_id,
         },
       });
-      if (!address) return res.status(404).json({ error: "Address not found" });
+      if (!address) {
+        return res.status(404).json({ error: "Address not found" });
+      }
 
       const nearestStore = await prisma.store.findFirst();
-      if (!nearestStore)
+      if (!nearestStore) {
         return res.status(400).json({ error: "No store available" });
-
+      }
       for (const item of products) {
         const stock = await prisma.stock.findFirst({
           where: {
@@ -53,9 +65,6 @@ export class OrderController {
 
       const now = new Date();
       const orderNumber = generateOrderNumber(now);
-      // akses informasi dari voucher code,
-      //  jika tipe voucher mengurangi pembayaran, total payment dikurangi nilai voucher
-      // jika tipe voucher mengurangi ongkir, shipping price dikurangi nilai voucher
       const order = await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
           data: {
@@ -66,7 +75,7 @@ export class OrderController {
             shipping_price: shipping_price || null,
             total_payment: 0,
             status: "menunggu_pembayaran",
-            order_date: new Date(),
+            order_date: now,
             profile_id: profile.profile_id,
             order_items: {
               create: products.map((item: any) => ({
@@ -81,7 +90,6 @@ export class OrderController {
         });
 
         let total = 0;
-
         for (const item of createdOrder.order_items) {
           const product = await tx.product.findUnique({
             where: { product_id: item.product_id },
@@ -115,7 +123,7 @@ export class OrderController {
                   quantity: item.quantity,
                   type: "out",
                   notes: `Order ${orderNumber} created - stock deducted`,
-                  created_at: new Date(),
+                  created_at: now,
                   stock_result: stock.quantity - item.quantity,
                 },
               });
@@ -123,13 +131,137 @@ export class OrderController {
           }
         }
 
-        const totalPayment = total + (shipping_price || 0);
+        // total pembayaran awal
+        let finalShippingPrice = shipping_price || 0;
+        let finalTotalPayment = total + finalShippingPrice;
+        let discountAmount = 0;
+        let appliedVoucherCode: string | null = null;
+        let voucherProductApplied: { product_id: number } | null = null;
+
+        // kalo pake voucher
+        if (voucherType && voucher_code) {
+          // data voucher berdasarkan store dan product
+          const voucherData = await getVoucher(
+            nearestStore.store_id,
+            Number(products[0].product_id)
+          );
+          let appliedVoucher = null;
+          if (voucherType === "ongkir") {
+            // cari voucher ongkir
+            appliedVoucher = voucherData.getOngkirVoucher.find(
+              (v: any) =>
+                v.voucher_ongkir_id === Number(voucher_code) ||
+                v.voucher_ongkir_code === voucher_code
+            );
+            if (appliedVoucher) {
+              discountAmount = appliedVoucher.voucher_ongkir_nominal;
+              finalShippingPrice = finalShippingPrice - discountAmount;
+              if (finalShippingPrice < 0) finalShippingPrice = 0;
+              finalTotalPayment = total + finalShippingPrice;
+              appliedVoucherCode = appliedVoucher.voucher_ongkir_code;
+            }
+          } else if (voucherType === "payment") {
+            // cari voucher store dulu
+            appliedVoucher = voucherData.getStoreVoucher.find(
+              (v: any) =>
+                v.voucher_store_id === Number(voucher_code) ||
+                v.voucher_store_code === voucher_code
+            );
+            if (appliedVoucher) {
+              // kalo voucher nya diskon persentase
+              if (appliedVoucher.voucher_store_amount_percentage > 0) {
+                if (total >= appliedVoucher.voucher_store_minimum_buy) {
+                  discountAmount = Math.floor(
+                    (total * appliedVoucher.voucher_store_amount_percentage) /
+                      100
+                  );
+                  if (
+                    discountAmount >
+                    appliedVoucher.voucher_store_maximum_nominal
+                  ) {
+                    discountAmount =
+                      appliedVoucher.voucher_store_maximum_nominal;
+                  }
+                }
+              }
+              // kalo voucher nya exact nominal
+              else {
+                discountAmount = appliedVoucher.voucher_store_exact_nominal;
+              }
+              finalTotalPayment = finalTotalPayment - discountAmount;
+              if (finalTotalPayment < 0) finalTotalPayment = 0;
+              appliedVoucherCode = appliedVoucher.voucher_store_code;
+            } else {
+              // kalo tidak ada, cek voucher product
+              appliedVoucher = voucherData.getProductVoucher.find(
+                (v: any) =>
+                  v.voucher_product_id === Number(voucher_code) ||
+                  v.voucher_product_code === voucher_code
+              );
+              if (appliedVoucher) {
+                discountAmount = 0;
+                finalTotalPayment = finalTotalPayment - discountAmount;
+                appliedVoucherCode = appliedVoucher.voucher_product_code;
+                // kalo voucher product diterapkan stok dikurangi tambahan 1 item
+                voucherProductApplied = {
+                  product_id: appliedVoucher.product_id,
+                };
+              }
+            }
+          }
+        }
 
         const updatedOrder = await tx.order.update({
           where: { order_id: createdOrder.order_id },
-          data: { total_price: total, total_payment: totalPayment },
+          data: {
+            total_price: total,
+            shipping_price: finalShippingPrice,
+            total_payment: finalTotalPayment,
+            voucher_code: appliedVoucherCode,
+          },
           include: { order_items: true },
         });
+
+        // kalo voucher product diterapkan dan produk order sama dengan produk voucher,
+        // maka stok dikurangi tambahan 1 items
+        for (const item of updatedOrder.order_items) {
+          const stock = await tx.stock.findFirst({
+            where: {
+              product_id: item.product_id,
+              store_id: nearestStore.store_id,
+            },
+          });
+          if (stock) {
+            let deductionQuantity = item.quantity;
+            if (
+              voucherProductApplied &&
+              item.product_id === voucherProductApplied.product_id
+            ) {
+              deductionQuantity = item.quantity + 1;
+            }
+            await tx.stock.update({
+              where: { stock_id: stock.stock_id },
+              data: { quantity: stock.quantity - deductionQuantity },
+            });
+            await tx.stockJournal.create({
+              data: {
+                store_id: nearestStore.store_id,
+                stock_id: stock.stock_id,
+                product_id: item.product_id,
+                quantity: deductionQuantity,
+                type: "out",
+                notes:
+                  `Order ${orderNumber} created - stock deducted` +
+                  (voucherProductApplied &&
+                  item.product_id === voucherProductApplied.product_id
+                    ? " (buy 1 get 1 applied)"
+                    : ""),
+                created_at: now,
+                stock_result: stock.quantity - deductionQuantity,
+              },
+            });
+          }
+        }
 
         return updatedOrder;
       });
@@ -140,7 +272,6 @@ export class OrderController {
       return res.status(500).json({ error: "Failed to create order" });
     }
   }
-
   // upload payment proof, cloudinary
   async uploadPaymentProof(req: Request, res: Response): Promise<any> {
     console.log(req.file);
