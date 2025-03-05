@@ -24,6 +24,7 @@ const productPage = () => {
   const [productList, setProductList] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
 
   const { toast } = useToast();
   const searchParams = useSearchParams();
@@ -149,14 +150,18 @@ const productPage = () => {
             <h2 className="text-lg">Manage or see product information here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">
-            <Button
-              onClick={() => {
-                setOpenDialog(true);
-                setAction("Add");
-              }}
-            >
-              Add new product
-            </Button>
+            {isSuperAdmin ? (
+              <Button
+                onClick={() => {
+                  setOpenDialog(true);
+                  setAction("Add");
+                }}
+              >
+                Add new product
+              </Button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
@@ -177,7 +182,12 @@ const productPage = () => {
             <div className="flex flex-col gap-8">
               <div className="table h-fit w-full rounded-lg shadow-sm">
                 <DataTable
-                  columns={columns(setAction, setProductId, setOpenDialog)}
+                  columns={columns(
+                    setAction,
+                    setProductId,
+                    setOpenDialog,
+                    isSuperAdmin,
+                  )}
                   data={productList}
                 />
                 <Dialog open={openDialog} onOpenChange={setOpenDialog}>

@@ -30,19 +30,15 @@ const stockPage = () => {
   const [allVoucher, setAllVoucher] = useState<any>([]);
   const [productEdit, setproductEdit] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [adminInfo, setAdminInfo] = useState<any>([]);
 
   const searchParams = useSearchParams();
-
-  //   useEffect(() => {
-  //     const params = searchParams.toString();
-  //     getProduct(storeId.toString(), params);
-  //     console.log("Query parameters:", params);
-  //   }, [searchParams, storeId]);
 
   useEffect(() => {
     getAllVoucher();
     getAllProduct(products);
     getProductForEdit();
+    getAdminInfo();
   }, [products]);
 
   useEffect(() => {
@@ -60,6 +56,26 @@ const stockPage = () => {
       setCategory(response.data.result);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getAdminInfo = async () => {
+    try {
+      const payload = {
+        email: "tesadmin@mail.com",
+      };
+      // const payload = {
+      //   email: "tessuperadmin@mail.com",
+      // };
+      const response = await callAPI.post("/admin/detail", payload);
+      console.log("INI ADMIN INFO : ", response.data.result[0]);
+      setAdminInfo(response.data.result);
+      console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
+      if (response.data.result[0]?.store_id) {
+        setStoreId(response.data.result[0]?.store_id);
+      }
+    } catch (error) {
+      console.log("error : ", error);
     }
   };
 

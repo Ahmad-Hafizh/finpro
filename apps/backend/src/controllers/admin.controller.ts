@@ -100,4 +100,54 @@ export class AdminController {
       return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
+
+  async checkAdminDetailRoleFromFrontend(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    try {
+      const { admin_id, email } = req.body;
+
+      let result = [];
+
+      if (admin_id) {
+        const getAdminInfo = await prisma.admin.findFirst({
+          where: {
+            ...(admin_id ? { admin_id: admin_id } : {}),
+          },
+        });
+
+        result.push(getAdminInfo);
+      }
+
+      if (email) {
+        const getAdminInfoByEmail = await prisma.admin.findFirst({
+          where: {
+            user: {
+              email: email,
+            },
+          },
+          include: {
+            user: true,
+            store: true,
+          },
+        });
+
+        if (!getAdminInfoByEmail) {
+          const getSuperAdminByEmail = await prisma.user.findFirst({
+            where: {
+              email: email,
+            },
+          });
+          result.push(getSuperAdminByEmail);
+        }
+
+        result.push(getAdminInfoByEmail);
+      }
+
+      return ResponseHandler.success(res, 200, "Get Admin success", result);
+    } catch (error) {
+      console.log("Error : ", error);
+    }
+  }
 }

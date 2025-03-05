@@ -29,36 +29,57 @@ const stockPage = () => {
   const [allStore, setAllStore] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [productEdit, setproductEdit] = useState<any>([]);
+  const [adminInfo, setAdminInfo] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const params = searchParams.toString();
-    getProduct(storeId.toString(), params);
-    console.log("Query parameters:", params);
+    if (storeId) {
+      getProduct(storeId.toString(), params);
+      console.log("Query parameters:", params);
+    }
   }, [searchParams, storeId]);
 
   useEffect(() => {
     getAllProduct(products);
     getProductForEdit();
+    getAdminInfo();
   }, [products]);
 
   useEffect(() => {
     getAllStore();
-    console.log("Ini store IDIDIDIDI : ", storeId);
     getCategory();
-    console.log("INI PRODUCTSSSS : ", products);
     setLoading(false);
   }, [storeId]);
 
   const getCategory = async () => {
     try {
       const response = await callAPI.get("/category");
-      console.log("Ini response get category :", response.data.result);
       setCategory(response.data.result);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getAdminInfo = async () => {
+    try {
+      // const payload = {
+      //   email: "tesadmin@mail.com",
+      // };
+      const payload = {
+        email: "tessuperadmin@mail.com",
+      };
+      const response = await callAPI.post("/admin/detail", payload);
+      console.log("INI ADMIN INFO : ", response.data.result[0]);
+      setAdminInfo(response.data.result);
+      console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
+      if (response.data.result[0]?.store_id) {
+        setStoreId(response.data.result[0]?.store_id);
+      }
+    } catch (error) {
+      console.log("error : ", error);
     }
   };
 
@@ -70,7 +91,6 @@ const stockPage = () => {
         (product: any) => product.deletedAt === null,
       );
       setProducts(filteredProducts);
-      console.log("INI PRODUCTSSSS : ", filteredProducts);
     } catch (error) {
       console.log(error);
     }
@@ -142,6 +162,7 @@ const stockPage = () => {
                 setStoreId={setStoreId}
                 allStore={allStore}
                 categories={category}
+                adminInfo={adminInfo}
               />
             </div>
             <div className="data">

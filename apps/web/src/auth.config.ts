@@ -3,12 +3,16 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import { signInSchema } from "../../schemas/authSchema";
 import { callAPI } from "@/config/axios";
+// import dotenv from "dotenv";
+
+// dotenv.config();
+// dotenv.configDotenv();
 
 export default {
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
     }),
     Credentials({
       async authorize(credentials) {
@@ -32,4 +36,5 @@ export default {
       },
     }),
   ],
+  secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;

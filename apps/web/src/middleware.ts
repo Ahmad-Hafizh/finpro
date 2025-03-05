@@ -24,11 +24,33 @@ export default auth(async (req) => {
   const isAdminRoute = nextUrl.pathname.includes("/admin");
   const isApiRoute = nextUrl.pathname.includes("/api");
 
+  // if (isApiRoute) {
+  //   return;
+  // }
+
+  // if (isPrivateRoute && !isLoggedIn) {
+  //   return NextResponse.redirect(`${fe_url}/auth/signin`);
+  // }
+
+  // if (isAuthRoute && isLoggedIn) {
+  //   return NextResponse.redirect(`${fe_url}/`);
+  // }
+
+  // if (isAdminRoute) {
+  //   const response = await callAPI.post("/account/get-role", {
+  //     email: req.auth?.user.email,
+  //   });
+
+  //   if (response.data.result.role == "user") {
+  //     return NextResponse.redirect(`${fe_url}/`);
+  //   }
+  // }
+
   if (isApiRoute) {
     return;
   }
 
-  if (isPrivateRoute && !isLoggedIn) {
+  if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
     return NextResponse.redirect(`${fe_url}/auth/signin`);
   }
 
@@ -36,15 +58,16 @@ export default auth(async (req) => {
     return NextResponse.redirect(`${fe_url}/`);
   }
 
-  if (isAdminRoute) {
-    const response = await callAPI.post("/account/get-role", {
-      email: req.auth?.user.email,
-    });
-
-    if (response.data.result.role == "user") {
-      return NextResponse.redirect(`${fe_url}/`);
-    }
+  if (isAdminRoute && isLoggedIn) {
+    // const response = await callAPI.post("/account/get-role", {
+    //   email: req.auth?.user?.email,
+    // });
+    // if (response.data.result.role == "user") {
+    //   return NextResponse.redirect(`${fe_url}/⁠`);
+    // }
   }
+
+  return;
 });
 
 export const config = {

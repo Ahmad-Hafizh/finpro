@@ -13,6 +13,7 @@ import { callAPI } from "@/config/axios";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const categoryPage = () => {
   const { toast } = useToast();
@@ -22,19 +23,41 @@ const categoryPage = () => {
   const [category, setCategory] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<any>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const searchParams = useSearchParams();
+  const route = useRouter();
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    const params = new URLSearchParams(searchParams.toString());
+    const pageNumber = parseInt(searchParams.get("page") || "1");
 
-  const getCategory = async () => {
+    if (!pageNumber !== currentPage.toString()) {
+      setCurrentPage(pageNumber);
+    }
+
+    if (!params.has("page")) {
+      params.set("page", "1");
+      route.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [searchParams, route]);
+
+  useEffect(() => {
+    getCategory(currentPage);
+  }, [currentPage]);
+
+  const getCategory = async (page: any) => {
     try {
-      const response = await callAPI.get("/category");
-      console.log("Ini response get category :", response.data.result);
-      const newResponse = response.data.result.map((product: any) => ({
+      const response = await callAPI.get(`/category?page=${page}`);
+      console.log("Ini response get category :", response.data);
+      const newResponse = response.data.result.result.map((product: any) => ({
         ...product,
         status: product.deletedAt ? `Deleted` : "Active",
       }));
+      setTotalPage(
+        response.data.result.totalPages ? response.data.result.totalPages : 1,
+      );
       setCategory(newResponse);
       setLoading(false);
     } catch (error) {
@@ -77,14 +100,18 @@ const categoryPage = () => {
             <h2 className="text-lg">Manage or see category here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">
-            <Button
-              onClick={() => {
-                setOpenDialog(true);
-                setAction("Add");
-              }}
-            >
-              Add new category
-            </Button>
+            {isSuperAdmin ? (
+              <Button
+                onClick={() => {
+                  setOpenDialog(true);
+                  setAction("Add");
+                }}
+              >
+                Add new category
+              </Button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
@@ -100,12 +127,22 @@ const categoryPage = () => {
               <div className="table h-fit w-full rounded-lg shadow-sm">
                 {loading ? (
                   <DataTable
-                    columns={columns(setAction, setCategoryId, setOpenDialog)}
+                    columns={columns(
+                      setAction,
+                      setCategoryId,
+                      setOpenDialog,
+                      isSuperAdmin,
+                    )}
                     data={[]}
                   />
                 ) : (
                   <DataTable
-                    columns={columns(setAction, setCategoryId, setOpenDialog)}
+                    columns={columns(
+                      setAction,
+                      setCategoryId,
+                      setOpenDialog,
+                      isSuperAdmin,
+                    )}
                     data={category}
                   />
                 )}
@@ -128,7 +165,7 @@ const categoryPage = () => {
                     {action === "Add" && (
                       <>
                         <DialogTitle>Add Product</DialogTitle>
-                        <AddCategory />
+                        <AddCategory setOpenDialog={setOpenDialog} />
                       </>
                     )}
                     {action === "Edit" && (
@@ -159,7 +196,10 @@ const categoryPage = () => {
                 </Dialog>
               </div>
               <div className="pagination flex items-center justify-center">
-                <PaginationTable currentPage={1} totalPage={3} />
+                <PaginationTable
+                  currentPage={currentPage}
+                  totalPage={totalPage}
+                />
               </div>
             </div>
           </div>
