@@ -34,7 +34,7 @@ const Home = async () => {
         </div>
         <ProductCarousel products={products.recommend} />
       </div>
-      {products.category_product.map((e) => (
+      {products.category_product.map((e: any) => (
         <div className="flex flex-col gap-2">
           <div className="flex w-full justify-between">
             <p className="text-lg md:text-xl">{e.product_category_name}</p>
