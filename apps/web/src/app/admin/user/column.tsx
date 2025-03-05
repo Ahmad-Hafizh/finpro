@@ -85,9 +85,7 @@ export const columns = (
       const storeAdmin = row.original;
 
       const onHandleEdit = () => {
-        console.log("SRTOREADMN,", storeAdmin);
         setAdminId(storeAdmin.admin_id);
-        console.log("Ini store admin: ", storeAdmin.admin_id);
         setAction("Edit");
         setOpenDialog(true);
       };

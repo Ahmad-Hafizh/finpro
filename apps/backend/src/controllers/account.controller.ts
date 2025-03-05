@@ -249,27 +249,26 @@ export class AccountController {
 
   async updatePfp(req: Request, res: Response): Promise<any> {
     try {
-      const { email } = req.body;
-      const user = await findUser(email);
-
+      const user = res.locals.user;
       if (!user?.email) {
         return ResponseHandler.error(res, 400, 'User not found');
       }
       if (!req.file?.path) {
         return ResponseHandler.error(res, 400, 'file not found');
       }
-
       const image: any = await uploadImage(req.file?.path, 'profile_image');
 
       await prisma.user.update({
         where: { email: user.email },
         data: {
-          image: image.result.secure_url,
+          image: image.secure_url,
         },
       });
 
       return ResponseHandler.success(res, 200, 'Update profile picture success');
     } catch (error) {
+      console.log(error);
+
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
   }

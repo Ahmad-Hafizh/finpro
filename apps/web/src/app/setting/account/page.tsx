@@ -10,6 +10,7 @@ const AccountPage = async () => {
     return null;
   }
   const { user } = session;
+  console.log(user);
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
