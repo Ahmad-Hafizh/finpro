@@ -127,11 +127,16 @@ const userPage = () => {
                     ) : (
                       <>
                         <DialogTitle>Edit Admin Role</DialogTitle>
-                        <EditAdminForm
-                          adminData={filteredData}
-                          setOpenDialog={setOpenDialog}
-                          storeData={store}
-                        />
+                        {status == "authenticated" ? (
+                          <EditAdminForm
+                            superAdminAccessToken={session?.user.auth_token}
+                            adminData={adminId}
+                            setOpenDialog={setOpenDialog}
+                            storeData={store}
+                          />
+                        ) : (
+                          <p>loading</p>
+                        )}
                       </>
                     )}
                   </DialogContent>

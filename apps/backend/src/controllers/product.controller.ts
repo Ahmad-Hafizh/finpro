@@ -12,7 +12,6 @@ export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
     try {
       const { page, search, cat, sort, del, store } = req.query;
-      console.log(cat);
       const pageNumber = parseInt(page as string) || 1;
       const pageSize = 8;
       const category = cat as string;
@@ -32,6 +31,72 @@ export class ProductController {
       };
 
       const result = await findProduct(objectPayload);
+
+      return ResponseHandler.success(
+        res,
+        200,
+        "Get Product Data Success",
+        result
+      );
+    } catch (error) {
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
+    }
+  }
+
+  async getLandingProduct(req: Request, res: Response): Promise<any> {
+    try {
+      const recommend = await prisma.orderItem.groupBy({
+        by: ["product_id"],
+        orderBy: {
+          _count: { order_id: "desc" },
+        },
+      });
+      console.log("recommend", recommend);
+      const productsId = recommend.map((p) => p.product_id);
+      const product = await prisma.product.findMany({
+        where: {
+          product_id: { in: productsId },
+        },
+        take: 20,
+      });
+      const categoryProduct = await prisma.productCategory.findMany({
+        include: {
+          product: true,
+        },
+      });
+
+      return ResponseHandler.success(res, 200, "Get landing products success", {
+        recommend: product,
+        category_product: categoryProduct,
+      });
+    } catch (error) {
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
+    }
+  }
+
+  async getProductDropdown(req: Request, res: Response): Promise<any> {
+    try {
+      const { page, search, cat, sort, del, store } = req.query;
+      console.log(cat);
+      const pageNumber = parseInt(page as string) || 1;
+      const pageSize = 8;
+      const category = cat as string;
+      const keyword = search as string;
+      const sortBy = sort as string;
+      const deletedAt = del as string;
+      const theStore = store as string;
+
+      const objectPayload = {
+        category,
+        pageNumber,
+        pageSize,
+        keyword,
+        sortBy,
+        deletedAt,
+        theStore,
+      };
+
+      const result = await findProductDropdown(objectPayload);
 
       return ResponseHandler.success(
         res,

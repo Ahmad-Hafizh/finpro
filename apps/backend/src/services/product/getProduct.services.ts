@@ -1,4 +1,4 @@
-import prisma from "../../prisma";
+import prisma from '../../prisma';
 
 interface IfindProduct {
   pageNumber: number;
@@ -10,24 +10,12 @@ interface IfindProduct {
   theStore: string;
 }
 
-export const findProduct = async ({
-  category,
-  pageNumber,
-  pageSize,
-  keyword,
-  sortBy,
-  deletedAt,
-  theStore,
-}: IfindProduct): Promise<any> => {
-  console.log("category in services :", category);
-  console.log("Sort by :", sortBy);
-  console.log("Deleted at :", deletedAt);
+export const findProduct = async ({ category, pageNumber, pageSize, keyword, sortBy, deletedAt, theStore }: IfindProduct): Promise<any> => {
+  console.log('category in services :', category);
+  console.log('Sort by :', sortBy);
+  console.log('Deleted at :', deletedAt);
 
-  const categories = category
-    ? Array.isArray(category)
-      ? category.map(String)
-      : (category as string).split(",")
-    : [];
+  const categories = category ? (Array.isArray(category) ? category.map(String) : (category as string).split(',')) : [];
 
   const result = await prisma.product.findMany({
     skip: (pageNumber - 1) * pageSize,
@@ -44,33 +32,29 @@ export const findProduct = async ({
         keyword
           ? {
               OR: [
-                { product_name: { contains: keyword, mode: "insensitive" } },
+                { product_name: { contains: keyword, mode: 'insensitive' } },
                 {
                   product_description: {
                     contains: keyword,
-                    mode: "insensitive",
+                    mode: 'insensitive',
                   },
                 },
               ],
             }
           : {},
-        deletedAt === "true"
-          ? { deletedAt: { not: null } }
-          : deletedAt === "false"
-            ? { deletedAt: null }
-            : {},
+        deletedAt === 'true' ? { deletedAt: { not: null } } : deletedAt === 'false' ? { deletedAt: null } : {},
         theStore ? { stock: { some: { store_id: parseInt(theStore) } } } : {},
       ],
     },
     orderBy: sortBy
-      ? sortBy === "name-asc"
-        ? { product_name: "asc" }
-        : sortBy === "name-desc"
-          ? { product_name: "desc" }
-          : sortBy === "price-asc"
-            ? { product_price: "asc" }
-            : sortBy === "price-desc"
-              ? { product_price: "desc" }
+      ? sortBy === 'name-asc'
+        ? { product_name: 'asc' }
+        : sortBy === 'name-desc'
+          ? { product_name: 'desc' }
+          : sortBy === 'price-asc'
+            ? { product_price: 'asc' }
+            : sortBy === 'price-desc'
+              ? { product_price: 'desc' }
               : undefined
       : undefined,
     include: {
@@ -94,21 +78,17 @@ export const findProduct = async ({
         keyword
           ? {
               OR: [
-                { product_name: { contains: keyword, mode: "insensitive" } },
+                { product_name: { contains: keyword, mode: 'insensitive' } },
                 {
                   product_description: {
                     contains: keyword,
-                    mode: "insensitive",
+                    mode: 'insensitive',
                   },
                 },
               ],
             }
           : {},
-        deletedAt === "true"
-          ? { deletedAt: { not: null } }
-          : deletedAt === "false"
-            ? { deletedAt: null }
-            : {},
+        deletedAt === 'true' ? { deletedAt: { not: null } } : deletedAt === 'false' ? { deletedAt: null } : {},
       ],
     },
   });
