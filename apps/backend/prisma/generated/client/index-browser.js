@@ -298,7 +298,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   shipping_price: 'shipping_price',
   total_payment: 'total_payment',
   tracking_number: 'tracking_number',
-  discount_id: 'discount_id',
+  voucher_code: 'voucher_code',
   status: 'status',
   order_date: 'order_date',
   profile_id: 'profile_id',

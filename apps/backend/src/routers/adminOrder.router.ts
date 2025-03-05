@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AdminOrderController } from "../controllers/adminOrder.controller";
+import { verifyToken } from "../middleware/verifyToken";
 
 export class AdminOrderRouter {
   private route: Router;
