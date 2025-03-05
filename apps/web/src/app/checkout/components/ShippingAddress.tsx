@@ -20,7 +20,7 @@ interface ShippingAddressProps {
   addresses: Address[];
   selectedAddress: number | "";
   onAddressChange: (addressId: number | "") => void;
-  onAddNewAddress: () => void;
+  // onAddNewAddress: () => void;
   error: string | null;
 }
 
@@ -28,7 +28,7 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
   addresses,
   selectedAddress,
   onAddressChange,
-  onAddNewAddress,
+  // onAddNewAddress,
   error,
 }) => {
   const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
@@ -61,19 +61,19 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <LocationOnIcon sx={{ color: "primary.main", mr: 1.5, fontSize: 24 }} />
         <Typography variant="h5" component="h2">
-          Alamat Pengiriman
+          Delivery Address
         </Typography>
       </Box>
 
       <Divider sx={{ mb: 3 }} />
 
       <FormControl fullWidth required sx={{ mb: 3 }}>
-        <InputLabel id="address-label">Pilih Alamat Pengiriman</InputLabel>
+        <InputLabel id="address-label">Choose Delivery Address</InputLabel>
         <Select
           labelId="address-label"
           id="address-select"
           value={selectedAddress}
-          label="Pilih Alamat Pengiriman"
+          label="Choose Delivery Address"
           onChange={handleAddressChange}
           MenuProps={{
             PaperProps: {
@@ -96,10 +96,10 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
         variant="outlined"
         color="primary"
         startIcon={<AddLocationAltIcon />}
-        onClick={onAddNewAddress}
+        // onClick={onAddNewAddress}
         sx={{ mb: 2 }}
       >
-        Tambah Alamat Baru
+        Add New Address
       </Button>
 
       {error && (
