@@ -51,9 +51,11 @@ export default auth(async (req) => {
   }
 
   if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
+
     if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
       return NextResponse.redirect(`${fe_url}/auth/signin`);
     }
+
 
     if (isAuthRoute && isLoggedIn) {
       return NextResponse.redirect(`${fe_url}/`);
@@ -69,6 +71,7 @@ export default auth(async (req) => {
     }
 
     return;
+
   }
 });
 

@@ -23,6 +23,7 @@ const userPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [store, setStore] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
+
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
@@ -50,10 +51,13 @@ const userPage = () => {
     }
   }, [searchParams, router]);
 
+
   const getData = async () => {
     try {
       const response = await callAPI.get("/admin");
+
       const data = response.data.result.admins;
+
       console.log("INI DATA ADMIN : ", data);
       setData(data);
       setTotalPage(response.data.result.totalPages);
@@ -66,8 +70,10 @@ const userPage = () => {
     getData();
     getAllStore();
     relevantData();
+
     getAllStore();
     relevantData();
+
   }, [adminId]);
 
   const relevantData = async () => {
@@ -131,6 +137,7 @@ const userPage = () => {
                         <DialogTitle>Edit Admin Role</DialogTitle>
                         {status == "authenticated" ? (
                           <EditAdminForm
+
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
@@ -146,6 +153,7 @@ const userPage = () => {
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
+
                             adminData={adminId}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
