@@ -54,10 +54,16 @@ export type ProductCategory = {
 export type IAddStock = {
   products: Product[];
   store_id?: number;
+  token?: any;
   setOpenDialog: (open: boolean) => void;
 };
 
-const AddNewStock = ({ products, store_id, setOpenDialog }: IAddStock) => {
+const AddNewStock = ({
+  products,
+  store_id,
+  token,
+  setOpenDialog,
+}: IAddStock) => {
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -80,7 +86,9 @@ const AddNewStock = ({ products, store_id, setOpenDialog }: IAddStock) => {
       quantity: values.stock,
     };
 
-    const submitNewStock = await callAPI.post("/stock", payload);
+    const submitNewStock = await callAPI.post("/stock", payload, {
+      headers: { Authorization: `bearer ${token}` },
+    });
 
     if (submitNewStock.status === 200) {
       toast({

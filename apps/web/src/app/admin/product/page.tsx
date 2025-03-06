@@ -15,6 +15,7 @@ import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import SortBox from "./components/SortBox";
+import { useSession } from "next-auth/react";
 
 const productPage = () => {
   const [action, setAction] = useState<string | null>("");
@@ -24,10 +25,20 @@ const productPage = () => {
   const [productList, setProductList] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
 
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const { data: session } = useSession();
+  console.log("INI DATA ADMIN : ", session);
+
+  useEffect(() => {
+    if (session?.user.role === "super_admin") {
+      setIsSuperAdmin(true);
+    }
+  }, [session]);
 
   useEffect(() => {
     getCategory();
@@ -109,6 +120,36 @@ const productPage = () => {
     { product_category_id: 5, product_category_name: "Nut" },
   ];
 
+  const fetchUserData = [
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "ahmad",
+      role: "user",
+    },
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "satrio",
+      role: "admin",
+    },
+    {
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image: null,
+      isOauth: false,
+      name: "satrio",
+      role: "super_admin",
+    },
+  ];
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />
@@ -119,14 +160,18 @@ const productPage = () => {
             <h2 className="text-lg">Manage or see product information here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">
-            <Button
-              onClick={() => {
-                setOpenDialog(true);
-                setAction("Add");
-              }}
-            >
-              Add new product
-            </Button>
+            {isSuperAdmin ? (
+              <Button
+                onClick={() => {
+                  setOpenDialog(true);
+                  setAction("Add");
+                }}
+              >
+                Add new product
+              </Button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
@@ -147,7 +192,12 @@ const productPage = () => {
             <div className="flex flex-col gap-8">
               <div className="table h-fit w-full rounded-lg shadow-sm">
                 <DataTable
-                  columns={columns(setAction, setProductId, setOpenDialog)}
+                  columns={columns(
+                    setAction,
+                    setProductId,
+                    setOpenDialog,
+                    isSuperAdmin,
+                  )}
                   data={productList}
                 />
                 <Dialog open={openDialog} onOpenChange={setOpenDialog}>

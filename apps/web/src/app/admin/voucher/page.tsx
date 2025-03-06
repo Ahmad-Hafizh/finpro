@@ -16,6 +16,7 @@ import AddVoucherOngkir from "./components/voucherOngkir/AddVoucherOngkir";
 import AddVoucherProduct from "./components/voucherProduct/AddVoucherProduct";
 import AddVoucherStore from "./components/voucherStore/AddVoucherStore";
 import { DataTable } from "./components/data-table";
+import { useSession } from "next-auth/react";
 
 const stockPage = () => {
   const [action, setAction] = useState<string | null>("");
@@ -30,19 +31,16 @@ const stockPage = () => {
   const [allVoucher, setAllVoucher] = useState<any>([]);
   const [productEdit, setproductEdit] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [adminInfo, setAdminInfo] = useState<any>([]);
 
   const searchParams = useSearchParams();
-
-  //   useEffect(() => {
-  //     const params = searchParams.toString();
-  //     getProduct(storeId.toString(), params);
-  //     console.log("Query parameters:", params);
-  //   }, [searchParams, storeId]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     getAllVoucher();
     getAllProduct(products);
     getProductForEdit();
+    getAdminInfo();
   }, [products]);
 
   useEffect(() => {
@@ -60,6 +58,21 @@ const stockPage = () => {
       setCategory(response.data.result);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getAdminInfo = async () => {
+    try {
+      const payload = { email: session?.user.email };
+      const response = await callAPI.post("/admin/detail", payload);
+      console.log("INI ADMIN INFO : ", response.data.result[0]);
+      setAdminInfo(response.data.result);
+      console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
+      if (response.data.result[0]?.store_id) {
+        setStoreId(response.data.result[0]?.store_id);
+      }
+    } catch (error) {
+      console.log("error : ", error);
     }
   };
 
@@ -167,7 +180,9 @@ const stockPage = () => {
       <div className="flex h-full w-full flex-col gap-5 p-5">
         <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
-            <h2 className="text-2xl font-bold">Welcome, Name!</h2>
+            <h2 className="text-2xl font-bold">
+              Welcome, {session?.user.name}!
+            </h2>
             <h2 className="text-lg">Manage or see voucher information here.</h2>
           </div>
           <div className="flex h-full w-full items-center justify-center gap-5 px-20">

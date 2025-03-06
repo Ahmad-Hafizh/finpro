@@ -54,10 +54,16 @@ export type ProductCategory = {
 export type IEditStock = {
   products: Product;
   store_id?: number;
+  token?: any;
   setOpenDialog: (open: boolean) => void;
 };
 
-const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
+const EditStock = ({
+  products,
+  store_id,
+  token,
+  setOpenDialog,
+}: IEditStock) => {
   console.log("INI PRODUCT DARI EDIT STOCK: ", products);
   console.log(
     "INI PRODUCT DARI EDIT STOCKKKKKKK: ",
@@ -95,7 +101,9 @@ const EditStock = ({ products, store_id, setOpenDialog }: IEditStock) => {
     };
     console.log("THIS IS PAYLOAD : ", payload);
 
-    const response = await callAPI.patch("/stock", payload);
+    const response = await callAPI.patch("/stock", payload, {
+      headers: { Authorization: `bearer ${token}` },
+    });
 
     if (response.status === 200) {
       toast({

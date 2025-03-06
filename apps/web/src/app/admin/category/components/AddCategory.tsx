@@ -16,7 +16,11 @@ import { Input } from "@/components/ui/input";
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
 
-const AddCategory = () => {
+export type IAddCategory = {
+  setOpenDialog: (open: boolean) => void;
+};
+
+const AddCategory = ({ setOpenDialog }: IAddCategory) => {
   const { toast } = useToast();
   const formSchema = z.object({
     category: z.string().nonempty({ message: "Category is required!" }),
@@ -44,6 +48,9 @@ const AddCategory = () => {
             description: "Add category Success",
             className: "bg-gradient-to-r from-green-300 to-green-200",
           });
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       } catch (error) {
         toast({
@@ -52,9 +59,11 @@ const AddCategory = () => {
           variant: "destructive",
         });
         console.log("Error submit category :", error);
+        setOpenDialog(false);
       }
     };
 
+    setOpenDialog(false);
     submitApi(payload);
 
     console.log("Value: ", payload);
