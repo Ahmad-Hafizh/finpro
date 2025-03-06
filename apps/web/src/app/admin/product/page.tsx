@@ -15,6 +15,7 @@ import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import SortBox from "./components/SortBox";
+import { useSession } from "next-auth/react";
 
 const productPage = () => {
   const [action, setAction] = useState<string | null>("");
@@ -29,6 +30,15 @@ const productPage = () => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const { data: session } = useSession();
+  console.log("INI DATA ADMIN : ", session);
+
+  useEffect(() => {
+    if (session?.user.role === "super_admin") {
+      setIsSuperAdmin(true);
+    }
+  }, [session]);
 
   useEffect(() => {
     getCategory();

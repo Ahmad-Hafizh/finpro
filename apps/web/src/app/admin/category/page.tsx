@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const categoryPage = () => {
   const { toast } = useToast();
@@ -23,11 +24,32 @@ const categoryPage = () => {
   const [category, setCategory] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(true);
+  const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const searchParams = useSearchParams();
   const route = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user.role === "super_admin") {
+      setIsSuperAdmin(true);
+    }
+  }, [session]);
+
+  const contohdata = {
+    user: {
+      name: "ahmad",
+      email: "ahmadmaulanahafizh63@gmail.com",
+      image:
+        "https://res.cloudinary.com/dk2sik7oi/image/upload/v1741178616/profile_image/orqmtvbaspjhv6lglcy0.jpg",
+      role: "super_admin",
+      isOauth: false,
+      auth_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTE5MDAwMSwiZXhwIjoxNzQxMTkzNjAxfQ.5ynLmmHM019YkXj3fub6UWoQHaqSKve34YaA1FfU7Rc",
+    },
+    expires: "2025-04-04T15:53:21.509Z",
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -96,7 +118,9 @@ const categoryPage = () => {
       <div className="flex h-full w-full flex-col gap-5 p-5">
         <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
-            <h2 className="text-2xl font-bold">Welcome, Name!</h2>
+            <h2 className="text-2xl font-bold">
+              Welcome, {session?.user?.name}!
+            </h2>
             <h2 className="text-lg">Manage or see category here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">

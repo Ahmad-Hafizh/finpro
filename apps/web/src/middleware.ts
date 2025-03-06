@@ -59,12 +59,12 @@ export default auth(async (req) => {
   }
 
   if (isAdminRoute && isLoggedIn) {
-    // const response = await callAPI.post("/account/get-role", {
-    //   email: req.auth?.user?.email,
-    // });
-    // if (response.data.result.role == "user") {
-    //   return NextResponse.redirect(`${fe_url}/⁠`);
-    // }
+    const response = await callAPI.post("/account/get-role", {
+      email: req.auth?.user?.email,
+    });
+    if (response.data.result.role == "user") {
+      return NextResponse.redirect(`${fe_url}/⁠`);
+    }
   }
 
   return;

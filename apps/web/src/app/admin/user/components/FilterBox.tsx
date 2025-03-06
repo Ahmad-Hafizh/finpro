@@ -9,7 +9,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-const FilterBox = () => {
+interface FilterBoxProps {
+  allStore?: any;
+}
+
+const FilterBox = ({ allStore }: FilterBoxProps) => {
+  const [selectedStore, setSelectedStore] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -48,29 +53,29 @@ const FilterBox = () => {
   };
 
   return (
-    <div className="filter-box rounded-lg shadow-sm border border-gray-200 h-full w-1/4 p-6 gap-3">
-      <h2 className="font-bold text-lg">Filter</h2>
+    <div className="filter-box h-full w-1/4 gap-3 rounded-lg border border-gray-200 p-6 shadow-sm">
+      <h2 className="text-lg font-bold">Filter</h2>
       <Accordion type="single" collapsible defaultValue="item-1">
         <AccordionItem value="item-1">
           <AccordionTrigger>Category</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-1">
-              {categories.map((category) => (
+              {allStore.map((store: any) => (
                 <div
-                  key={category}
-                  className="flex justify-between items-center py-2"
+                  key={store.store_id}
+                  className="flex items-center justify-between py-2"
                 >
                   <label
-                    htmlFor={category}
-                    className="text-sm font-medium leading-none w-full"
+                    htmlFor={`store-${store.store_id}`}
+                    className="w-full text-sm font-medium leading-none"
                   >
-                    {category}
+                    {store.store_name}
                   </label>
                   <Checkbox
-                    id={category}
-                    checked={isChecked("category", category)}
-                    onCheckedChange={(checked) =>
-                      dynamicFilter("category", category)
+                    id={`store-${store.store_id}`}
+                    checked={isChecked("store", store.store_id.toString())}
+                    onCheckedChange={() =>
+                      dynamicFilter("store", store.store_id.toString())
                     }
                   />
                 </div>

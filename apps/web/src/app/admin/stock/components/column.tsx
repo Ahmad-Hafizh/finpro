@@ -44,6 +44,7 @@ export const columns = (
   setProductId: (id: number) => void,
   setOpenDialog: (open: boolean) => void,
   storeId: number,
+  token: any,
 ): ColumnDef<any>[] => [
   {
     accessorKey: "product_name",
@@ -185,7 +186,9 @@ export const columns = (
               product_id: productList.product_id,
               store_id: storeId,
             };
-            const response = await callAPI.patch("/stock/zero", payload);
+            const response = await callAPI.patch("/stock/zero", payload, {
+              headers: { Authorization: `bearer ${token}` },
+            });
 
             if (response.status === 200) {
               toast({
