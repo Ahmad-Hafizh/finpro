@@ -51,23 +51,25 @@ export default auth(async (req) => {
   }
 
   if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
-    return NextResponse.redirect(`${fe_url}/auth/signin`);
-  }
-
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(`${fe_url}/`);
-  }
-
-  if (isAdminRoute && isLoggedIn) {
-    const response = await callAPI.post("/account/get-role", {
-      email: req.auth?.user?.email,
-    });
-    if (response.data.result.role == "user") {
-      return NextResponse.redirect(`${fe_url}/⁠`);
+    if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
+      return NextResponse.redirect(`${fe_url}/auth/signin`);
     }
-  }
 
-  return;
+    if (isAuthRoute && isLoggedIn) {
+      return NextResponse.redirect(`${fe_url}/`);
+    }
+
+    if (isAdminRoute && isLoggedIn) {
+      const response = await callAPI.post("/account/get-role", {
+        email: req.auth?.user?.email,
+      });
+      if (response.data.result.role == "user") {
+        return NextResponse.redirect(`${fe_url}/`);
+      }
+    }
+
+    return;
+  }
 });
 
 export const config = {

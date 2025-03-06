@@ -30,6 +30,7 @@ export class ProductRouter {
       authGuard.superAdmin,
       this.productRouter.deleteProduct
     );
+    this.route.get("/landing", this.productRouter.getLandingProduct);
     this.route.get("/:name", this.productRouter.getDetailedProduct);
   }
 

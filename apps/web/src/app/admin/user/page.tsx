@@ -66,6 +66,8 @@ const userPage = () => {
     getData();
     getAllStore();
     relevantData();
+    getAllStore();
+    relevantData();
   }, [adminId]);
 
   const relevantData = async () => {
@@ -129,7 +131,21 @@ const userPage = () => {
                         <DialogTitle>Edit Admin Role</DialogTitle>
                         {status == "authenticated" ? (
                           <EditAdminForm
-                            superAdminAccessToken={session?.user.auth_token}
+                            superAdminAccessToken={
+                              session?.user.auth_token as string
+                            }
+                            adminData={adminId}
+                            setOpenDialog={setOpenDialog}
+                            storeData={store}
+                          />
+                        ) : (
+                          <p>loading</p>
+                        )}
+                        {status == "authenticated" ? (
+                          <EditAdminForm
+                            superAdminAccessToken={
+                              session?.user.auth_token as string
+                            }
                             adminData={adminId}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
