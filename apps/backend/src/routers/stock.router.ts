@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { StockController } from "../controllers/stock.controller";
 import { verifyToken } from "../middleware/verifyToken";
-import authGuard from "../middleware/authGuard";
 
 export class StockRouter {
   private route: Router;

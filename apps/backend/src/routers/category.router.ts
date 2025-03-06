@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { CategoryController } from "../controllers/category.controller";
+import { verifyToken } from "../middleware/verifyToken";
+import authGuard from "../middleware/authGuard";
+
 export class CategoryRouter {
   private route: Router;
   private categoryRouter: CategoryController;
@@ -12,9 +15,24 @@ export class CategoryRouter {
 
   private initializeRoutes() {
     this.route.get("/", this.categoryRouter.getCategory);
-    this.route.post("/", this.categoryRouter.createCategory);
-    this.route.patch("/", this.categoryRouter.updateCategory);
-    this.route.patch("/delete", this.categoryRouter.deleteCategory);
+    this.route.post(
+      "/",
+      verifyToken,
+      authGuard.superAdmin,
+      this.categoryRouter.createCategory
+    );
+    this.route.patch(
+      "/",
+      verifyToken,
+      authGuard.superAdmin,
+      this.categoryRouter.updateCategory
+    );
+    this.route.patch(
+      "/delete",
+      verifyToken,
+      authGuard.superAdmin,
+      this.categoryRouter.deleteCategory
+    );
     // this.route.post("/", this.productRouter.createProduct);
     // this.route.patch("/", this.adminController.updateAdmin);
   }
