@@ -1,6 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { callAPI } from "@/config/axios";
@@ -9,10 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import z from "zod";
 import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IProfilePictureFormProps {
   image: string;
   isOauth: boolean;
+  name: string;
 }
 
 const profileSchema = z.object({
@@ -36,22 +37,19 @@ const profileSchema = z.object({
 const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
   image,
   isOauth,
+  name,
 }) => {
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
   });
+
   const { data: session, status } = useSession();
-  const [imageUrl, setImageUrl] = useState("");
 
   const onSubmit = async (values: z.infer<typeof profileSchema>) => {
-    console.log(values.profile_image);
-
     if (!values.profile_image) return null;
 
     const formData = new FormData();
     formData.append("profile_image", values.profile_image);
-
-    console.log(formData);
 
     try {
       if (status == "authenticated") {
@@ -64,31 +62,27 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
       console.log(error);
     }
   };
-
-  const onCheckSubmit = () => {
-    console.log("submited");
-  };
   return (
-    <>
-      <div className="relative aspect-square w-40 overflow-hidden rounded-full bg-gray-300">
-        <Image
-          src={image || ""}
-          alt="profile picture"
-          fill
-          className="absolute"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-3xl">Profile Picture</p>
-        <p className="text-sm">
+    <div className="col-span-1 flex flex-col items-center justify-center gap-4 md:flex-row md:justify-start md:gap-10 md:rounded-xl md:border-2 md:p-10 lg:flex-col lg:justify-center lg:gap-4">
+      <Avatar className="h-20 w-20">
+        <AvatarImage src={image || ""} />
+        <AvatarFallback>{name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col items-center gap-2 md:items-start lg:items-center">
+        <p className="text-center text-2xl">Profile Picture</p>
+        <p className="text-center text-sm">
           max sizes 1MB with JPG, JPEG, PNG & GIF format
         </p>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-2 md:flex-row lg:flex-col"
+          >
             <FormField
               name="profile_image"
               control={form.control}
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormControl>
                     <Input
@@ -96,16 +90,6 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
                       type="file"
                       placeholder="profile picture"
                       disabled={isOauth}
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        const file = files?.[0];
-                        field.onChange(file || null);
-
-                        if (file) {
-                          const fileUrl = URL.createObjectURL(file);
-                          setImageUrl(fileUrl);
-                        }
-                      }}
                     />
                   </FormControl>
                 </FormItem>
@@ -115,7 +99,7 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
           </form>
         </Form>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -112,7 +112,8 @@ const Navbar = () => {
       >
         <MobileNav
           store_name={currStore.store_name}
-          user_image={session?.user.image}
+          user_name={session?.user.name}
+          user_pfp={session?.user.image}
         />
       </div>
 
@@ -124,6 +125,7 @@ const Navbar = () => {
           store_name={currStore.store_name}
           cart_count={cartCount.count}
           user_name={session?.user.name}
+          user_pfp={session?.user.image}
         />
       </div>
     </div>

@@ -14,17 +14,9 @@ interface FilterBoxProps {
 }
 
 const FilterBox = ({ allStore }: FilterBoxProps) => {
-  const [selectedStore, setSelectedStore] = useState<number | null>(null);
+  // const [selectedStore, setSelectedStore] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const categories = [
-    "Dry vegetable",
-    "Fruit",
-    "Wet vegetable",
-    "Green vegetable",
-    "Nut",
-  ];
 
   // Function to update URL based on selected filters
   const dynamicFilter = (key: string, value: string) => {

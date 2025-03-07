@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Input } from "@/components/ui/input";
 import HeaderDashboard from "../components/header";
 import { StoreAdmin, columns } from "./column";
 import { DataTable } from "./data-table";
@@ -16,20 +16,20 @@ import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const userPage = () => {
+const UserPage = () => {
   const [action, setAction] = useState<string | null>(null);
   const [adminId, setAdminId] = useState<number>(1);
   const [data, setData] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [store, setStore] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
+  const { data: session, status } = useSession();
 
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session } = useSession();
 
   useEffect(() => {
     if (session?.user.role === "super_admin") {
@@ -50,7 +50,6 @@ const userPage = () => {
       router.replace(`?${params.toString()}`, { scroll: false });
     }
   }, [searchParams, router]);
-
 
   const getData = async () => {
     try {
@@ -73,7 +72,6 @@ const userPage = () => {
 
     getAllStore();
     relevantData();
-
   }, [adminId]);
 
   const relevantData = async () => {
@@ -137,7 +135,6 @@ const userPage = () => {
                         <DialogTitle>Edit Admin Role</DialogTitle>
                         {status == "authenticated" ? (
                           <EditAdminForm
-
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
@@ -153,7 +150,6 @@ const userPage = () => {
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
-
                             adminData={adminId}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
@@ -180,4 +176,4 @@ const userPage = () => {
   );
 };
 
-export default userPage;
+export default UserPage;

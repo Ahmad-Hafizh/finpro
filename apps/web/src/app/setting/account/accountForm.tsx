@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useEffect } from "react";
+import React from "react";
 import { callAPI } from "@/config/axios";
 import { z } from "zod";
 import { updateProfileSchema } from "../../../../../schemas/authSchema";
@@ -14,8 +14,15 @@ import {
   FormControl,
   FormLabel,
 } from "@/components/ui/form";
+import { toast } from "@/hooks/use-toast";
 
-const AccountForm = ({ name, email, isOauth }: any) => {
+interface IAccountForm {
+  name: string;
+  email: string;
+  isOauth: boolean;
+}
+
+const AccountForm: React.FC<IAccountForm> = ({ name, email, isOauth }) => {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -32,7 +39,10 @@ const AccountForm = ({ name, email, isOauth }: any) => {
         email: values.email,
         phone: values.phone,
       });
-      console.log(response.data.message);
+
+      toast({
+        description: response.data.message,
+      });
     } catch (error) {
       console.log(error);
     }

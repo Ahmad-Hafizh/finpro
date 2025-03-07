@@ -31,10 +31,7 @@ export class StoreController {
       if (!lat && !lng) {
         const mainStore = await prisma.store.findUnique({
           where: {
-            store_id: 12,
-            city: 'jakarta',
-            lat: '-6.980870',
-            lng: '108.477570',
+            store_id: 8,
           },
         });
 

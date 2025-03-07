@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CategoryCarousel } from "@/components/global/CategoryCarousel";
 import { LargeCarousel } from "@/components/global/LargeCarousel";
 import { ProductCarousel } from "@/components/global/ProductCarousel";
@@ -23,22 +24,15 @@ const Home = async () => {
       <div className="overflow-hidden rounded-xl md:px-0">
         <LargeCarousel />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="hidden flex-col gap-2 md:flex">
         <p className="text-lg md:text-xl">Categories</p>
         <CategoryCarousel />
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="flex w-full justify-between">
-          <p className="text-lg md:text-xl">Todays choice</p>
-          <Link href="/search">see all</Link>
-        </div>
-        <ProductCarousel products={products.recommend} />
-      </div>
-      {products.category_product.map((e: any) => (
-        <div className="flex flex-col gap-2">
+      {products.map((e: any, i: number) => (
+        <div className="flex flex-col gap-2" key={i}>
           <div className="flex w-full justify-between">
             <p className="text-lg md:text-xl">{e.product_category_name}</p>
-            <Link href="/search">see all</Link>
+            <Link href="/explore">see all</Link>
           </div>
           <ProductCarousel products={e.product} />
         </div>

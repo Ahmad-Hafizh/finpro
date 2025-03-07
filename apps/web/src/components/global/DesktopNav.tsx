@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { IoCartOutline } from "react-icons/io5";
-import { MdOutlineAccountCircle } from "react-icons/md";
 import Link from "next/link";
 import { FiPackage } from "react-icons/fi";
 import { Search } from "lucide-react";
@@ -14,17 +13,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOutAction } from "@/actions/signOutAction";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IDesktopNavProps {
   store_name: string;
   user_name?: string | null | undefined;
   cart_count: number;
+  user_pfp: string | null | undefined;
 }
 
 const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
   store_name,
   user_name,
   cart_count,
+  user_pfp,
 }) => {
   return (
     <div
@@ -61,9 +63,13 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
           </Link>
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex gap-2">
-            <MdOutlineAccountCircle className="text-3xl" />
-            <p className="text-xl">{user_name}</p>
+          <DropdownMenuTrigger className="flex items-center gap-2 overflow-hidden px-2">
+            <Avatar>
+              <AvatarImage src={user_pfp || ""} />
+              <AvatarFallback>{user_name?.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+
+            <p className="text-nowrap text-lg">{user_name}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
