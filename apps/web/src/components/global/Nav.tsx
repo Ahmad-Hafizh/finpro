@@ -73,18 +73,34 @@ const Navbar = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   dispatch(fetchCartCount({}));
+  // }, [cartVersion, dispatch]);
+
+  // useEffect(() => {
+  //   const handleFocus = () => {
+  //     dispatch(fetchCartCount({}));
+  //   };
+
+  //   window.addEventListener("focus", handleFocus);
+  //   return () => window.removeEventListener("focus", handleFocus);
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(fetchCartCount());
-  }, [cartVersion, dispatch]);
+    if (session && session.user && session.user.auth_token) {
+      dispatch(fetchCartCount({ token: session.user.auth_token }));
+    }
+  }, [cartVersion, dispatch, session]);
 
   useEffect(() => {
     const handleFocus = () => {
-      dispatch(fetchCartCount());
+      if (session && session.user && session.user.auth_token) {
+        dispatch(fetchCartCount({ token: session.user.auth_token }));
+      }
     };
 
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
-  }, [dispatch]);
+  }, [dispatch, session]);
 
   return (
     <div
@@ -96,7 +112,8 @@ const Navbar = () => {
       >
         <MobileNav
           store_name={currStore.store_name}
-          user_image={session?.user.image}
+          user_name={session?.user.name}
+          user_pfp={session?.user.image}
         />
       </div>
 
@@ -108,6 +125,7 @@ const Navbar = () => {
           store_name={currStore.store_name}
           cart_count={cartCount.count}
           user_name={session?.user.name}
+          user_pfp={session?.user.image}
         />
       </div>
     </div>

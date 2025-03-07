@@ -30,7 +30,7 @@ export class AccountController {
         const referralCode: string = `${user.name?.slice(0, 4).toUpperCase() ?? 'USER'}${Math.round(Math.random() * 10000).toString()}`;
 
         const authToken = sign({ email: user.email }, process.env.TOKEN_KEY || 'secretkey', { expiresIn: '1h' });
-
+        console.log('Generated auth token:', authToken);
         const profile = await tx.profile.create({
           data: {
             user_id: user.id,
@@ -81,6 +81,7 @@ export class AccountController {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
   }
+
   async signIn(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const { email, password } = req.body;
@@ -105,6 +106,7 @@ export class AccountController {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
   }
+
   async getUserById(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const user = await prisma.user.findUnique({
@@ -122,7 +124,10 @@ export class AccountController {
 
       const authToken = sign({ email: user.email, id: user.id }, process.env.TOKEN_KEY || 'secretkey', { expiresIn: '1h' });
 
-      return ResponseHandler.success(res, 200, 'Sign in is success', { ...user, auth_token: authToken });
+      return ResponseHandler.success(res, 200, 'Sign in is success', {
+        ...user,
+        auth_token: authToken,
+      });
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
@@ -138,7 +143,9 @@ export class AccountController {
       if (!user) {
         return ResponseHandler.error(res, 404, 'User not found');
       }
-      return ResponseHandler.success(res, 200, 'Sign in is success', { role: user.role });
+      return ResponseHandler.success(res, 200, 'Sign in is success', {
+        role: user.role,
+      });
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }

@@ -24,47 +24,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOutAction } from "@/actions/signOutAction";
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IMobileNavProps {
   store_name: string;
-  user_image?: string | null | undefined;
+  user_name?: string | null | undefined;
+  user_pfp?: string | null | undefined;
 }
 
 const MobileNav: React.FunctionComponent<IMobileNavProps> = ({
-  user_image,
+  user_name,
   store_name,
+  user_pfp,
 }) => {
   const isVisible = true;
   return (
     <div className="h-full w-full md:hidden">
       {isVisible ? (
-        <div className="flex h-full w-full items-center justify-between gap-4 md:hidden">
-          <div>
-            {user_image ? (
-              <div
-                className={`${user_image ? "block" : "hidden"} relative h-10 w-10 overflow-hidden rounded-full`}
-              >
-                <Image fill src={user_image} alt="user profile picture" />
-              </div>
-            ) : (
-              <BiHomeSmile
-                className={`${user_image ? "hidden" : "block"} text-3xl md:flex`}
-              />
-            )}
-          </div>
-          <div
-            className={`flex w-1/2 items-center justify-between gap-2 rounded-full bg-gray-200 p-2`}
-          >
-            <div className="flex items-center justify-start gap-1 pl-2">
-              <MapPin className="h-5 w-5" />
-              <p className="text-xl">{store_name}</p>
+        <div className="flex h-full w-full items-center justify-between gap-4">
+          <div className="flex gap-4">
+            <Avatar>
+              <AvatarImage src={user_pfp || ""} />
+              <AvatarFallback>{user_name?.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="text-sm text-gray-500">Deliver from :</p>
+              <p className="text-l leading-tight">{store_name}</p>
             </div>
-            <Link
-              href="/change-store"
-              className="aspect-square h-full rounded-full bg-white p-2"
-            >
-              <Pencil className="h-4 w-4" />
-            </Link>
           </div>
           <div>
             <Search />

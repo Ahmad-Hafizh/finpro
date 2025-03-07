@@ -1,50 +1,50 @@
 import { Request, Response } from 'express';
 import prisma from '../prisma';
 import ResponseHandler from '../utils/responseHandler';
+import { findDistance } from '../services/store/findDistance';
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+      };
+    }
+  }
+}
 
 export class AddressController {
   async getAddresses(req: Request, res: Response): Promise<any> {
     try {
-      const authUser = res.locals.user;
+      const userId = res.locals.user;
 
-      const user = await prisma.user.findUnique({
-        where: {
-          email: authUser.email,
-        },
+      if (!userId) {
+        return ResponseHandler.error(res, 404, 'user not found');
+      }
+
+      const profile = await prisma.profile.findUnique({
+        where: { user_id: userId.id },
         include: {
-          profile: true,
+          Address: true,
         },
       });
 
-      if (!user?.profile) return ResponseHandler.error(res, 404, 'user not found');
+      if (!profile) {
+        return ResponseHandler.error(res, 404, 'profile not found');
+      }
 
-      const addresses = await prisma.address.findMany({
-        where: { profile_id: user.profile.profile_id, deleted_at: null },
-      });
+      const { Address: addresses } = profile;
+
+      // const addresses = await prisma.address.findMany({
+      //   where: { profile_id: profile.profile_id },
+      // });
 
       return ResponseHandler.success(res, 200, 'get address success', addresses);
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'internal server error', error);
+      console.error('Get Addresses Error:', error);
+      return res.status(500).json({ error: 'Failed to fetch addresses' });
     }
   }
-  // async getAddresses(req: Request, res: Response): Promise<any> {
-  //   const userId = "1";
-  //   try {
-  //     const profile = await prisma.profile.findUnique({
-  //       where: { user_id: userId },
-  //     });
-  //     if (!profile) return res.status(404).json({ error: "Profile not found" });
 
-  //     const addresses = await prisma.address.findMany({
-  //       where: { profile_id: profile.profile_id },
-  //     });
-
-  //     return res.status(200).json(addresses);
-  //   } catch (error) {
-  //     console.error("Get Addresses Error:", error);
-  //     return res.status(500).json({ error: "Failed to fetch addresses" });
-  //   }
-  // }
   async setDeliveryAddress(req: Request, res: Response): Promise<any> {
     try {
       const { email } = req.body;
@@ -131,7 +131,10 @@ export class AddressController {
       }
 
       await prisma.address.update({
-        where: { address_id: parseInt(address_id), profile_id: profile.profile_id },
+        where: {
+          address_id: parseInt(address_id),
+          profile_id: profile.profile_id,
+        },
         data: {
           deleted_at: new Date().toISOString(),
         },
@@ -161,6 +164,44 @@ export class AddressController {
         where: { address_id: parseInt(address_id) },
       });
       return ResponseHandler.success(res, 200, 'Get Address Success', address);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'internal server error', error);
+    }
+  }
+  async getOngkir(req: Request, res: Response): Promise<any> {
+    try {
+      const { address_id, store_id } = req.body;
+      const address = await prisma.address.findUnique({
+        where: {
+          address_id,
+        },
+      });
+
+      const store = await prisma.store.findUnique({
+        where: { store_id },
+      });
+
+      const distance = findDistance(address?.lat, store?.lat, address?.lng, store?.lng);
+
+      const ongkir = [
+        {
+          courier: 'jnt',
+          cost: distance ? Math.round(distance * 2000) : 15000,
+          estimate: Math.round(distance / 50) * 60,
+        },
+        {
+          courier: 'sicepat',
+          cost: distance ? Math.round(distance * 1900) : 13000,
+          estimate: Math.round(distance / 45) * 60,
+        },
+        {
+          courier: 'jne',
+          cost: distance ? Math.round(distance * 1950) : 14000,
+          estimate: Math.round(distance / 50) * 60,
+        },
+      ];
+
+      return ResponseHandler.success(res, 200, 'Get Address Success', ongkir);
     } catch (error) {
       return ResponseHandler.error(res, 500, 'internal server error', error);
     }

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import Navbar from "@/components/global/Nav";
 import { callAPI } from "@/config/axios";
 import {
   Box,
@@ -17,11 +16,14 @@ import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../../config/theme";
 import PaymentProofSummary from "../components/PaymentProofSummary";
 import PaymentProofForm from "../components/PaymentProofForm";
+import { useSession } from "next-auth/react";
 
 export interface OrderDetail {
   order_id: number;
   order_number: string;
   total_price: number;
+  shipping_price: number;
+  total_payment: number;
   order_items: {
     order_item_id: number;
     quantity: number;
@@ -42,23 +44,42 @@ const PaymentProofUploadPage: React.FC = () => {
   const orderId = params.order_id;
   const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
+    if (status === "loading") return;
     const fetchOrderDetails = async () => {
       try {
-        const response = await callAPI.get(`/order/${orderId}`);
+        const token = session?.user?.auth_token;
+        if (!token) {
+          setError("Token not available");
+          return;
+        }
+        const response = await callAPI.get(`/order/${orderId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setOrderDetail(response.data);
       } catch (err: any) {
-        setError(err.response?.data?.error || err.message);
+        const errData = err.response?.data?.error;
+        const errorMessage =
+          typeof errData === "object" && errData !== null
+            ? errData.message
+            : errData || err.message;
+        setError(errorMessage);
       }
     };
     fetchOrderDetails();
-  }, [orderId]);
+  }, [orderId, session, status]);
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-        <Navbar />
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          pt: { xs: "80px", md: "80px" },
+        }}
+      >
         <Container maxWidth="md" sx={{ py: 6 }}>
           <Paper
             elevation={3}

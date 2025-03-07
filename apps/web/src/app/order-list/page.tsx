@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { callAPI } from "@/config/axios";
 import {
-  Container,
   Box,
-  Typography,
+  Container,
   Paper,
-  CircularProgress,
+  Typography,
   Alert,
+  CircularProgress,
   Stack,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { callAPI } from "@/config/axios";
-import { useToast } from "@/hooks/use-toast";
 import { theme } from "../../config/theme";
 import OrderFilters from "./components/OrderFilters";
 import OrderTabs from "./components/OrderTabs";
@@ -19,8 +19,14 @@ import OrderCard from "./components/OrderCard";
 import CancelOrderDialog from "./components/CancelOrderDialog";
 import ConfirmOrderDialog from "./components/ConfirmOrderDialog";
 import ImagePreviewDialog from "./components/ImagePreviewDialog";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
+
 const OrderListPage: React.FC = () => {
   const { toast } = useToast();
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,10 +46,16 @@ const OrderListPage: React.FC = () => {
     orderId: null as number | null,
   });
   const [imageDialog, setImageDialog] = useState({ open: false, imageUrl: "" });
+
   const fetchOrders = async (params = {}) => {
+    if (status === "loading" || !session) return;
     setLoading(true);
     try {
-      const response = await callAPI.get("/order", { params });
+      const token = session?.user?.auth_token;
+      const response = await callAPI.get("/order", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setOrders(response.data);
     } catch (err: any) {
       setError(err.response?.data?.error || err.message);
@@ -51,9 +63,11 @@ const OrderListPage: React.FC = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [session, status]);
+
   const orderCounts = orders.reduce(
     (counts, order) => {
       counts[order.status] = (counts[order.status] || 0) + 1;
@@ -61,6 +75,7 @@ const OrderListPage: React.FC = () => {
     },
     {} as { [key: string]: number },
   );
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -168,10 +183,16 @@ const OrderListPage: React.FC = () => {
           if (!cancelDialog.orderId || !cancelDialog.reason.trim()) return;
           setLoading(true);
           try {
+            const token = session?.user?.auth_token;
             await callAPI.post(
               `/order/${cancelDialog.orderId}/cancel`,
               { reason: cancelDialog.reason },
-              { headers: { "Content-Type": "application/json" } },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              },
             );
             toast({
               title: "Order is cancelled",
@@ -198,7 +219,12 @@ const OrderListPage: React.FC = () => {
           if (!confirmDialog.orderId) return;
           setLoading(true);
           try {
-            await callAPI.post(`/order/${confirmDialog.orderId}/confirm`);
+            const token = session?.user?.auth_token;
+            await callAPI.post(
+              `/order/${confirmDialog.orderId}/confirm`,
+              null,
+              { headers: { Authorization: `Bearer ${token}` } },
+            );
             toast({
               title: "Order is confirmed",
               description: "Order is successfully confirmed.",

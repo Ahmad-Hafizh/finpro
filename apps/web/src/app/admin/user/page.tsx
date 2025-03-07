@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Input } from "@/components/ui/input";
 import HeaderDashboard from "../components/header";
 import { StoreAdmin, columns } from "./column";
 import { DataTable } from "./data-table";
@@ -23,13 +23,13 @@ const UserPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [store, setStore] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
+  const { data: session, status } = useSession();
 
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session } = useSession();
 
   useEffect(() => {
     if (session?.user.role === "super_admin") {

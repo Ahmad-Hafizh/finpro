@@ -52,7 +52,7 @@ export class AdminController {
 
   async createAdmin(req: Request, res: Response): Promise<any> {
     try {
-      const { email, name, password, store_id, phone } = req.body;
+      const { email, name, password, store_id, phone, position } = req.body;
 
       const user = await findUser(email);
       if (user) return ResponseHandler.error(res, 404, 'Email already used');
@@ -67,12 +67,12 @@ export class AdminController {
         },
       });
 
-      const admin = await prisma.admin.create({
+      await prisma.admin.create({
         data: {
           user_id: newUser.id,
           phone,
-          store_id,
-          position: 'store_manager',
+          store_id: parseInt(store_id),
+          position,
         },
       });
       return ResponseHandler.success(res, 200, 'Create Admin Success');
@@ -96,10 +96,7 @@ export class AdminController {
     }
   }
 
-  async checkAdminDetailRoleFromFrontend(
-    req: Request,
-    res: Response
-  ): Promise<any> {
+  async checkAdminDetailRoleFromFrontend(req: Request, res: Response): Promise<any> {
     try {
       const { admin_id, email } = req.body;
 
@@ -140,9 +137,9 @@ export class AdminController {
         result.push(getAdminInfoByEmail);
       }
 
-      return ResponseHandler.success(res, 200, "Get Admin success", result);
+      return ResponseHandler.success(res, 200, 'Get Admin success', result);
     } catch (error) {
-      console.log("Error : ", error);
+      console.log('Error : ', error);
     }
   }
 }
