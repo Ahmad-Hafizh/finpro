@@ -17,6 +17,8 @@ export default auth(async (req) => {
     "/admin",
     "/setting/address",
     "/setting/account",
+    "/admin/order",
+    "/payment-proof",
   ];
 
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
