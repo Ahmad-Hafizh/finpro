@@ -16,6 +16,7 @@ export class VoucherRouter {
     this.route.post("/ongkir", this.voucherController.createNewOngkirVoucher);
     this.route.post("/product", this.voucherController.createNewProductVoucher);
     this.route.post("/store", this.voucherController.createNewStoreVoucher);
+    this.route.get("/order", this.voucherController.getVoucherTwo);
   }
 
   public getRouter() {

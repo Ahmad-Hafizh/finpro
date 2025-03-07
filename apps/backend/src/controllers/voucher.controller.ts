@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ResponseHandler from "../utils/responseHandler";
 import prisma from "../prisma";
+import { getVoucher } from "../services/voucher/voucher.service";
 
 export class VoucherController {
   async getAllVoucher(req: Request, res: Response): Promise<any> {
@@ -142,5 +143,12 @@ export class VoucherController {
       console.log(error);
       return ResponseHandler.error(res, 500, "Internal Server Error");
     }
+  }
+
+  async getVoucherTwo(req: Request, res: Response): Promise<any> {
+    try {
+      const voucher = await getVoucher(8, 5);
+      return ResponseHandler.success(res, 200, "Success", voucher);
+    } catch (error) {}
   }
 }

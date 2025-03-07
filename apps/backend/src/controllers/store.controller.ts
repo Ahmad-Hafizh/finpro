@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
-import ResponseHandler from '../utils/responseHandler';
-import prisma from '../prisma';
-import { findDistance } from '../services/store/findDistance';
+import { Request, Response, NextFunction } from "express";
+import ResponseHandler from "../utils/responseHandler";
+import prisma from "../prisma";
+import { findDistance } from "../services/store/findDistance";
 
 export class StoreController {
   async getAllStore(req: Request, res: Response): Promise<any> {
     try {
       const stores = await prisma.store.findMany();
-      return ResponseHandler.success(res, 200, 'get all store succeed', stores);
+      return ResponseHandler.success(res, 200, "get all store succeed", stores);
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
   async getStoreByName(req: Request, res: Response): Promise<any> {
@@ -18,11 +18,11 @@ export class StoreController {
         where: { store_name: req.body.store_name },
       });
 
-      if (!store) return ResponseHandler.error(res, 404, 'store not found');
+      if (!store) return ResponseHandler.error(res, 404, "store not found");
 
-      return ResponseHandler.success(res, 200, 'get store succeed', store);
+      return ResponseHandler.success(res, 200, "get store succeed", store);
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
   async findNearestStore(req: Request, res: Response): Promise<any> {
@@ -32,13 +32,13 @@ export class StoreController {
         const mainStore = await prisma.store.findUnique({
           where: {
             store_id: 12,
-            city: 'jakarta',
-            lat: '-6.980870',
-            lng: '108.477570',
+            city: "jakarta",
+            lat: "-6.980870",
+            lng: "108.477570",
           },
         });
 
-        return ResponseHandler.success(res, 200, 'get main store success', {
+        return ResponseHandler.success(res, 200, "get main store success", {
           ...mainStore,
           distance: 999,
         });
@@ -52,11 +52,18 @@ export class StoreController {
         return { ...e, distance: d };
       });
 
-      const nearest = storesDistanceData.sort((a, b) => a.distance - b.distance)[0];
+      const nearest = storesDistanceData.sort(
+        (a, b) => a.distance - b.distance
+      )[0];
 
-      return ResponseHandler.success(res, 200, 'get nearest store succeed', nearest);
+      return ResponseHandler.success(
+        res,
+        200,
+        "get nearest store succeed",
+        nearest
+      );
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
 
@@ -75,9 +82,9 @@ export class StoreController {
         },
       });
 
-      return ResponseHandler.success(res, 200, 'create store success');
+      return ResponseHandler.success(res, 200, "create store success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
 
@@ -93,9 +100,9 @@ export class StoreController {
           isActive: false,
         },
       });
-      return ResponseHandler.success(res, 200, 'delete store success');
+      return ResponseHandler.success(res, 200, "delete store success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
 
@@ -116,9 +123,9 @@ export class StoreController {
           lng: req.body.lng,
         },
       });
-      return ResponseHandler.success(res, 200, 'Update store success');
+      return ResponseHandler.success(res, 200, "Update store success");
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
     }
   }
   async getStoreDistance(req: Request, res: Response): Promise<any> {
@@ -130,16 +137,36 @@ export class StoreController {
       });
 
       if (!store) {
-        return ResponseHandler.error(res, 404, 'store not found');
+        return ResponseHandler.error(res, 404, "store not found");
       }
       const distance = findDistance(lat, store?.lat, lng, store?.lng);
 
-      return ResponseHandler.success(res, 200, 'get store distance success', {
+      return ResponseHandler.success(res, 200, "get store distance success", {
         ...store,
         distance,
       });
     } catch (error) {
-      return ResponseHandler.error(res, 500, 'server error', error);
+      return ResponseHandler.error(res, 500, "server error", error);
+    }
+  }
+
+  async getStoreById(req: Request, res: Response): Promise<any> {
+    try {
+      const { store_id } = req.body;
+      const getStoreName = await prisma.store.findFirst({
+        where: {
+          store_id: parseInt(store_id as string),
+        },
+      });
+      return ResponseHandler.success(
+        res,
+        200,
+        "Get store success",
+        getStoreName
+      );
+    } catch (error) {
+      console.log("Error : ", error);
+      return ResponseHandler.error(res, 500, "internal server error");
     }
   }
 }

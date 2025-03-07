@@ -3,6 +3,7 @@
 import { callAPI } from "@/config/axios";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 
 //===========================
 import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
@@ -19,6 +20,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any | null>(null);
   const [productData, setProductData] = useState<any>([]);
+  const [stock, setStock] = useState<any>([]);
 
   //==========================
   const [quantity, setQuantity] = useState<number>(1);
@@ -33,21 +35,56 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     getData();
   }, []);
 
+  useEffect(() => {
+    console.log("INI STOCK : ", stock);
+  }, [stock]);
+
   const getData = async (): Promise<void> => {
     try {
       setLoading(true);
       const slug = (await params).slug;
       console.log("getting data");
       const response = await callAPI.get(`product/${slug}`);
-      console.log(response);
-      setProductData(response.data.result);
+      // console.log("Ini response data:", response.data.result.stock);
+
+      const product = response.data.result;
+
+      const updatedStock = await Promise.all(
+        product.stock.map(async (item: any) => ({
+          ...item,
+          store_name: await getStore(item.store_id),
+        })),
+      );
+
+      setProductData(product);
       setLoading(false);
+      // setStock(response.data.result.stock);
+      setStock(updatedStock);
     } catch (error) {
       setError(error);
     }
   };
 
+  const getStore = async (id: any) => {
+    try {
+      const payload = { store_id: id };
+      const response = await callAPI.post("/store/get-id", payload);
+      console.log("RESPONSE DATA : ", response.data.result);
+      return response.data.result.store_name;
+    } catch (error) {}
+  };
+
+  // const formatStore = async () => {
+  //   const updatedStock = await Promise.all(
+  //     stock.map(async (item: any) => ({
+  //       ...item,
+  //       store_name: await getStore(item.store_id),
+  //     })),
+  //   );
+  // };
+
   console.log("product data", productData);
+  console.log("store data", stock);
 
   const formatRupiah = (amount: any) => {
     return `Rp. ${amount.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -85,7 +122,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   }
   //===============================
   return (
-    <div className="grid h-full w-full grid-cols-1 gap-5 p-7 lg:grid-cols-3 lg:px-20 lg:py-10">
+    <div className="grid h-full w-full grid-cols-1 gap-5 p-7 lg:grid-cols-3 lg:px-20 lg:py-20">
       <div className="title and image h-full w-full p-2 lg:col-span-2 lg:px-20 lg:py-10">
         {/* <img
           className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
@@ -113,15 +150,6 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
             {formatRupiah(parseInt(productData.product_price))}
           </h1>
         </div>
-        <h1 className="pb-4 text-lg font-bold lg:text-lg lg:font-semibold">
-          {/* Available Stock : {productData.stock ? productData.stock : "0"} */}
-          {/* aku ganti ini dulu */}
-          Available Stock :{" "}
-          {productData.stock && productData.stock.quantity
-            ? productData.stock.quantity
-            : "0"}
-          {/* ============================= */}
-        </h1>
         <div className="description text-sm lg:text-base">
           <h1>{productData.product_description}</h1>
         </div>
@@ -130,6 +158,30 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
             CATEGORY{" "}
             {productData.product_category?.product_category_name.toUpperCase()}
           </Badge>
+        </div>
+        <div className="flex flex-col gap-2 py-10 text-lg lg:py-8">
+          {stock.length ? <h1>AVAILABLE IN :</h1> : <></>}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {stock.length ? (
+              stock.map((stock: any) => {
+                return (
+                  <Card
+                    key={stock.stock_id}
+                    className="flex items-center justify-center"
+                  >
+                    <CardContent className="flex flex-col items-center justify-center py-3">
+                      <h1 className="text-center text-xs">
+                        {stock.store_name} :
+                      </h1>
+                      <h1 className="text-xs">{stock.quantity} Pcs</h1>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            ) : (
+              <h1 className="flex">STOCK EMPTY</h1>
+            )}
+          </div>
         </div>
       </div>
       <div className="product cart h-full w-full lg:col-span-1 lg:px-20 lg:py-10">

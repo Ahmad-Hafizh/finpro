@@ -26,6 +26,7 @@ const productPage = () => {
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
+  const [editedData, setEditedData] = useState<any>([]);
 
   const { toast } = useToast();
   const searchParams = useSearchParams();
@@ -44,6 +45,10 @@ const productPage = () => {
     getCategory();
     getProduct();
   }, [searchParams]);
+
+  useEffect(() => {
+    filteredData(productId);
+  }, [productId]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -110,15 +115,7 @@ const productPage = () => {
     }
   };
   console.log("INI KATEGORI DARI STATE : ", categories);
-  console.log(productList);
-
-  const category = [
-    { product_category_id: 1, product_category_name: "Dry vegetable" },
-    { product_category_id: 2, product_category_name: "Fruit" },
-    { product_category_id: 3, product_category_name: "Wet vegetable" },
-    { product_category_id: 4, product_category_name: "Green vegetable" },
-    { product_category_id: 5, product_category_name: "Nut" },
-  ];
+  console.log("Ini product list:", productList);
 
   const fetchUserData = [
     {
@@ -150,13 +147,22 @@ const productPage = () => {
     },
   ];
 
+  const filteredData = async (productId: any) => {
+    const newData =
+      productList.find((product: any) => product.product_id === productId) ||
+      null;
+    setEditedData(newData);
+  };
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />
       <div className="flex h-full w-full flex-col gap-5 p-5">
         <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
-            <h2 className="text-2xl font-bold">Welcome, Name!</h2>
+            <h2 className="text-2xl font-bold">
+              Welcome, {session?.user.name}!
+            </h2>
             <h2 className="text-lg">Manage or see product information here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">
@@ -175,11 +181,7 @@ const productPage = () => {
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
-          {categories ? (
-            <FilterBox categories={categories} />
-          ) : (
-            <FilterBox categories={category} />
-          )}
+          {categories ? <FilterBox categories={categories} /> : <></>}
           <div className="mainpart flex h-full w-full flex-col gap-5">
             <div className="flex h-fit w-full gap-2">
               <div className="searchbox h-14 w-full rounded-lg">
@@ -217,6 +219,7 @@ const productPage = () => {
                         <AddProduct
                           setOpenDialog={setOpenDialog}
                           categories={categories}
+                          token={session?.user.auth_token as string}
                         />
                       </>
                     )}
@@ -229,7 +232,7 @@ const productPage = () => {
                     {action === "Edit" && (
                       <>
                         <DialogTitle>Edit Product</DialogTitle>
-                        <EditProduct productData={productList[productId]} />
+                        <EditProduct productData={editedData} />
                       </>
                     )}
                   </DialogContent>

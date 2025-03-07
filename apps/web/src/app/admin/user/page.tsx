@@ -16,7 +16,7 @@ import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const userPage = () => {
+const UserPage = () => {
   const [action, setAction] = useState<string | null>(null);
   const [adminId, setAdminId] = useState<number>(1);
   const [data, setData] = useState<any>([]);
@@ -51,7 +51,6 @@ const userPage = () => {
     }
   }, [searchParams, router]);
 
-
   const getData = async () => {
     try {
       const response = await callAPI.get("/admin");
@@ -73,7 +72,6 @@ const userPage = () => {
 
     getAllStore();
     relevantData();
-
   }, [adminId]);
 
   const relevantData = async () => {
@@ -137,7 +135,6 @@ const userPage = () => {
                         <DialogTitle>Edit Admin Role</DialogTitle>
                         {status == "authenticated" ? (
                           <EditAdminForm
-
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
@@ -153,7 +150,6 @@ const userPage = () => {
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
-
                             adminData={adminId}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
@@ -180,4 +176,4 @@ const userPage = () => {
   );
 };
 
-export default userPage;
+export default UserPage;

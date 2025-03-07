@@ -61,7 +61,7 @@ export class StockController {
             product: {
               connect: { product_id: parseInt(product_id) },
             },
-            notes: `Admin ${admin} create new stock: stock added`,
+            notes: `Admin  create new stock: stock added`,
             stock_result: createStock.quantity,
           },
         });
@@ -76,6 +76,7 @@ export class StockController {
         newStock
       );
     } catch (error) {
+      console.log("INI ERRROR : ", error);
       return ResponseHandler.error(res, 500, "Internal server error", error);
     }
   }
