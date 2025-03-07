@@ -45,21 +45,28 @@ export class ProductController {
           _count: { order_id: 'desc' },
         },
       });
-      console.log('recommend', recommend);
       const productsId = recommend.map((p) => p.product_id);
       const product = await prisma.product.findMany({
         where: {
           product_id: { in: productsId },
         },
+        include: {
+          product_img: true,
+        },
         take: 20,
       });
       const categoryProduct = await prisma.productCategory.findMany({
         include: {
-          product: true,
+          product: {
+            include: {
+              product_img: true,
+            },
+          },
         },
       });
 
-      return ResponseHandler.success(res, 200, 'Get landing products success', { recommend: product, category_product: categoryProduct });
+      const avaliableMinimum = categoryProduct.filter((e) => e.product.length >= 2);
+      return ResponseHandler.success(res, 200, 'Get landing products success', [{ product_category_name: 'Todays choice', product }, ...avaliableMinimum]);
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }

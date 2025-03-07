@@ -1,15 +1,18 @@
 "use client";
-
 import { callAPI } from "@/config/axios";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
-
-//===========================
 import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
-//===============================
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 interface IProductDetailPage {
   params: Promise<{ slug: string }>;
@@ -38,7 +41,7 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
       setLoading(true);
       const slug = (await params).slug;
       console.log("getting data");
-      const response = await callAPI.get(`product/${slug}`);
+      const response = await callAPI.get(`/product/${slug}`);
       console.log(response);
       setProductData(response.data.result);
       setLoading(false);
@@ -53,8 +56,6 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     return `Rp. ${amount.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
-  //KURANG BIKIN SKELETON (PAKAI LOADING STATE)
-  //==============================================
   const handleAddToCart = async () => {
     if (isAdding) return;
     try {
@@ -85,8 +86,8 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   }
   //===============================
   return (
-    <div className="grid h-full w-full grid-cols-1 gap-5 p-7 lg:grid-cols-3 lg:px-20 lg:py-10">
-      <div className="title and image h-full w-full p-2 lg:col-span-2 lg:px-20 lg:py-10">
+    <div className="relative grid h-full min-h-screen w-full grid-cols-1 gap-4 py-24 lg:grid-cols-3">
+      <div className="flex h-full w-full flex-col gap-4 lg:col-span-2 lg:py-10">
         {/* <img
           className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
           src={
@@ -102,64 +103,73 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
             src={productData.product_img[0].image_url}
             alt={productData.product_name}
           />
-        ) : null}
-        {/* ======================================================= */}
-
-        <div className="flex items-center justify-between py-2 lg:py-5">
-          <h1 className="py-3 text-3xl font-bold lg:py-2 lg:font-semibold">
-            {productData.product_name}
-          </h1>
-          <h1 className="py-3 text-lg font-bold lg:py-2 lg:text-lg lg:font-semibold">
+        ) : (
+          <div className="aspect-square w-full rounded-xl bg-gray-300"></div>
+        )}
+        <div className="flex flex-col items-start justify-start gap-2 py-2 lg:py-5">
+          <h1 className="text-3xl font-semibold">{productData.product_name}</h1>
+          <p className="text-lg lg:text-lg lg:font-semibold">
             {formatRupiah(parseInt(productData.product_price))}
-          </h1>
+          </p>
         </div>
-        <h1 className="pb-4 text-lg font-bold lg:text-lg lg:font-semibold">
-          {/* Available Stock : {productData.stock ? productData.stock : "0"} */}
-          {/* aku ganti ini dulu */}
-          Available Stock :{" "}
-          {productData.stock && productData.stock.quantity
-            ? productData.stock.quantity
-            : "0"}
-          {/* ============================= */}
-        </h1>
-        <div className="description text-sm lg:text-base">
-          <h1>{productData.product_description}</h1>
-        </div>
-        <div className="flex gap-2 py-10 text-lg lg:py-8">
-          <Badge>
-            CATEGORY{" "}
-            {productData.product_category?.product_category_name.toUpperCase()}
-          </Badge>
-        </div>
+        <Accordion type="multiple" className="pb-5">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Description</AccordionTrigger>
+            <AccordionContent>
+              {productData.product_description}
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Category</AccordionTrigger>
+            <AccordionContent>
+              {productData.product_category?.product_category_name}
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>Available Stock</AccordionTrigger>
+            <AccordionContent>
+              {productData.stock && productData.stock.quantity
+                ? productData.stock.quantity
+                : "0"}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
-      <div className="product cart h-full w-full bg-blue-700 lg:col-span-1 lg:px-20 lg:py-10">
-        {/* TOMBOL ADD TO CART HERE */}
-        {/* -------------------------------------- */}
-        <div className="rounded border bg-white p-4 shadow-sm">
-          <h3 className="mb-4 text-xl font-medium">Add to Cart</h3>
-          <div className="mt-2 flex items-center space-x-2">
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-              }
-              className="w-16 rounded border p-1"
-              disabled={isAdding}
-            />
-            <button
-              onClick={handleAddToCart}
-              className={`rounded bg-[#80ED99] px-4 py-2 text-black hover:bg-[#60cd79] ${
-                isAdding ? "cursor-not-allowed opacity-50" : ""
-              }`}
-              disabled={isAdding}
-            >
-              {isAdding ? "Adding..." : "Add to Cart"}
-            </button>
+      <div className="fixed bottom-0 h-fit w-full rounded-xl border-2 p-4">
+        <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex w-full justify-between">
+            <p>Quantity :</p>
+            <div className="flex gap-1">
+              <Button
+                onClick={() => {
+                  if (quantity > 1) {
+                    setQuantity(quantity - 1);
+                  }
+                }}
+                disabled={quantity <= 1}
+              >
+                -
+              </Button>
+              <p>{quantity}</p>
+              <Button
+                onClick={() => {
+                  setQuantity(quantity + 1);
+                }}
+              >
+                +
+              </Button>
+            </div>
           </div>
+          <button
+            onClick={handleAddToCart}
+            className={`w-full rounded bg-[#80ED99] px-4 py-2 text-black hover:bg-[#60cd79] ${
+              isAdding ? "cursor-not-allowed opacity-50" : ""
+            }`}
+            disabled={isAdding}
+          >
+            {isAdding ? "Adding..." : "Add to Cart"}
+          </button>
         </div>
-        {/* --------------------------- */}
       </div>
     </div>
   );

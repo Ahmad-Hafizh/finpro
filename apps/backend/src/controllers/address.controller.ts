@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../prisma';
 import ResponseHandler from '../utils/responseHandler';
+import { findDistance } from '../services/store/findDistance';
 
 export class AddressController {
   async getAddresses(req: Request, res: Response): Promise<any> {
@@ -161,6 +162,44 @@ export class AddressController {
         where: { address_id: parseInt(address_id) },
       });
       return ResponseHandler.success(res, 200, 'Get Address Success', address);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'internal server error', error);
+    }
+  }
+  async getOngkir(req: Request, res: Response): Promise<any> {
+    try {
+      const { address_id, store_id } = req.body;
+      const address = await prisma.address.findUnique({
+        where: {
+          address_id,
+        },
+      });
+
+      const store = await prisma.store.findUnique({
+        where: { store_id },
+      });
+
+      const distance = findDistance(address?.lat, store?.lat, address?.lng, store?.lng);
+
+      const ongkir = [
+        {
+          courier: 'jnt',
+          cost: distance ? Math.round(distance * 2000) : 15000,
+          estimate: Math.round(distance / 50) * 60,
+        },
+        {
+          courier: 'sicepat',
+          cost: distance ? Math.round(distance * 1900) : 13000,
+          estimate: Math.round(distance / 45) * 60,
+        },
+        {
+          courier: 'jne',
+          cost: distance ? Math.round(distance * 1950) : 14000,
+          estimate: Math.round(distance / 50) * 60,
+        },
+      ];
+
+      return ResponseHandler.success(res, 200, 'Get Address Success', ongkir);
     } catch (error) {
       return ResponseHandler.error(res, 500, 'internal server error', error);
     }
