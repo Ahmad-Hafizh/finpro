@@ -72,9 +72,9 @@ const CheckoutPage: React.FC = () => {
       const response = await callAPI.get("/address/get-address", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAddresses(response.data.result);
-      if (response.data.result && response.data.result.length > 0) {
-        setSelectedAddress(response.data.result[0].address_id);
+      setAddresses(response.data);
+      if (response.data && response.data.length > 0) {
+        setSelectedAddress(response.data[0].address_id);
       }
     } catch (err: any) {
       console.error("Error fetching addresses:", err);
@@ -109,7 +109,10 @@ const CheckoutPage: React.FC = () => {
     };
 
     try {
-      const response = await callAPI.post("/order/new", payload);
+      const token = session?.data?.user.auth_token;
+      const response = await callAPI.post("/order/new", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const createdOrder = response.data;
 
       localStorage.removeItem("selectedCartItems");

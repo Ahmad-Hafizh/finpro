@@ -9,16 +9,20 @@ import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
+import { useSession } from "next-auth/react";
 //===============================
 
 interface IProductDetailPage {
   params: Promise<{ slug: string }>;
 }
 
-const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
+const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
+  //====================================
+  const { data: session, status } = useSession();
+  //====================================
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any | null>(null);
-  const [productData, setProductData] = useState<any>([]);
+  const [productData, setProductData] = useState<any>(null);
 
   //==========================
   const [quantity, setQuantity] = useState<number>(1);
@@ -30,42 +34,56 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   //===========================
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (status !== "loading" && session) {
+      getData();
+    }
+  }, [session, status]);
 
   const getData = async (): Promise<void> => {
     try {
       setLoading(true);
       const slug = (await params).slug;
       console.log("getting data");
-      const response = await callAPI.get(`product/${slug}`);
+      const response = await callAPI.get(`product/${slug}`, {
+        headers: { Authorization: `Bearer ${session?.user.auth_token}` },
+      });
       console.log(response);
       setProductData(response.data.result);
       setLoading(false);
     } catch (error) {
       setError(error);
+      setLoading(false);
     }
   };
 
   console.log("product data", productData);
 
   const formatRupiah = (amount: any) => {
-    return `Rp. ${amount.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `Rp. ${amount.toLocaleString("id-ID", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   //KURANG BIKIN SKELETON (PAKAI LOADING STATE)
   //==============================================
-  const handleAddToCart = async () => {
+  const handleAddToCart: () => Promise<void> = async () => {
     if (isAdding) return;
     try {
       setIsAdding(true);
-      await callAPI.post("/cart", {
-        product_id: productData?.product_id,
-        quantity: quantity,
-      });
+      await callAPI.post(
+        "/cart",
+        {
+          product_id: productData?.product_id,
+          quantity: quantity,
+        },
+        {
+          headers: { Authorization: `Bearer ${session?.user.auth_token}` },
+        },
+      );
       await Promise.all([
-        dispatch(fetchCartItems()).unwrap(),
-        dispatch(fetchCartCount()).unwrap(),
+        dispatch(fetchCartItems({ token: session?.user.auth_token! })).unwrap(),
+        dispatch(fetchCartCount({ token: session?.user.auth_token! })).unwrap(),
       ]);
       updateCart("add_item");
     } catch (error: any) {
@@ -75,6 +93,10 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
       setIsAdding(false);
     }
   };
+
+  if (status === "loading" || !session) {
+    return <div>Loading...</div>;
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -88,12 +110,12 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     <div className="grid h-full w-full grid-cols-1 gap-5 p-7 lg:grid-cols-3 lg:px-20 lg:py-10">
       <div className="title and image h-full w-full p-2 lg:col-span-2 lg:px-20 lg:py-10">
         {/* <img
-          className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
+       className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
           src={
-            productData?.product_img?.length
-              ? productData.product_img[0].image_url
-              : ""
-          }
+             productData?.product_img?.length
+               ? productData.product_img[0].image_url
+               : ""
+           }
         /> */}
         {/* aku ganti ini dulu soalnya td error kalo kosong src nya */}
         {productData?.product_img?.length ? (
@@ -116,14 +138,14 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
         <h1 className="pb-4 text-lg font-bold lg:text-lg lg:font-semibold">
           {/* Available Stock : {productData.stock ? productData.stock : "0"} */}
           {/* aku ganti ini dulu */}
-          Available Stock :{" "}
+          Available Stock:{" "}
           {productData.stock && productData.stock.quantity
             ? productData.stock.quantity
             : "0"}
           {/* ============================= */}
         </h1>
         <div className="description text-sm lg:text-base">
-          <h1>{productData.product_description}</h1>
+          <p>{productData.product_description}</p>
         </div>
         <div className="flex gap-2 py-10 text-lg lg:py-8">
           <Badge>
@@ -165,4 +187,4 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   );
 };
 
-export default detailProductPage;
+export default DetailProductPage;

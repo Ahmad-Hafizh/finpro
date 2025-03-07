@@ -9,19 +9,17 @@ import {
   Paper,
   Typography,
   Alert,
-  CircularProgress,
   Stack,
   Card,
   CardContent,
   Divider,
   Button,
-  Chip,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../config/theme";
-import Navbar from "@/components/global/Nav";
 import PaymentProofCard from "./components/PaymentProofCard";
+import { useSession } from "next-auth/react";
 
 interface Order {
   order_id: number;
@@ -35,11 +33,16 @@ const PaymentProofListPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
 
   const fetchOrders = async () => {
+    if (status === "loading" || !session) return;
     setLoading(true);
     try {
-      const response = await callAPI.get("/order");
+      const token = session?.user?.auth_token;
+      const response = await callAPI.get("/order", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = response.data;
       const pendingOrders = data.filter(
         (order: Order) => order.status === "menunggu_pembayaran",
@@ -54,7 +57,7 @@ const PaymentProofListPage: React.FC = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [session, status]);
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -69,8 +72,13 @@ const PaymentProofListPage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-        <Navbar />
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          pt: { xs: "80px", md: "80px" },
+        }}
+      >
         <Container maxWidth="md" sx={{ py: 6 }}>
           <Paper
             elevation={3}
