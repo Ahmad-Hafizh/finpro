@@ -21,7 +21,9 @@ export class StockController {
   async createNewStock(req: Request, res: Response): Promise<any> {
     try {
       const { store_id, product_id, quantity } = req.body;
-      const admin = "1";
+      const user = res.locals.user;
+      const admin = user.name;
+      console.log("INI USER : ", user);
 
       const newStock = await prisma.$transaction(async (tx) => {
         const checkStock = await tx.stock.findFirst({
@@ -81,7 +83,8 @@ export class StockController {
   async updateStock(req: Request, res: Response): Promise<any> {
     try {
       const { store_id, product_id, quantity } = req.body;
-      const admin = "1";
+      const user = res.locals.user;
+      const admin = user.name;
 
       const updateStock = await prisma.$transaction(async (tx) => {
         const findStock = await tx.stock.findFirst({
@@ -148,7 +151,8 @@ export class StockController {
   async outOfStock(req: Request, res: Response): Promise<any> {
     try {
       const { store_id, product_id, quantity = 0 } = req.body;
-      const admin = "1";
+      const user = res.locals.user;
+      const admin = user.name;
 
       const outOfStock = await prisma.$transaction(async (tx) => {
         const findStock = await tx.stock.findFirst({

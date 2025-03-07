@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Paper,
@@ -11,6 +11,7 @@ import {
   Button,
   Alert,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
@@ -25,12 +26,17 @@ interface ShippingAddressProps {
 }
 
 const ShippingAddress: React.FC<ShippingAddressProps> = ({
-  addresses,
+  addresses = [],
   selectedAddress,
   onAddressChange,
   // onAddNewAddress,
   error,
 }) => {
+  useEffect(() => {
+    console.log("ShippingAddress - addresses:", addresses);
+    console.log("ShippingAddress - selectedAddress:", selectedAddress);
+  }, [addresses, selectedAddress]);
+
   const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
     const value = event.target.value;
     onAddressChange(value === "" ? "" : Number(value));
@@ -45,6 +51,7 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
         border: "1px solid #e0e0e0",
         position: "relative",
         overflow: "hidden",
+        mb: 3,
       }}
     >
       <Box
@@ -67,30 +74,37 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
 
       <Divider sx={{ mb: 3 }} />
 
-      <FormControl fullWidth required sx={{ mb: 3 }}>
-        <InputLabel id="address-label">Choose Delivery Address</InputLabel>
-        <Select
-          labelId="address-label"
-          id="address-select"
-          value={selectedAddress}
-          label="Choose Delivery Address"
-          onChange={handleAddressChange}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 300,
-                borderRadius: 12,
+      {addresses.length === 0 ? (
+        <Box sx={{ textAlign: "center", py: 2 }}>
+          <CircularProgress size={24} sx={{ mb: 2 }} />
+          <Typography color="text.secondary">Loading addresses...</Typography>
+        </Box>
+      ) : (
+        <FormControl fullWidth required sx={{ mb: 3 }}>
+          <InputLabel id="address-label">Choose Delivery Address</InputLabel>
+          <Select
+            labelId="address-label"
+            id="address-select"
+            value={selectedAddress}
+            label="Choose Delivery Address"
+            onChange={handleAddressChange}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  borderRadius: 12,
+                },
               },
-            },
-          }}
-        >
-          {addresses.map((address) => (
-            <MenuItem key={address.address_id} value={address.address_id}>
-              {address.street}, {address.city}, {address.province}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            }}
+          >
+            {addresses.map((address) => (
+              <MenuItem key={address.address_id} value={address.address_id}>
+                {address.street}, {address.city}, {address.province}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
 
       <Button
         variant="outlined"

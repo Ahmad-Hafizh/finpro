@@ -3,6 +3,10 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import { signInSchema } from "../../schemas/authSchema";
 import { callAPI } from "@/config/axios";
+// import dotenv from "dotenv";
+
+// dotenv.config();
+// dotenv.configDotenv();
 
 export default {
   providers: [

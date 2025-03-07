@@ -1,7 +1,9 @@
-import { Router } from 'express';
-import { AdminController } from '../controllers/admin.controller';
-import { verifyToken } from '../middleware/verifyToken';
-import authGuard from '../middleware/authGuard';
+
+import { Router } from "express";
+import { AdminController } from "../controllers/admin.controller";
+import { verifyToken } from "../middleware/verifyToken";
+import authGuard from "../middleware/authGuard";
+
 
 export class AdminRouter {
   private route: Router;
@@ -14,10 +16,21 @@ export class AdminRouter {
   }
 
   private initializeRoutes() {
-    this.route.get('/', this.adminController.getAdmin);
-    this.route.patch('/', verifyToken, authGuard.superAdmin, this.adminController.updateAdmin);
-    this.route.post('/create', this.adminController.createAdmin);
-    this.route.post('/assign-store', this.adminController.assignStoreAdmin);
+
+    this.route.get("/", this.adminController.getAdmin);
+    this.route.post(
+      "/detail",
+      this.adminController.checkAdminDetailRoleFromFrontend
+    );
+    this.route.patch(
+      "/",
+      verifyToken,
+      authGuard.superAdmin,
+      this.adminController.updateAdmin
+    );
+    this.route.post("/create", this.adminController.createAdmin);
+    this.route.post("/assign-store", this.adminController.assignStoreAdmin);
+
   }
 
   public getRouter() {

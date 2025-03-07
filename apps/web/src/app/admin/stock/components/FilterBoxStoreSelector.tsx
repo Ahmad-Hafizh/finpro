@@ -27,6 +27,7 @@ interface Icategory {
 interface FilterBoxProps {
   categories?: Icategory[];
   allStore?: any;
+  adminInfo?: any;
   setStoreId: (storeId: any) => void;
 }
 
@@ -47,12 +48,15 @@ const FilterBoxStoreSelector = ({
   categories,
   setStoreId,
   allStore,
+  adminInfo,
 }: FilterBoxProps) => {
   const [category, setCategory] = useState<any>([]);
   const [selectedStore, setSelectedStore] = useState<number | null>(null);
   // const [store, setStore] = useState<any>("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  console.log("INI ADMIN INFO DARI COMPONENT : ", adminInfo);
 
   useEffect(() => {
     setCategory(categories);
@@ -91,29 +95,38 @@ const FilterBoxStoreSelector = ({
   };
 
   return (
-    <div className="filter-box h-full w-fit gap-3 rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h1 className="py-5 text-lg font-bold">Select a store :</h1>
-      <Select
-        onValueChange={handleStoreChange}
-        value={selectedStore?.toString()}
-      >
-        <SelectTrigger className="w-[250px]">
-          <SelectValue placeholder="Select a store" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Store</SelectLabel>
-            {allStore.map((store: any) => (
-              <SelectItem
-                key={store.store_id}
-                value={store.store_id.toString()}
-              >
-                {store.store_name}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+    <div className="filter-box h-full w-full gap-3 rounded-lg border border-gray-200 p-6 shadow-sm">
+      {!adminInfo[0]?.store ? (
+        <div>
+          <h1 className="py-5 text-lg font-bold">Select a store :</h1>
+          <Select
+            onValueChange={handleStoreChange}
+            value={selectedStore?.toString()}
+          >
+            <SelectTrigger className="w-[250px]">
+              <SelectValue placeholder="Select a store" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Store</SelectLabel>
+                {allStore.map((store: any) => (
+                  <SelectItem
+                    key={store.store_id}
+                    value={store.store_id.toString()}
+                  >
+                    {store.store_name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      ) : (
+        <h1 className="pt-5 text-lg font-bold">
+          Store : {adminInfo[0]?.store?.store_name}
+        </h1>
+      )}
+
       <h2 className="pb-2 pt-7 text-lg font-bold">Filter</h2>
       <Accordion type="single" collapsible defaultValue="item-1">
         <AccordionItem value="item-1">
@@ -124,7 +137,7 @@ const FilterBoxStoreSelector = ({
                 category?.map((category: any) => (
                   <div
                     key={category.product_category_id}
-                    className="flex items-center justify-between py-2"
+                    className="flex w-full items-center justify-between gap-36 py-2"
                   >
                     <label
                       htmlFor={category.product_category_id}

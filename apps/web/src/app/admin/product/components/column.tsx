@@ -27,6 +27,7 @@ export const columns = (
   setAction: (action: string) => void,
   setProductId: (id: number) => void,
   setOpenDialog: (open: boolean) => void,
+  isSuperAdmin: boolean,
 ): ColumnDef<ProductList>[] => [
   {
     accessorKey: "product_name",
@@ -129,7 +130,7 @@ export const columns = (
         setOpenDialog(true);
       };
 
-      return (
+      return isSuperAdmin ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -141,16 +142,18 @@ export const columns = (
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem onClick={onHandleEdit}>
-              Edit Admin
+              Edit Product
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuItem onClick={onHandleDelete}>
-              Delete Admin
+              Delete Product
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      ) : (
+        <></>
       );
     },
   },

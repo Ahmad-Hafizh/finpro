@@ -28,9 +28,11 @@ export interface CartResponse {
 
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
-  async (_, { rejectWithValue }) => {
+  async ({ token }: { token: string }, { rejectWithValue }) => {
     try {
-      const response = await callAPI.get("/cart/items");
+      const response = await callAPI.get("/cart/items", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data as CartResponse;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
@@ -40,9 +42,11 @@ export const fetchCartItems = createAsyncThunk(
 
 export const fetchCartCount = createAsyncThunk(
   "cart/fetchCartCount",
-  async (_, { rejectWithValue }) => {
+  async ({ token }: { token: string }, { rejectWithValue }) => {
     try {
-      const response = await callAPI.get("/cart/count");
+      const response = await callAPI.get("/cart/count", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data.count;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
@@ -53,13 +57,21 @@ export const fetchCartCount = createAsyncThunk(
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
   async (
-    { cart_item_id, quantity }: { cart_item_id: number; quantity: number },
+    {
+      cart_item_id,
+      quantity,
+      token,
+    }: { cart_item_id: number; quantity: number; token: string },
     { dispatch, rejectWithValue },
   ) => {
     try {
-      await callAPI.patch(`/cart/${cart_item_id}`, { quantity });
-      dispatch(fetchCartItems());
-      dispatch(fetchCartCount());
+      await callAPI.patch(
+        `/cart/${cart_item_id}`,
+        { quantity },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      dispatch(fetchCartItems({ token }));
+      dispatch(fetchCartCount({ token }));
       return { cart_item_id, quantity };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || error.message);
@@ -69,11 +81,16 @@ export const updateCartItemQuantity = createAsyncThunk(
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
-  async (cart_item_id: number, { dispatch, rejectWithValue }) => {
+  async (
+    { cart_item_id, token }: { cart_item_id: number; token: string },
+    { dispatch, rejectWithValue },
+  ) => {
     try {
-      await callAPI.delete(`/cart/${cart_item_id}`);
-      dispatch(fetchCartItems());
-      dispatch(fetchCartCount());
+      await callAPI.delete(`/cart/${cart_item_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      dispatch(fetchCartItems({ token }));
+      dispatch(fetchCartCount({ token }));
       return cart_item_id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || error.message);

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import HeaderDashboard from "../components/header";
@@ -8,6 +7,7 @@ import { DataTable } from "./components/data-table";
 import { createColumns } from "./components/columns";
 import { useToast } from "@/hooks/use-toast";
 import PaginationTable from "../components/Pagination";
+import { useSession } from "next-auth/react";
 
 export interface Order {
   order_id: number;
@@ -49,6 +49,7 @@ const AdminOrderPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const { data: session } = useSession();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +75,10 @@ const AdminOrderPage: React.FC = () => {
       if (filterDate) {
         endpoint += `&orderDate=${filterDate}`;
       }
-      const response = await callAPI.get(endpoint);
+      const token = session?.user?.auth_token;
+      const response = await callAPI.get(endpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (Array.isArray(response.data)) {
         setOrders(response.data);
         setTotalPage(1);
@@ -83,10 +87,15 @@ const AdminOrderPage: React.FC = () => {
         setTotalPage(response.data.totalPages || 1);
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message);
+      const errData = err.response?.data?.error;
+      const errorMessage =
+        typeof errData === "object" && errData !== null
+          ? errData.message
+          : errData || err.message;
+      setError(errorMessage);
       toast({
         title: "Error",
-        description: err.response?.data?.error || err.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -96,24 +105,37 @@ const AdminOrderPage: React.FC = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [searchParams, currentPage]);
+  }, [searchParams, currentPage, session]);
 
   const handleConfirmPayment = async (orderId: number, decision: string) => {
     try {
+      const token = session?.user?.auth_token;
       await callAPI.post(
         `/admin-order/${orderId}/confirm-payment`,
         { decision },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       toast({
         title: "Success",
-        description: `Payment ${decision === "approve" ? "approved" : "rejected"} successfully.`,
+        description: `Payment ${
+          decision === "approve" ? "approved" : "rejected"
+        } successfully.`,
       });
       fetchOrders();
     } catch (err: any) {
+      const errData = err.response?.data?.error;
+      const errorMessage =
+        typeof errData === "object" && errData !== null
+          ? errData.message
+          : errData || err.message;
       toast({
         title: "Error",
-        description: err.response?.data?.error || err.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -122,10 +144,16 @@ const AdminOrderPage: React.FC = () => {
   const handleSendOrder = async (orderId: number) => {
     const tracking_number = prompt("Enter tracking number (optional):") || "";
     try {
+      const token = session?.user?.auth_token;
       await callAPI.post(
         `/admin-order/${orderId}/send`,
         { tracking_number },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       toast({
         title: "Success",
@@ -133,9 +161,14 @@ const AdminOrderPage: React.FC = () => {
       });
       fetchOrders();
     } catch (err: any) {
+      const errData = err.response?.data?.error;
+      const errorMessage =
+        typeof errData === "object" && errData !== null
+          ? errData.message
+          : errData || err.message;
       toast({
         title: "Error",
-        description: err.response?.data?.error || err.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -145,17 +178,31 @@ const AdminOrderPage: React.FC = () => {
     const reason = prompt("Enter reason for order cancellation:");
     if (!reason) return;
     try {
+      const token = session?.user?.auth_token;
       await callAPI.post(
         `/admin-order/${orderId}/cancel`,
         { reason },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-      toast({ title: "Success", description: "Order cancelled successfully." });
+      toast({
+        title: "Success",
+        description: "Order cancelled successfully.",
+      });
       fetchOrders();
     } catch (err: any) {
+      const errData = err.response?.data?.error;
+      const errorMessage =
+        typeof errData === "object" && errData !== null
+          ? errData.message
+          : errData || err.message;
       toast({
         title: "Error",
-        description: err.response?.data?.error || err.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }

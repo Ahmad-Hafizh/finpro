@@ -106,6 +106,44 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
         p: 2,
         mt: 3,
         borderTop: "1px solid",
+        borderColor: "divider",
+      }}
+    >
+      <Typography variant="subtitle1" fontWeight={600}>
+        Subtotal
+      </Typography>
+      <Typography variant="h6" fontWeight={700}>
+        Rp {orderDetail.total_price.toLocaleString()}
+      </Typography>
+    </Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        bgcolor: "background.paper",
+        p: 2,
+        mt: 1,
+        borderTop: "1px solid",
+        borderColor: "divider",
+      }}
+    >
+      <Typography variant="subtitle1" fontWeight={600}>
+        Shipping
+      </Typography>
+      <Typography variant="h6" fontWeight={700}>
+        Rp {orderDetail.shipping_price?.toLocaleString() || "0"}
+      </Typography>
+    </Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        bgcolor: "background.paper",
+        p: 2,
+        mt: 1,
+        borderTop: "1px solid",
         borderBottom: "1px solid",
         borderColor: "divider",
       }}
@@ -114,7 +152,7 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
         Total Payment
       </Typography>
       <Typography variant="h6" fontWeight={700}>
-        Rp {orderDetail.total_price.toLocaleString()}
+        Rp {orderDetail.total_payment?.toLocaleString() || "0"}
       </Typography>
     </Box>
   </Box>
