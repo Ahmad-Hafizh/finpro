@@ -15,8 +15,9 @@ export class AdminRouter {
 
   private initializeRoutes() {
     this.route.get('/', this.adminController.getAdmin);
+    this.route.post('/detail', this.adminController.checkAdminDetailRoleFromFrontend);
     this.route.patch('/', verifyToken, authGuard.superAdmin, this.adminController.updateAdmin);
-    this.route.post('/create', this.adminController.createAdmin);
+    this.route.post('/create', verifyToken, authGuard.superAdmin, this.adminController.createAdmin);
     this.route.post('/assign-store', this.adminController.assignStoreAdmin);
   }
 

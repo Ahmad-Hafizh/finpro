@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CategoryCarousel } from "@/components/global/CategoryCarousel";
 import { LargeCarousel } from "@/components/global/LargeCarousel";
 import { ProductCarousel } from "@/components/global/ProductCarousel";

@@ -44,7 +44,8 @@ export const columns = (
   setProductId: (id: number) => void,
   setOpenDialog: (open: boolean) => void,
   storeId: number,
-): ColumnDef<Product>[] => [
+  token: any,
+): ColumnDef<any>[] => [
   {
     accessorKey: "product_name",
     header: ({ column }) => {
@@ -143,13 +144,14 @@ export const columns = (
     },
     cell: ({ row }) => {
       const product = row.original;
-      console.log("PRODUCT: ", product);
+      console.log("PRODUCT: ", product.stock);
       const stockForStore = product.stock?.find(
         (s: any) => s.store_id === storeId,
       );
+      console.log("INI STORE ID DARI COMPONENET : ", storeId);
       console.log("stockForStore: ", stockForStore);
       return (
-        <div className="text-md font-medium">{stockForStore.quantity}</div>
+        <div className="text-md font-medium">{stockForStore?.quantity}</div>
       );
     },
   },
@@ -184,7 +186,9 @@ export const columns = (
               product_id: productList.product_id,
               store_id: storeId,
             };
-            const response = await callAPI.patch("/stock/zero", payload);
+            const response = await callAPI.patch("/stock/zero", payload, {
+              headers: { Authorization: `bearer ${token}` },
+            });
 
             if (response.status === 200) {
               toast({

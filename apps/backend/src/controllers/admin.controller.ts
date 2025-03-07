@@ -52,7 +52,7 @@ export class AdminController {
 
   async createAdmin(req: Request, res: Response): Promise<any> {
     try {
-      const { email, name, password, store_id, phone } = req.body;
+      const { email, name, password, store_id, phone, position } = req.body;
 
       const user = await findUser(email);
       if (user) return ResponseHandler.error(res, 404, 'Email already used');
@@ -67,12 +67,12 @@ export class AdminController {
         },
       });
 
-      const admin = await prisma.admin.create({
+      await prisma.admin.create({
         data: {
           user_id: newUser.id,
           phone,
-          store_id,
-          position: 'store_manager',
+          store_id: parseInt(store_id),
+          position,
         },
       });
       return ResponseHandler.success(res, 200, 'Create Admin Success');
@@ -93,6 +93,53 @@ export class AdminController {
       return ResponseHandler.success(res, 200, 'Assign Admin Success');
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
+
+  async checkAdminDetailRoleFromFrontend(req: Request, res: Response): Promise<any> {
+    try {
+      const { admin_id, email } = req.body;
+
+      let result = [];
+
+      if (admin_id) {
+        const getAdminInfo = await prisma.admin.findFirst({
+          where: {
+            ...(admin_id ? { admin_id: admin_id } : {}),
+          },
+        });
+
+        result.push(getAdminInfo);
+      }
+
+      if (email) {
+        const getAdminInfoByEmail = await prisma.admin.findFirst({
+          where: {
+            user: {
+              email: email,
+            },
+          },
+          include: {
+            user: true,
+            store: true,
+          },
+        });
+
+        if (!getAdminInfoByEmail) {
+          const getSuperAdminByEmail = await prisma.user.findFirst({
+            where: {
+              email: email,
+            },
+          });
+          result.push(getSuperAdminByEmail);
+        }
+
+        result.push(getAdminInfoByEmail);
+      }
+
+      return ResponseHandler.success(res, 200, 'Get Admin success', result);
+    } catch (error) {
+      console.log('Error : ', error);
     }
   }
 }

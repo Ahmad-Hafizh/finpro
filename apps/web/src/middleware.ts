@@ -17,6 +17,8 @@ export default auth(async (req) => {
     "/admin",
     "/setting/address",
     "/setting/account",
+    "/admin/order",
+    "/payment-proof",
   ];
 
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
@@ -32,8 +34,8 @@ export default auth(async (req) => {
     return NextResponse.redirect(`${fe_url}/auth/signin`);
   }
 
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(`${fe_url}/`);
+  if ((isPrivateRoute && !isLoggedIn) || (isAdminRoute && !isLoggedIn)) {
+    return NextResponse.redirect(`${fe_url}/auth/signin`);
   }
 
   if (isAdminRoute && isLoggedIn) {
@@ -41,9 +43,17 @@ export default auth(async (req) => {
       email: req.auth?.user.email,
     });
 
-    if (response.data.result.role == "user") {
+    if (isAuthRoute && isLoggedIn) {
       return NextResponse.redirect(`${fe_url}/`);
     }
+
+    if (isAdminRoute && isLoggedIn) {
+      if (response.data.result.role == "user") {
+        return NextResponse.redirect(`${fe_url}/`);
+      }
+    }
+
+    return;
   }
 });
 

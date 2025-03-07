@@ -2,14 +2,13 @@
 
 import SearchBox from "./components/SearchBox";
 import FilterBox from "./components/FilterBox";
-import ProductCardExplore from "./components/ProductCard";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import PaginationTable from "../admin/components/Pagination";
 import ProductCard from "@/components/global/ProductCard";
 
-const explorePage = () => {
+const ExplorePage = () => {
   const [categories, setCategories] = useState<any>([]);
   const [products, setProducts] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -99,4 +98,4 @@ const explorePage = () => {
   );
 };
 
-export default explorePage;
+export default ExplorePage;

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { callAPI } from "@/config/axios";
-import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import {
   Accordion,
@@ -13,60 +13,78 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+//===============================
 
 interface IProductDetailPage {
   params: Promise<{ slug: string }>;
 }
 
-const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
+const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any | null>(null);
-  const [productData, setProductData] = useState<any>([]);
-
-  //==========================
+  const [productData, setProductData] = useState<any>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const { updateCart } = useCart();
-  const router = useRouter();
-  //===========================
+  // const router = useRouter();
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (status !== "loading" && session) {
+      getData();
+    }
+  }, [session, status]);
 
   const getData = async (): Promise<void> => {
     try {
       setLoading(true);
       const slug = (await params).slug;
       console.log("getting data");
-      const response = await callAPI.get(`/product/${slug}`);
+      const response = await callAPI.get(`product/${slug}`, {
+        headers: { Authorization: `Bearer ${session?.user.auth_token}` },
+      });
       console.log(response);
       setProductData(response.data.result);
       setLoading(false);
     } catch (error) {
       setError(error);
+      setLoading(false);
     }
   };
 
   console.log("product data", productData);
 
   const formatRupiah = (amount: any) => {
-    return `Rp. ${amount.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `Rp. ${amount.toLocaleString("id-ID", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart: () => Promise<void> = async () => {
     if (isAdding) return;
     try {
       setIsAdding(true);
-      await callAPI.post("/cart", {
-        product_id: productData?.product_id,
-        quantity: quantity,
-      });
+      await callAPI.post(
+        "/cart",
+        {
+          product_id: productData?.product_id,
+          quantity: quantity,
+        },
+        {
+          headers: { Authorization: `Bearer ${session?.user.auth_token}` },
+        },
+      );
       await Promise.all([
-        dispatch(fetchCartItems()).unwrap(),
-        dispatch(fetchCartCount()).unwrap(),
+        dispatch(
+          fetchCartItems({ token: session?.user.auth_token || "" }),
+        ).unwrap(),
+        dispatch(
+          fetchCartCount({ token: session?.user.auth_token || "" }),
+        ).unwrap(),
       ]);
       updateCart("add_item");
     } catch (error: any) {
@@ -76,6 +94,10 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
       setIsAdding(false);
     }
   };
+
+  if (status === "loading" || !session) {
+    return <div>Loading...</div>;
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -88,15 +110,6 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   return (
     <div className="relative grid h-full min-h-screen w-full grid-cols-1 gap-4 py-24 lg:grid-cols-3">
       <div className="flex h-full w-full flex-col gap-4 lg:col-span-2 lg:py-10">
-        {/* <img
-          className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
-          src={
-            productData?.product_img?.length
-              ? productData.product_img[0].image_url
-              : ""
-          }
-        /> */}
-        {/* aku ganti ini dulu soalnya td error kalo kosong src nya */}
         {productData?.product_img?.length ? (
           <img
             className="h-fit w-full rounded-md shadow-sm lg:h-fit lg:w-full"
@@ -175,4 +188,4 @@ const detailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   );
 };
 
-export default detailProductPage;
+export default DetailProductPage;

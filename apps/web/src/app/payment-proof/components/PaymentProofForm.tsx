@@ -12,6 +12,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useRouter } from "next/navigation";
 import { callAPI } from "@/config/axios";
+import { useSession } from "next-auth/react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,6 +30,7 @@ interface PaymentProofFormProps {
 
 const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [filename, setFilename] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -70,8 +72,12 @@ const PaymentProofForm: React.FC<PaymentProofFormProps> = ({ orderId }) => {
     formData.append("proof", file);
 
     try {
+      const token = session?.user?.auth_token;
       await callAPI.post(`/order/${orderId}/payment-proof`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
       setMessage("Payment proof is successfully uploaded!");
       setTimeout(() => {

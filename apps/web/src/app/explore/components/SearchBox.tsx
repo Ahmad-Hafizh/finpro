@@ -2,7 +2,6 @@
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { IoSearchOutline } from "react-icons/io5";
 
 const SearchBox = () => {
   const router = useRouter();

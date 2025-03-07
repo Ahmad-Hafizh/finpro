@@ -13,14 +13,20 @@ export class AdminOrderRouter {
   }
 
   private initializeRoutes(): void {
-    this.route.get("/", this.adminOrderController.getAllOrders);
+    this.route.get("/", verifyToken, this.adminOrderController.getAllOrders);
     this.route.post(
       "/:order_id/confirm-payment",
+      verifyToken,
       this.adminOrderController.confirmPayment
     );
-    this.route.post("/:order_id/send", this.adminOrderController.sendUserOrder);
+    this.route.post(
+      "/:order_id/send",
+      verifyToken,
+      this.adminOrderController.sendUserOrder
+    );
     this.route.post(
       "/:order_id/cancel",
+      verifyToken,
       this.adminOrderController.cancelUserOrder
     );
   }
