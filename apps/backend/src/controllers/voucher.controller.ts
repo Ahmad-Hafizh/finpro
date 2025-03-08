@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import ResponseHandler from "../utils/responseHandler";
-import prisma from "../prisma";
+import { Request, Response } from 'express';
+import ResponseHandler from '../utils/responseHandler';
+import prisma from '../prisma';
 
 export class VoucherController {
   async getAllVoucher(req: Request, res: Response): Promise<any> {
@@ -20,28 +20,26 @@ export class VoucherController {
       });
 
       const voucherProducts = await prisma.voucherProduct.findMany({
-        where: storeId
-          ? { product: { stock: { some: { store_id: storeId } } } }
-          : undefined,
+        where: storeId ? { product: { stock: { some: { store_id: storeId } } } } : undefined,
         include: { product: { include: { stock: true } } },
       });
 
       const vouchers = [
-        ...voucherStores.map((voucher: any) => ({ ...voucher, type: "store" })),
+        ...voucherStores.map((voucher: any) => ({ ...voucher, type: 'store' })),
         ...voucherOngkirs.map((voucher: any) => ({
           ...voucher,
-          type: "ongkir",
+          type: 'ongkir',
         })),
         ...voucherProducts.map((voucher: any) => ({
           ...voucher,
-          type: "product",
+          type: 'product',
         })),
       ];
 
-      return ResponseHandler.success(res, 200, "Get Voucher Success", vouchers);
+      return ResponseHandler.success(res, 200, 'Get Voucher Success', vouchers);
     } catch (error) {
       console.log(error);
-      return ResponseHandler.error(res, 500, "internal Server Error");
+      return ResponseHandler.error(res, 500, 'internal Server Error');
     }
   }
 
@@ -62,14 +60,9 @@ export class VoucherController {
         },
       });
 
-      return ResponseHandler.success(
-        res,
-        200,
-        "create new stock success",
-        newOngkirVoucher
-      );
+      return ResponseHandler.success(res, 200, 'create new stock success', newOngkirVoucher);
     } catch (error) {
-      return ResponseHandler.error(res, 500, "Internal server error", error);
+      return ResponseHandler.error(res, 500, 'Internal server error', error);
     }
   }
 
@@ -89,41 +82,25 @@ export class VoucherController {
         },
       });
 
-      return ResponseHandler.success(
-        res,
-        200,
-        "create new stock success",
-        newProductVoucher
-      );
+      return ResponseHandler.success(res, 200, 'create new stock success', newProductVoucher);
     } catch (error) {
-      return ResponseHandler.error(res, 500, "Internal server error", error);
+      return ResponseHandler.error(res, 500, 'Internal server error', error);
     }
   }
 
   async createNewStoreVoucher(req: Request, res: Response): Promise<any> {
     try {
-      const {
-        code,
-        amount_percentage,
-        exact_nominal,
-        minimum_buy,
-        maximum_nominal,
-        startdate,
-        enddate,
-        store_id,
-      } = req.body;
+      const { code, amount_percentage, exact_nominal, minimum_buy, maximum_nominal, startdate, enddate, store_id } = req.body;
 
       const admin = 4;
 
       const newStoreVoucher = await prisma.voucherStore.create({
         data: {
           voucher_store_code: code as string,
-          voucher_store_amount_percentage:
-            parseInt(amount_percentage as string) || 0,
+          voucher_store_amount_percentage: parseInt(amount_percentage as string) || 0,
           voucher_store_exact_nominal: parseInt(exact_nominal as string) || 0,
           voucher_store_minimum_buy: parseInt(minimum_buy as string) || 0,
-          voucher_store_maximum_nominal:
-            parseInt(maximum_nominal as string) || 0,
+          voucher_store_maximum_nominal: parseInt(maximum_nominal as string) || 0,
           voucher_store_startdate: new Date(startdate as string),
           voucher_store_enddate: new Date(enddate as string),
           store_id: parseInt(store_id as string),
@@ -132,15 +109,21 @@ export class VoucherController {
         },
       });
 
-      return ResponseHandler.success(
-        res,
-        200,
-        "Add voucher code success",
-        newStoreVoucher
-      );
+      return ResponseHandler.success(res, 200, 'Add voucher code success', newStoreVoucher);
     } catch (error) {
       console.log(error);
-      return ResponseHandler.error(res, 500, "Internal Server Error");
+      return ResponseHandler.error(res, 500, 'Internal Server Error');
+    }
+  }
+  async getBanner(req: Request, res: Response): Promise<any> {
+    try {
+      const banners = await prisma.banner.findMany({
+        take: 3,
+      });
+
+      return ResponseHandler.success(res, 200, 'get banner success', banners);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error');
     }
   }
 }

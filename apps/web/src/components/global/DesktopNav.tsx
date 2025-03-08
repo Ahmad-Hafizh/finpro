@@ -2,10 +2,8 @@
 import React from "react";
 import { IoCartOutline } from "react-icons/io5";
 import Link from "next/link";
-import { FiPackage } from "react-icons/fi";
-import { Search } from "lucide-react";
+import { MapPin, Package, Search } from "lucide-react";
 import { Button } from "../ui/button";
-import { MapPin } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOutAction } from "@/actions/signOutAction";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface IDesktopNavProps {
   store_name: string;
@@ -33,19 +39,38 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
       className={`hidden h-full w-full items-center justify-between gap-4 md:flex lg:gap-10`}
     >
       <div className="flex w-full items-center gap-10">
-        <Link href="/">
-          {/* <BiHomeSmile className="flex text-3xl" /> */}
-          <p className="text-2xl font-bold">EGrocery</p>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logofinpro.png"
+            width={40}
+            height={40}
+            sizes="512"
+            alt="greeneries logo"
+          />
+          <p className="text-2xl font-bold">reeneries</p>
         </Link>
         <div className="flex w-full gap-4">
-          <div className="flex w-2/3 gap-2 rounded-lg border-2 p-2">
-            <Search />
-            <input type="text" placeholder="search" className="w-full" />
+          <div className="relative flex w-2/3 items-center">
+            <Search className="absolute left-2 h-4 w-4" />
+            <input
+              type="text"
+              placeholder="search"
+              className="w-full rounded-md border py-1 pl-8 pr-3"
+            />
           </div>
-          <div className="flex w-1/3 items-center gap-2 overflow-hidden text-nowrap rounded-lg border-2 px-2 py-1">
-            <MapPin />
-            <p className="capitalize">{store_name}</p>
-          </div>
+          <Select defaultValue="nearest">
+            <SelectTrigger className="w-1/3">
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                <SelectValue />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="nearest">{store_name}</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className={`${user_name ? "flex" : "hidden"} gap-2`}>
@@ -59,7 +84,7 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
             )}
           </Link>
           <Link href="/order">
-            <FiPackage className="text-3xl" />
+            <Package />
           </Link>
         </div>
         <DropdownMenu>
@@ -69,7 +94,7 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
               <AvatarFallback>{user_name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
 
-            <p className="text-nowrap text-lg">{user_name}</p>
+            <p className="text-nowrap text-lg">{user_name?.split(" ")[0]}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>

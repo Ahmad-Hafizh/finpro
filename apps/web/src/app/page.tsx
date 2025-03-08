@@ -15,14 +15,23 @@ const Home = async () => {
       console.log(error);
     }
   };
+  const getBanner = async () => {
+    try {
+      const response = await callAPI.get("/voucher/banner");
+      return response.data.result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const products = await getProducts();
+  const banner: any[] = await getBanner();
+  const products: any[] = await getProducts();
 
   return (
     <div className="flex flex-col gap-6 py-24">
       {/* <StorePick /> */}
       <div className="overflow-hidden rounded-xl md:px-0">
-        <LargeCarousel />
+        <LargeCarousel banner={banner} />
       </div>
       <div className="hidden flex-col gap-2 md:flex">
         <p className="text-lg md:text-xl">Categories</p>

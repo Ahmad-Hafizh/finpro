@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { callAPI } from "@/config/axios";
@@ -12,19 +13,11 @@ import DesktopNav from "./DesktopNav";
 
 const Navbar = () => {
   const pathName = usePathname();
-  const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
-
-  const splitPath = pathName.split("/");
-  const currentPath = splitPath[splitPath.length - 1].replace("-", " ");
   const dispatch: any = useAppDispatch();
   const currStore = useAppSelector((state) => state.store);
   const cartCount = useAppSelector((state) => state.cart);
   const { cartVersion } = useCart();
-
-  useEffect(() => {
-    setIsVisible(pathName == "/" ? true : false);
-  }, [pathName]);
 
   const getNearestStore = async (latitude?: number, longitude?: number) => {
     try {
@@ -47,7 +40,7 @@ const Navbar = () => {
       const getCoords = (): Promise<
         { lat: number; lng: number } | undefined
       > => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           window.navigator.geolocation.getCurrentPosition(
             (position) => {
               resolve({
@@ -73,18 +66,6 @@ const Navbar = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(fetchCartCount({}));
-  // }, [cartVersion, dispatch]);
-
-  // useEffect(() => {
-  //   const handleFocus = () => {
-  //     dispatch(fetchCartCount({}));
-  //   };
-
-  //   window.addEventListener("focus", handleFocus);
-  //   return () => window.removeEventListener("focus", handleFocus);
-  // }, [dispatch]);
   useEffect(() => {
     if (session && session.user && session.user.auth_token) {
       dispatch(fetchCartCount({ token: session.user.auth_token }));
@@ -111,6 +92,7 @@ const Navbar = () => {
         className={`${pathName.startsWith("/admin") ? "hidden" : "block"} a h-20 w-full justify-center border-b bg-white px-[5%] md:hidden`}
       >
         <MobileNav
+          pathName={pathName}
           store_name={currStore.store_name}
           user_name={session?.user.name}
           user_pfp={session?.user.image}

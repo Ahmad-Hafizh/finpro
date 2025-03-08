@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { VoucherController } from "../controllers/voucher.controller";
+import { Router } from 'express';
+import { VoucherController } from '../controllers/voucher.controller';
 
 export class VoucherRouter {
   private route: Router;
@@ -12,10 +12,11 @@ export class VoucherRouter {
   }
 
   private initializeRoute() {
-    this.route.get("/", this.voucherController.getAllVoucher);
-    this.route.post("/ongkir", this.voucherController.createNewOngkirVoucher);
-    this.route.post("/product", this.voucherController.createNewProductVoucher);
-    this.route.post("/store", this.voucherController.createNewStoreVoucher);
+    this.route.get('/', this.voucherController.getAllVoucher);
+    this.route.post('/ongkir', this.voucherController.createNewOngkirVoucher);
+    this.route.post('/product', this.voucherController.createNewProductVoucher);
+    this.route.post('/store', this.voucherController.createNewStoreVoucher);
+    this.route.get('/banner', this.voucherController.getBanner);
   }
 
   public getRouter() {
