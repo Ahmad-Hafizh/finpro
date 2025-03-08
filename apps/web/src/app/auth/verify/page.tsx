@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { Suspense } from "react";
-import Link from "next/link";
+import React from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,8 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { callAPI } from "@/config/axios";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { passwordSchema } from "../../../../../schemas/authSchema";
+import { toast } from "@/hooks/use-toast";
 
 const VerifyPage = () => {
   const params = useSearchParams();
@@ -28,6 +28,7 @@ const VerifyPage = () => {
       confirmPassword: "",
     },
   });
+  const router = useRouter();
 
   const onVerify = async (values: z.infer<typeof passwordSchema>) => {
     if (values.password !== values.confirmPassword) {
@@ -44,7 +45,13 @@ const VerifyPage = () => {
           },
           { headers: { Authorization: `Bearer ${token}` } },
         );
-        console.log(response.data.message);
+
+        toast({
+          title: "Verify Account",
+          description: response.data.message,
+        });
+
+        router.push("/");
       } catch (error) {
         console.log(error);
       }

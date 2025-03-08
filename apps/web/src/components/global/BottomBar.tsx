@@ -8,6 +8,7 @@ import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { Button } from "../ui/button";
 
 const Botbar = () => {
   const navList = [
@@ -34,7 +35,7 @@ const Botbar = () => {
   ];
 
   const pathName = usePathname();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   if (status != "authenticated") {
     return;
@@ -44,15 +45,22 @@ const Botbar = () => {
     <div
       className={`${pathName == "/" || pathName.startsWith("/explore") ? "flex" : "hidden"} fixed bottom-0 h-20 w-full items-center justify-between rounded-t-xl border-t bg-white px-[5%] py-4 md:hidden`}
     >
-      {navList.map((e, i) => (
-        <Link
-          href={e.route}
-          className="flex flex-col items-center justify-end gap-1"
-          key={i}
-        >
-          {e.icon}
-        </Link>
-      ))}
+      {session && status ? (
+        navList.map((e, i) => (
+          <Link
+            href={e.route}
+            className="flex flex-col items-center justify-end gap-1"
+            key={i}
+          >
+            {e.icon}
+          </Link>
+        ))
+      ) : (
+        <div className="flex">
+          <Button>Sing Up</Button>
+          <Button>Sing In</Button>
+        </div>
+      )}
     </div>
   );
 };
