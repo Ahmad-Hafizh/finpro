@@ -4,7 +4,7 @@ import React from "react";
 import { IoCartOutline } from "react-icons/io5";
 import Link from "next/link";
 import { MapPin, Package } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,11 +47,12 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
       <div className="flex w-full items-center gap-10">
         <Link href="/" className="flex items-center">
           <Image
-            src="/logofinpro.png"
-            width={40}
-            height={40}
+            src="/greeneries.svg"
+            width={20}
+            height={20}
             sizes="512"
             alt="greeneries logo"
+            priority
           />
           <p className="text-2xl font-bold md:hidden lg:block">reeneries</p>
         </Link>

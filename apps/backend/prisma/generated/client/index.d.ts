@@ -9629,7 +9629,7 @@ export namespace Prisma {
 
   export type AdminGroupByOutputType = {
     admin_id: number
-    store_id: number
+    store_id: number | null
     phone: string
     position: string
     user_id: string
@@ -9662,7 +9662,7 @@ export namespace Prisma {
     position?: boolean
     user_id?: boolean
     deleted_at?: boolean
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     admin_orders?: boolean | Admin$admin_ordersArgs<ExtArgs>
     voucher_ongkir?: boolean | Admin$voucher_ongkirArgs<ExtArgs>
@@ -9678,7 +9678,7 @@ export namespace Prisma {
     position?: boolean
     user_id?: boolean
     deleted_at?: boolean
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -9689,7 +9689,7 @@ export namespace Prisma {
     position?: boolean
     user_id?: boolean
     deleted_at?: boolean
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -9704,7 +9704,7 @@ export namespace Prisma {
 
   export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"admin_id" | "store_id" | "phone" | "position" | "user_id" | "deleted_at", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     admin_orders?: boolean | Admin$admin_ordersArgs<ExtArgs>
     voucher_ongkir?: boolean | Admin$voucher_ongkirArgs<ExtArgs>
@@ -9713,18 +9713,18 @@ export namespace Prisma {
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type AdminIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    store?: boolean | StoreDefaultArgs<ExtArgs>
+    store?: boolean | Admin$storeArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $AdminPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Admin"
     objects: {
-      store: Prisma.$StorePayload<ExtArgs>
+      store: Prisma.$StorePayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs>
       admin_orders: Prisma.$AdminOrderPayload<ExtArgs>[]
       voucher_ongkir: Prisma.$VoucherOngkirPayload<ExtArgs>[]
@@ -9733,7 +9733,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       admin_id: number
-      store_id: number
+      store_id: number | null
       phone: string
       position: string
       user_id: string
@@ -10132,7 +10132,7 @@ export namespace Prisma {
    */
   export interface Prisma__AdminClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    store<T extends Admin$storeArgs<ExtArgs> = {}>(args?: Subset<T, Admin$storeArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     admin_orders<T extends Admin$admin_ordersArgs<ExtArgs> = {}>(args?: Subset<T, Admin$admin_ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminOrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     voucher_ongkir<T extends Admin$voucher_ongkirArgs<ExtArgs> = {}>(args?: Subset<T, Admin$voucher_ongkirArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VoucherOngkirPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
@@ -10566,6 +10566,25 @@ export namespace Prisma {
      * Limit how many Admins to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Admin.store
+   */
+  export type Admin$storeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Store
+     */
+    select?: StoreSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Store
+     */
+    omit?: StoreOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StoreInclude<ExtArgs> | null
+    where?: StoreWhereInput
   }
 
   /**
@@ -32110,12 +32129,12 @@ export namespace Prisma {
     OR?: AdminWhereInput[]
     NOT?: AdminWhereInput | AdminWhereInput[]
     admin_id?: IntFilter<"Admin"> | number
-    store_id?: IntFilter<"Admin"> | number
+    store_id?: IntNullableFilter<"Admin"> | number | null
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
     user_id?: StringFilter<"Admin"> | string
     deleted_at?: DateTimeNullableFilter<"Admin"> | Date | string | null
-    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    store?: XOR<StoreNullableScalarRelationFilter, StoreWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     admin_orders?: AdminOrderListRelationFilter
     voucher_ongkir?: VoucherOngkirListRelationFilter
@@ -32125,7 +32144,7 @@ export namespace Prisma {
 
   export type AdminOrderByWithRelationInput = {
     admin_id?: SortOrder
-    store_id?: SortOrder
+    store_id?: SortOrderInput | SortOrder
     phone?: SortOrder
     position?: SortOrder
     user_id?: SortOrder
@@ -32144,11 +32163,11 @@ export namespace Prisma {
     AND?: AdminWhereInput | AdminWhereInput[]
     OR?: AdminWhereInput[]
     NOT?: AdminWhereInput | AdminWhereInput[]
-    store_id?: IntFilter<"Admin"> | number
+    store_id?: IntNullableFilter<"Admin"> | number | null
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
     deleted_at?: DateTimeNullableFilter<"Admin"> | Date | string | null
-    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    store?: XOR<StoreNullableScalarRelationFilter, StoreWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     admin_orders?: AdminOrderListRelationFilter
     voucher_ongkir?: VoucherOngkirListRelationFilter
@@ -32158,7 +32177,7 @@ export namespace Prisma {
 
   export type AdminOrderByWithAggregationInput = {
     admin_id?: SortOrder
-    store_id?: SortOrder
+    store_id?: SortOrderInput | SortOrder
     phone?: SortOrder
     position?: SortOrder
     user_id?: SortOrder
@@ -32175,7 +32194,7 @@ export namespace Prisma {
     OR?: AdminScalarWhereWithAggregatesInput[]
     NOT?: AdminScalarWhereWithAggregatesInput | AdminScalarWhereWithAggregatesInput[]
     admin_id?: IntWithAggregatesFilter<"Admin"> | number
-    store_id?: IntWithAggregatesFilter<"Admin"> | number
+    store_id?: IntNullableWithAggregatesFilter<"Admin"> | number | null
     phone?: StringWithAggregatesFilter<"Admin"> | string
     position?: StringWithAggregatesFilter<"Admin"> | string
     user_id?: StringWithAggregatesFilter<"Admin"> | string
@@ -33798,7 +33817,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     user: UserCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -33808,7 +33827,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -33823,7 +33842,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -33833,7 +33852,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
@@ -33846,7 +33865,7 @@ export namespace Prisma {
 
   export type AdminCreateManyInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -33861,7 +33880,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateManyInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
@@ -35494,9 +35513,9 @@ export namespace Prisma {
     profile_id?: SortOrder
   }
 
-  export type StoreScalarRelationFilter = {
-    is?: StoreWhereInput
-    isNot?: StoreWhereInput
+  export type StoreNullableScalarRelationFilter = {
+    is?: StoreWhereInput | null
+    isNot?: StoreWhereInput | null
   }
 
   export type AdminOrderListRelationFilter = {
@@ -35653,6 +35672,11 @@ export namespace Prisma {
   export type ProductScalarRelationFilter = {
     is?: ProductWhereInput
     isNot?: ProductWhereInput
+  }
+
+  export type StoreScalarRelationFilter = {
+    is?: StoreWhereInput
+    isNot?: StoreWhereInput
   }
 
   export type StockStore_idProduct_idCompoundUniqueInput = {
@@ -37024,10 +37048,12 @@ export namespace Prisma {
     connect?: VoucherStoreWhereUniqueInput | VoucherStoreWhereUniqueInput[]
   }
 
-  export type StoreUpdateOneRequiredWithoutAdminNestedInput = {
+  export type StoreUpdateOneWithoutAdminNestedInput = {
     create?: XOR<StoreCreateWithoutAdminInput, StoreUncheckedCreateWithoutAdminInput>
     connectOrCreate?: StoreCreateOrConnectWithoutAdminInput
     upsert?: StoreUpsertWithoutAdminInput
+    disconnect?: StoreWhereInput | boolean
+    delete?: StoreWhereInput | boolean
     connect?: StoreWhereUniqueInput
     update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutAdminInput, StoreUpdateWithoutAdminInput>, StoreUncheckedUpdateWithoutAdminInput>
   }
@@ -38640,7 +38666,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
@@ -38649,7 +38675,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateWithoutUserInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     deleted_at?: Date | string | null
@@ -38746,7 +38772,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
@@ -38755,7 +38781,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateWithoutUserInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -40113,7 +40139,7 @@ export namespace Prisma {
     OR?: AdminScalarWhereInput[]
     NOT?: AdminScalarWhereInput | AdminScalarWhereInput[]
     admin_id?: IntFilter<"Admin"> | number
-    store_id?: IntFilter<"Admin"> | number
+    store_id?: IntNullableFilter<"Admin"> | number | null
     phone?: StringFilter<"Admin"> | string
     position?: StringFilter<"Admin"> | string
     user_id?: StringFilter<"Admin"> | string
@@ -41060,7 +41086,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     user: UserCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -41069,7 +41095,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateWithoutVoucher_storeInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -41163,7 +41189,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -41172,7 +41198,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateWithoutVoucher_storeInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
@@ -41244,7 +41270,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     user: UserCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
@@ -41253,7 +41279,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateWithoutVoucher_ongkirInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -41319,7 +41345,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
@@ -41328,7 +41354,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateWithoutVoucher_ongkirInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
@@ -41384,7 +41410,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     user: UserCreateNestedOneWithoutAdminInput
     admin_orders?: AdminOrderCreateNestedManyWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
@@ -41393,7 +41419,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateWithoutVoucher_productInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -41455,7 +41481,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     admin_orders?: AdminOrderUpdateManyWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
@@ -41464,7 +41490,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateWithoutVoucher_productInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
@@ -42445,7 +42471,7 @@ export namespace Prisma {
     phone: string
     position: string
     deleted_at?: Date | string | null
-    store: StoreCreateNestedOneWithoutAdminInput
+    store?: StoreCreateNestedOneWithoutAdminInput
     user: UserCreateNestedOneWithoutAdminInput
     voucher_ongkir?: VoucherOngkirCreateNestedManyWithoutAdminInput
     voucher_product?: VoucherProductCreateNestedManyWithoutAdminInput
@@ -42454,7 +42480,7 @@ export namespace Prisma {
 
   export type AdminUncheckedCreateWithoutAdmin_ordersInput = {
     admin_id?: number
-    store_id: number
+    store_id?: number | null
     phone: string
     position: string
     user_id: string
@@ -42528,7 +42554,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    store?: StoreUpdateOneRequiredWithoutAdminNestedInput
+    store?: StoreUpdateOneWithoutAdminNestedInput
     user?: UserUpdateOneRequiredWithoutAdminNestedInput
     voucher_ongkir?: VoucherOngkirUpdateManyWithoutAdminNestedInput
     voucher_product?: VoucherProductUpdateManyWithoutAdminNestedInput
@@ -42537,7 +42563,7 @@ export namespace Prisma {
 
   export type AdminUncheckedUpdateWithoutAdmin_ordersInput = {
     admin_id?: IntFieldUpdateOperationsInput | number
-    store_id?: IntFieldUpdateOperationsInput | number
+    store_id?: NullableIntFieldUpdateOperationsInput | number | null
     phone?: StringFieldUpdateOperationsInput | string
     position?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string

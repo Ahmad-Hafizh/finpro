@@ -22,23 +22,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 interface EditAdminFormProps {
   productData: any;
+  token: string;
+  setOpenDialog: (open: boolean) => void;
 }
 
-const EditProduct = ({ productData }: EditAdminFormProps) => {
+export const EditProduct = ({
+  productData,
+  setOpenDialog,
+  token,
+}: EditAdminFormProps) => {
+  const { toast } = useToast();
   console.log("product data :", productData);
-  const [product, setProduct] = useState<any>({
-    name: "",
-    price: 0,
-    category: "",
-    images: [],
-  });
+  const [product, setProduct] = useState<any>({});
 
   useEffect(() => {
     setProduct(productData);
     form.reset(productData);
+    form.setValue(
+      "category",
+      productData.product_category.product_category_name,
+    );
+    console.log(
+      "Category Default Value:",
+      productData?.product_category?.product_category_name,
+    );
   }, [productData]);
 
   const category = [
@@ -64,10 +76,13 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
             message: "Minimum price is 1! Price cannot be negative!",
           })
           .int("Must be whole number")
-          .optional()
+          .optional(),
       )
       .optional(),
-      description: z.string().nonempty({message:"Description cannot be empty!"}).min(10, {message:"Decription minimum has 10 word"}),
+    description: z
+      .string()
+      .nonempty({ message: "Description cannot be empty!" })
+      .min(10, { message: "Decription minimum has 10 word" }),
 
     category: z
       .string()
@@ -77,14 +92,14 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
       .array(
         z.custom<File>((file) => file instanceof File, {
           message: "Invalid file format!",
-        })
+        }),
       )
       .refine(
         (files) =>
           files.every((file) =>
-            ["image/jpeg", "image/png", "image/gif"].includes(file.type)
+            ["image/jpeg", "image/png", "image/gif"].includes(file.type),
           ),
-        { message: "Only JPG, PNG, and GIF files are allowed!" }
+        { message: "Only JPG, PNG, and GIF files are allowed!" },
       )
       .refine((files) => files.every((file) => file.size <= 1024 * 1024), {
         message: "Each file must be under 1MB!",
@@ -95,15 +110,15 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: productData?.name,
-      price: productData?.price,
-      description: productData?.description,
-      category: productData?.category,
+      name: productData?.product_name ?? "",
+      price: productData?.product_price ?? "",
+      description: productData?.product_description ?? "",
+      category: productData?.product_category?.product_category_name ?? "",
       images: productData?.images || [],
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const updatedFields = {
       name: values.name ?? product.name,
       price: values.price ?? product.price,
@@ -112,7 +127,56 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
       images: values.images ?? product.images,
     };
 
-    console.log("Payload :", updatedFields);
+    const formData = new FormData();
+
+    formData.append("product_id", productData?.product_id);
+    formData.append("product_name", values.name || productData?.product_name);
+    formData.append(
+      "product_price",
+      (values.price || productData?.product_price).toString(),
+    );
+    formData.append(
+      "product_description",
+      values.description || productData?.product_description,
+    );
+    formData.append(
+      "product_category",
+      values.category || productData?.product_category?.product_category_name,
+    );
+
+    if (values.images && values.images.length > 0) {
+      values.images.forEach((file) => formData.append("product_image", file));
+    }
+    console.log("Payload :", formData);
+
+    try {
+      const response = await callAPI.patch("/product/update", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Ini response :", response);
+      if (response.data.isSuccess) {
+        toast({
+          title: "Success",
+          description: "Updating Product Success",
+          className: "bg-gradient-to-r from-green-300 to-green-200",
+        });
+      }
+      setOpenDialog(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      return;
+    } catch (error) {
+      console.log("error");
+      toast({
+        title: "Error",
+        description: "Something went wrong while updating product",
+        variant: "destructive",
+      });
+      setOpenDialog(false);
+      console.log("Ini error: ", error);
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +192,7 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col gap-0 my-5"
+        className="my-5 flex flex-col gap-0 space-y-8"
       >
         <FormField
           control={form.control}
@@ -174,15 +238,19 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
             </FormItem>
           )}
         />
-                <FormField
+        <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-              <Textarea
-                  placeholder={product?.description ? product?.description : "Tell user about your product"}
+                <Textarea
+                  placeholder={
+                    product?.description
+                      ? product?.description
+                      : "Tell user about your product"
+                  }
                   className="resize-none"
                   {...field}
                 />
@@ -200,11 +268,16 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
               <FormLabel>Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={product.category || ""}
+                value={field.value}
+                defaultValue={
+                  productData?.product_category?.product_category_name
+                    ? productData?.product_category?.product_category_name
+                    : ""
+                }
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select product category" />
+                    <SelectValue placeholder={"Select a category"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

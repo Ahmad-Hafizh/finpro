@@ -2,18 +2,16 @@
 "use client";
 import { callAPI } from "@/config/axios";
 import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+
+//===========================
 import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 // import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
+import { Badge } from "@/components/ui/badge";
 //===============================
 
 interface IProductDetailPage {
@@ -24,7 +22,10 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any | null>(null);
-  const [productData, setProductData] = useState<any>(null);
+  const [productData, setProductData] = useState<any>([]);
+  const [stock, setStock] = useState<any>([]);
+
+  //==========================
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
@@ -33,29 +34,62 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   // const router = useRouter();
 
   useEffect(() => {
-    if (status !== "loading" && session) {
-      getData();
-    }
-  }, [session, status]);
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log("INI STOCK : ", stock);
+  }, [stock]);
 
   const getData = async (): Promise<void> => {
     try {
       setLoading(true);
       const slug = (await params).slug;
       console.log("getting data");
-      const response = await callAPI.get(`product/${slug}`, {
-        headers: { Authorization: `Bearer ${session?.user.auth_token}` },
-      });
-      console.log(response);
-      setProductData(response.data.result);
+      const response = await callAPI.get(`product/${slug}`);
+      // console.log("Ini response data:", response.data.result.stock);
+
+      const product = response.data.result;
+
+      const updatedStock = await Promise.all(
+        product.stock.map(async (item: any) => ({
+          ...item,
+          store_name: await getStore(item.store_id),
+        })),
+      );
+
+      setProductData(product);
       setLoading(false);
+      // setStock(response.data.result.stock);
+      setStock(updatedStock);
     } catch (error) {
       setError(error);
       setLoading(false);
     }
   };
 
+  const getStore = async (id: any) => {
+    try {
+      const payload = { store_id: id };
+      const response = await callAPI.post("/store/get-id", payload);
+      console.log("RESPONSE DATA : ", response.data.result);
+      return response.data.result.store_name;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const formatStore = async () => {
+  //   const updatedStock = await Promise.all(
+  //     stock.map(async (item: any) => ({
+  //       ...item,
+  //       store_name: await getStore(item.store_id),
+  //     })),
+  //   );
+  // };
+
   console.log("product data", productData);
+  console.log("store data", stock);
 
   const formatRupiah = (amount: any) => {
     return `Rp. ${amount.toLocaleString("id-ID", {
@@ -125,30 +159,41 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
             {formatRupiah(parseInt(productData.product_price))}
           </p>
         </div>
-        <Accordion type="multiple" className="pb-5">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Description</AccordionTrigger>
-            <AccordionContent>
-              {productData.product_description}
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Category</AccordionTrigger>
-            <AccordionContent>
-              {productData.product_category?.product_category_name}
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>Available Stock</AccordionTrigger>
-            <AccordionContent>
-              {productData.stock && productData.stock.quantity
-                ? productData.stock.quantity
-                : "0"}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <div className="description text-sm lg:text-base">
+          <h1>{productData.product_description}</h1>
+        </div>
+        <div className="flex gap-2 py-10 text-lg lg:py-8">
+          <Badge>
+            CATEGORY{" "}
+            {productData.product_category?.product_category_name.toUpperCase()}
+          </Badge>
+        </div>
+        <div className="flex flex-col gap-2 py-10 text-lg lg:py-8">
+          {stock.length ? <h1>AVAILABLE IN :</h1> : <></>}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {stock.length ? (
+              stock.map((stock: any) => {
+                return (
+                  <Card
+                    key={stock.stock_id}
+                    className="flex items-center justify-center"
+                  >
+                    <CardContent className="flex flex-col items-center justify-center py-3">
+                      <h1 className="text-center text-xs">
+                        {stock.store_name} :
+                      </h1>
+                      <h1 className="text-xs">{stock.quantity} Pcs</h1>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            ) : (
+              <h1 className="flex">STOCK EMPTY</h1>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="fixed bottom-0 h-fit w-full rounded-xl border-2 p-4">
+      <div className="sticky left-20 right-0 top-32 h-fit w-fit rounded-xl border-2 p-4">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex w-full justify-between">
             <p>Quantity :</p>

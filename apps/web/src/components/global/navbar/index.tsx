@@ -113,7 +113,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`${pathName.startsWith("/auth") ? "hidden" : "block"} fixed top-0 z-50 mx-auto w-full`}
+      className={`${pathName.startsWith("/auth") ? "hidden" : "block"} fixed top-0 z-40 mx-auto w-full`}
     >
       {/* mobile */}
       <div
