@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface IProductCard {
   product_name: string;
@@ -14,8 +15,12 @@ const ProductCard: React.FC<IProductCard> = ({
   product_price,
   product_image,
 }) => {
+  const route = useRouter();
   return (
-    <div className="flex h-[300px] flex-col items-center justify-start gap-2 rounded-xl border px-2 pb-4 pt-2">
+    <div
+      className="flex h-[300px] cursor-pointer flex-col items-center justify-start gap-2 rounded-xl border px-2 pb-4 pt-2 hover:bg-slate-100"
+      onClick={() => route.push(`/product/${product_name}`)}
+    >
       <div className="relative h-2/3 w-full overflow-hidden rounded-lg">
         {product_image ? (
           <Image

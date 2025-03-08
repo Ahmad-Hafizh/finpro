@@ -65,10 +65,10 @@ const EditStock = ({
   setOpenDialog,
 }: IEditStock) => {
   console.log("INI PRODUCT DARI EDIT STOCK: ", products);
-  console.log(
-    "INI PRODUCT DARI EDIT STOCKKKKKKK: ",
-    Array.isArray(products.stock),
-  );
+  // console.log(
+  //   "INI PRODUCT DARI EDIT STOCKKKKKKK: ",
+  //   Array.isArray(products.stock),
+  // );
   const { toast } = useToast();
 
   const formSchema = z.object({

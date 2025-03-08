@@ -90,16 +90,27 @@ const categoryPage = () => {
 
   const deleteCategory = async (id: any) => {
     try {
-      const response = await callAPI.patch("/category/delete", {
-        id: id,
-      });
+      const response = await callAPI.patch(
+        "/category/delete",
+        {
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.auth_token}`,
+          },
+        },
+      );
       if (response.data.isSuccess) {
         toast({
           title: "Success",
-          description: "Updating Category Success",
+          description: "Deleting Category Success",
           className: "bg-gradient-to-r from-green-300 to-green-200",
         });
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       setOpenDialog(false);
     } catch (error) {
       toast({
@@ -140,13 +151,6 @@ const categoryPage = () => {
         </div>
         <div className="main flex h-full w-full gap-5">
           <div className="mainpart flex h-full w-full flex-col gap-5">
-            <div className="searchbox h-14 w-full rounded-lg">
-              <Input
-                type="text"
-                placeholder="Search here..."
-                className="h-full px-7"
-              />
-            </div>
             <div className="flex flex-col gap-8">
               <div className="table h-fit w-full rounded-lg shadow-sm">
                 {loading ? (
@@ -189,7 +193,10 @@ const categoryPage = () => {
                     {action === "Add" && (
                       <>
                         <DialogTitle>Add Product</DialogTitle>
-                        <AddCategory setOpenDialog={setOpenDialog} />
+                        <AddCategory
+                          setOpenDialog={setOpenDialog}
+                          token={session?.user.auth_token as string}
+                        />
                       </>
                     )}
                     {action === "Edit" && (
@@ -202,6 +209,7 @@ const categoryPage = () => {
                               product_category_id: 0,
                               product_category_name: "",
                             }}
+                            token={session?.user.auth_token as string}
                           />
                         ) : (
                           <EditCategory
@@ -212,6 +220,7 @@ const categoryPage = () => {
                                   cat.product_category_id === categoryId,
                               ) || { id: 0, name: "" }
                             }
+                            token={session?.user.auth_token as string}
                           />
                         )}
                       </>

@@ -142,7 +142,7 @@ const stockReportPage = () => {
               <SortBoxTotal />
               <Card className="border border-none">
                 <CardHeader>
-                  <h1 className="text-lg font-bold">Total Stock</h1>
+                  <h1 className="text-lg font-bold">Current Stock</h1>
                 </CardHeader>
                 <CardContent>
                   <h1 className="text-3xl font-medium">

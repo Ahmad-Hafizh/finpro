@@ -36,12 +36,14 @@ import { useEffect } from "react";
 export type IAddStock = {
   store_id?: number;
   allProduct: any;
+  token: string;
   setOpenDialog: (open: boolean) => void;
 };
 
 const AddVoucherProduct = ({
   store_id,
   allProduct,
+  token,
   setOpenDialog,
 }: IAddStock) => {
   const { toast } = useToast();
@@ -81,7 +83,11 @@ const AddVoucherProduct = ({
       product_id: values.product_id,
     };
 
-    const submitNewStock = await callAPI.post("/voucher/product", payload);
+    const submitNewStock = await callAPI.post("/voucher/product", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (submitNewStock.status === 200) {
       toast({

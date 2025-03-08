@@ -80,6 +80,38 @@ export const columns = (
     },
   },
   {
+    accessorKey: "deleted_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="px-2"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <AiOutlineSortAscending />{" "}
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const admin = row.original;
+      console.log("ini admin :", admin);
+      if (admin.deleted_at !== null) {
+        return (
+          <div className="m-2 flex h-fit w-fit items-center justify-center rounded-2xl bg-red-500 px-1">
+            <h1 className="p-2 font-bold text-white">DELETED</h1>
+          </div>
+        );
+      } else {
+        return (
+          <div className="m-2 flex h-fit w-fit items-center justify-center rounded-2xl bg-green-500 px-1">
+            <h1 className="p-2 font-bold text-white">ACTIVE</h1>
+          </div>
+        );
+      }
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const storeAdmin = row.original;

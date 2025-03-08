@@ -13,17 +13,18 @@ import { DataTable } from "./components/data-table";
 import { columns } from "./components/column";
 import AddNewStock from "./components/AddNewStock";
 import EditStock from "./components/EditStock";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { get } from "react-hook-form";
 import SearchBox from "./components/SearchBox";
 import { set } from "zod";
 import { useSession } from "next-auth/react";
+import PaginationTable from "../components/Pagination";
 
 const stockPage = () => {
   const [action, setAction] = useState<string | null>("");
   const [categoryId, setCategoryId] = useState<number>(0);
   const [category, setCategory] = useState<any>([]);
-  const [storeId, setStoreId] = useState<number>(1);
+  const [storeId, setStoreId] = useState<any>(null);
   const [products, setProducts] = useState<any>([]);
   const [productId, setProductId] = useState<number>(0);
   const [allProducts, setAllProducts] = useState<any>([]);
@@ -32,29 +33,62 @@ const stockPage = () => {
   const [productEdit, setproductEdit] = useState<any>([]);
   const [adminInfo, setAdminInfo] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<any>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
 
   const searchParams = useSearchParams();
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const pageParam = params.get("page") || "1";
+
+    if (pageParam !== currentPage.toString()) {
+      setCurrentPage(parseInt(pageParam));
+    }
+
+    if (!params.has("page")) {
+      params.set("page", "1");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [searchParams, router]);
 
   useEffect(() => {
     const params = searchParams.toString();
     if (storeId) {
       getProduct(storeId.toString(), params);
+      getProductForEdit(storeId.toString(), params);
       console.log("Query parameters:", params);
     }
   }, [searchParams, storeId]);
 
   useEffect(() => {
     getAllProduct(products);
-    getProductForEdit();
-    getAdminInfo();
   }, [products]);
+
+  useEffect(() => {
+    getAdminInfo();
+    console.log("Session changed:", session);
+  }, [session]);
+
+  useEffect(() => {}, [session]);
 
   useEffect(() => {
     getAllStore();
     getCategory();
     setLoading(false);
   }, [storeId]);
+
+  useEffect(() => {
+    const selectedProduct = productEdit.find(
+      (p: any) => p.product_id === productId && p.store_id === storeId,
+    );
+    console.log("INI PRODUCT ID : ID :", productId);
+    console.log("INI store ID : ID :", storeId);
+    console.log("INI PRODUCT : EDIT : ", productEdit);
+    console.log("Selected Product:", selectedProduct);
+  }, [productEdit, productId]);
 
   const getCategory = async () => {
     try {
@@ -82,7 +116,7 @@ const stockPage = () => {
     try {
       const payload = { email: session?.user.email };
       const response = await callAPI.post("/admin/detail", payload);
-      console.log("INI ADMIN INFO : ", response.data.result[0]);
+      console.log("INI ADMIN INFO : ", response.data.result);
       setAdminInfo(response.data.result);
       console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
       if (response.data.result[0]?.store_id) {
@@ -96,11 +130,13 @@ const stockPage = () => {
   const getProduct = async (id: string, params: string) => {
     try {
       const response = await callAPI.get(`product?store=${id}&${params}`);
+      console.log("Ini response : ", response);
       const data = response.data.result.products;
       const filteredProducts = data.filter(
         (product: any) => product.deletedAt === null,
       );
       setProducts(filteredProducts);
+      setTotalPage(response.data.result.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -122,11 +158,14 @@ const stockPage = () => {
     }
   };
 
-  const getProductForEdit = async () => {
+  const getProductForEdit = async (id: any, params: any) => {
     try {
-      const response = await callAPI.get("/product");
+      const response = await callAPI.get(`/product?${id}&${params}`);
       const data = response.data.result.products;
       setproductEdit(data);
+      const selectedProduct = productEdit.find(
+        (p: any) => p.product_id === productId,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -157,14 +196,26 @@ const stockPage = () => {
             <h2 className="text-lg">Manage or see stock information here.</h2>
           </div>
           <div className="flex h-full w-full flex-col items-end justify-center gap-5 px-20">
-            <Button
-              onClick={() => {
-                setOpenDialog(true);
-                setAction("Add");
-              }}
-            >
-              Add new stock
-            </Button>
+            {storeId ? (
+              <Button
+                onClick={() => {
+                  setOpenDialog(true);
+                  setAction("Add");
+                }}
+              >
+                Add new stock
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setOpenDialog(true);
+                  setAction("Add");
+                }}
+                disabled
+              >
+                Add new stock
+              </Button>
+            )}
           </div>
         </div>
         <div className="main flex h-full w-full gap-5">
@@ -222,9 +273,15 @@ const stockPage = () => {
                       <>
                         <DialogTitle>Edit Product</DialogTitle>
                         <EditStock
-                          products={productEdit.find(
-                            (p: any) => p.product_id === productId,
-                          )}
+                          products={(() => {
+                            const selectedProduct = productEdit.find(
+                              (p: any) => p.product_id === productId,
+                            );
+                            console.log("Selected Product:", selectedProduct);
+                            console.log("Current Product ID:", productId);
+                            console.log("Product Edit List:", productEdit);
+                            return selectedProduct;
+                          })()}
                           store_id={storeId}
                           setOpenDialog={setOpenDialog}
                           token={session?.user.auth_token}
@@ -233,6 +290,12 @@ const stockPage = () => {
                     )}
                   </DialogContent>
                 </Dialog>
+              </div>
+              <div className="pagination flex items-center justify-center py-3">
+                <PaginationTable
+                  currentPage={currentPage}
+                  totalPage={totalPage}
+                />
               </div>
             </div>
           </div>

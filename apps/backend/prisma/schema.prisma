@@ -91,12 +91,12 @@ model Address {
 
 model Admin {
   admin_id        Int              @id @default(autoincrement())
-  store_id        Int
+  store_id        Int?
   phone           String
   position        String
   user_id         String           @unique
   deleted_at      DateTime?
-  store           Store            @relation(fields: [store_id], references: [store_id])
+  store           Store?           @relation(fields: [store_id], references: [store_id])
   user            User             @relation(fields: [user_id], references: [id])
   admin_orders    AdminOrder[]
   voucher_ongkir  VoucherOngkir[]

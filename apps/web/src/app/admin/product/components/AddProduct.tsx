@@ -31,10 +31,11 @@ interface Icategory {
 
 interface IaddProduct {
   categories: Icategory[];
+  token: string;
   setOpenDialog: (open: boolean) => void;
 }
 
-const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
+const AddProduct = ({ categories, token, setOpenDialog }: IaddProduct) => {
   const { toast } = useToast();
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -98,9 +99,8 @@ const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
 
     const sendResult = async (payload: any) => {
       try {
-        // const response = await callAPI.post("/product", payload);
         const response = await callAPI.post("/product", payload, {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         console.log("Ini response :", response);
@@ -111,12 +111,15 @@ const AddProduct = ({ categories, setOpenDialog }: IaddProduct) => {
             className: "bg-gradient-to-r from-green-300 to-green-200",
           });
         }
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
         setOpenDialog(false);
         return;
       } catch (error) {
         toast({
           title: "Error",
-          description: "Something went wrong while updating category",
+          description: "Something went wrong while adding product",
           variant: "destructive",
         });
         setOpenDialog(false);
