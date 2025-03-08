@@ -133,6 +133,8 @@ export class AdminController {
           },
         });
 
+        console.log("GET INFOR BY ADMIN : ", getAdminInfoByEmail);
+
         if (!getAdminInfoByEmail) {
           const getSuperAdminByEmail = await prisma.user.findFirst({
             where: {

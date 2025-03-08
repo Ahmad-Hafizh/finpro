@@ -28,6 +28,7 @@ const ProductCard: React.FC<IProductCard> = ({
             fill
             alt="product image"
             sizes="300"
+            className="absolute object-cover"
           />
         ) : (
           <p>loading...</p>

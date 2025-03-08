@@ -15,6 +15,7 @@ export class AddressRouter {
   private initializeRoutes(): void {
     this.route.get('/', verifyToken, (req, res) => this.addressController.getAddresses(req, res));
     this.route.get('/', verifyToken, this.addressController.getAddresses);
+    this.route.post('/ongkir', this.addressController.getOngkir);
     this.route.get('/get-address', verifyToken, this.addressController.getAddresses);
     this.route.post('/set-address', this.addressController.setDeliveryAddress);
     this.route.patch('/update-address', this.addressController.updateDeliveryAddress);

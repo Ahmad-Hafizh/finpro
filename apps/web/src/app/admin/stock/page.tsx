@@ -58,21 +58,37 @@ const stockPage = () => {
     const params = searchParams.toString();
     if (storeId) {
       getProduct(storeId.toString(), params);
+      getProductForEdit(storeId.toString(), params);
       console.log("Query parameters:", params);
     }
   }, [searchParams, storeId]);
 
   useEffect(() => {
     getAllProduct(products);
-    getProductForEdit();
-    getAdminInfo();
   }, [products]);
+
+  useEffect(() => {
+    getAdminInfo();
+    console.log("Session changed:", session);
+  }, [session]);
+
+  useEffect(() => {}, [session]);
 
   useEffect(() => {
     getAllStore();
     getCategory();
     setLoading(false);
   }, [storeId]);
+
+  useEffect(() => {
+    const selectedProduct = productEdit.find(
+      (p: any) => p.product_id === productId && p.store_id === storeId,
+    );
+    console.log("INI PRODUCT ID : ID :", productId);
+    console.log("INI store ID : ID :", storeId);
+    console.log("INI PRODUCT : EDIT : ", productEdit);
+    console.log("Selected Product:", selectedProduct);
+  }, [productEdit, productId]);
 
   const getCategory = async () => {
     try {
@@ -100,7 +116,7 @@ const stockPage = () => {
     try {
       const payload = { email: session?.user.email };
       const response = await callAPI.post("/admin/detail", payload);
-      console.log("INI ADMIN INFO : ", response);
+      console.log("INI ADMIN INFO : ", response.data.result);
       setAdminInfo(response.data.result);
       console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
       if (response.data.result[0]?.store_id) {
@@ -142,11 +158,14 @@ const stockPage = () => {
     }
   };
 
-  const getProductForEdit = async () => {
+  const getProductForEdit = async (id: any, params: any) => {
     try {
-      const response = await callAPI.get("/product");
+      const response = await callAPI.get(`/product?${id}&${params}`);
       const data = response.data.result.products;
       setproductEdit(data);
+      const selectedProduct = productEdit.find(
+        (p: any) => p.product_id === productId,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -254,9 +273,15 @@ const stockPage = () => {
                       <>
                         <DialogTitle>Edit Product</DialogTitle>
                         <EditStock
-                          products={productEdit.find(
-                            (p: any) => p.product_id === productId,
-                          )}
+                          products={(() => {
+                            const selectedProduct = productEdit.find(
+                              (p: any) => p.product_id === productId,
+                            );
+                            console.log("Selected Product:", selectedProduct);
+                            console.log("Current Product ID:", productId);
+                            console.log("Product Edit List:", productEdit);
+                            return selectedProduct;
+                          })()}
                           store_id={storeId}
                           setOpenDialog={setOpenDialog}
                           token={session?.user.auth_token}
