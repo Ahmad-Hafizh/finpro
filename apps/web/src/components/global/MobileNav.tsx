@@ -1,70 +1,39 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { IoCartOutline } from "react-icons/io5";
-import { MdOutlineAccountCircle } from "react-icons/md";
-import Link from "next/link";
-import { BiHomeSmile } from "react-icons/bi";
-import { FiPackage } from "react-icons/fi";
-import { Pencil, Search } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import React from "react";
 import { Button } from "../ui/button";
-import { callAPI } from "@/config/axios";
-import { setStore } from "@/lib/redux/reducers/storeSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { FaArrowLeft } from "react-icons/fa";
-import { MapPin } from "lucide-react";
-import { fetchCartCount } from "@/lib/redux/reducers/cartSlice";
-import { useCart } from "@/contexts/CartContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { signOutAction } from "@/actions/signOutAction";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface IMobileNavProps {
   store_name: string;
-  user_image?: string | null | undefined;
+  user_name?: string | null | undefined;
+  user_pfp?: string | null | undefined;
+  pathName: string;
 }
 
 const MobileNav: React.FunctionComponent<IMobileNavProps> = ({
-  user_image,
+  user_name,
   store_name,
+  user_pfp,
+  pathName,
 }) => {
-  const isVisible = true;
+  const router = useRouter();
+  const currentLoc = pathName.split("/")[pathName.split("/").length - 1];
   return (
     <div className="h-full w-full md:hidden">
-      {isVisible ? (
-        <div className="flex h-full w-full items-center justify-between gap-4 md:hidden">
-          <div>
-            {user_image ? (
-              <div
-                className={`${user_image ? "block" : "hidden"} relative h-10 w-10 overflow-hidden rounded-full`}
-              >
-                <Image fill src={user_image} alt="user profile picture" />
-              </div>
-            ) : (
-              <BiHomeSmile
-                className={`${user_image ? "hidden" : "block"} text-3xl md:flex`}
-              />
-            )}
-          </div>
-          <div
-            className={`flex w-1/2 items-center justify-between gap-2 rounded-full bg-gray-200 p-2`}
-          >
-            <div className="flex items-center justify-start gap-1 pl-2">
-              <MapPin className="h-5 w-5" />
-              <p className="text-xl">{store_name}</p>
+      {pathName == "/" || pathName.startsWith("/explore") ? (
+        <div className="flex h-full w-full items-center justify-between gap-4">
+          <div className="flex gap-4">
+            <Avatar>
+              <AvatarImage src={user_pfp || ""} />
+              <AvatarFallback>{user_name?.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="text-sm text-gray-500">Deliver from :</p>
+              <p className="text-l leading-tight">{store_name}</p>
             </div>
-            <Link
-              href="/change-store"
-              className="aspect-square h-full rounded-full bg-white p-2"
-            >
-              <Pencil className="h-4 w-4" />
-            </Link>
           </div>
           <div>
             <Search />
@@ -72,18 +41,18 @@ const MobileNav: React.FunctionComponent<IMobileNavProps> = ({
         </div>
       ) : (
         <div className="flex h-full items-center gap-2">
-          <Link
-            href="/order"
-            className="flex-col items-center justify-start gap-1"
+          <Button
+            className="space-y-0 hover:bg-transparent"
+            variant={"ghost"}
+            onClick={() => router.back()}
           >
-            <Button
-              className="space-y-0 hover:bg-transparent"
-              variant={"ghost"}
-            >
-              <FaArrowLeft className="text-3xl" />
-            </Button>
-          </Link>
-          <p className="text-2xl capitalize">Hom</p>
+            <FaArrowLeft className="text-3xl" />
+          </Button>
+          <p className="text-xl capitalize">
+            {parseInt(currentLoc)
+              ? pathName.split("/")[pathName.split("/").length - 2]
+              : currentLoc}
+          </p>
         </div>
       )}
     </div>

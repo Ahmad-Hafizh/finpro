@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import AddressCard from "./addressCard";
 import { callAPI } from "@/config/axios";
@@ -23,9 +24,11 @@ const AddressList: React.FunctionComponent<IAddressListProps> = async ({
   const address = await addresses();
 
   return (
-    <div className="flex flex-col">
-      {address[0] ? (
-        address.map((e: any, i: number) => <AddressCard {...e} token={token} />)
+    <div className="flex flex-col gap-2">
+      {address ? (
+        address.map((e: any, i: number) => (
+          <AddressCard {...e} token={token} key={i} />
+        ))
       ) : (
         <p>No address found</p>
       )}

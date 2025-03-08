@@ -14,17 +14,9 @@ interface FilterBoxProps {
 }
 
 const FilterBox = ({ allStore }: FilterBoxProps) => {
-  const [selectedStore, setSelectedStore] = useState<number | null>(null);
+  // const [selectedStore, setSelectedStore] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const categories = [
-    "Dry vegetable",
-    "Fruit",
-    "Wet vegetable",
-    "Green vegetable",
-    "Nut",
-  ];
 
   // Function to update URL based on selected filters
   const dynamicFilter = (key: string, value: string) => {
@@ -46,7 +38,6 @@ const FilterBox = ({ allStore }: FilterBoxProps) => {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  // Function to check if a filter value is selected
   const isChecked = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     return params.get(key)?.split(",").includes(value) || false;
@@ -73,9 +64,9 @@ const FilterBox = ({ allStore }: FilterBoxProps) => {
                   </label>
                   <Checkbox
                     id={`store-${store.store_id}`}
-                    checked={isChecked("store", store.store_id.toString())}
+                    checked={isChecked("storeNew", store.store_id.toString())}
                     onCheckedChange={() =>
-                      dynamicFilter("store", store.store_id.toString())
+                      dynamicFilter("storeNew", store.store_id.toString())
                     }
                   />
                 </div>

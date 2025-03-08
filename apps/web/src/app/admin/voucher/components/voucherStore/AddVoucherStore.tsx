@@ -36,10 +36,16 @@ import { useState } from "react";
 export type IAddStock = {
   store_id?: number;
   allStore: any;
+  token: string;
   setOpenDialog: (open: boolean) => void;
 };
 
-const AddVoucherStore = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
+const AddVoucherStore = ({
+  store_id,
+  allStore,
+  token,
+  setOpenDialog,
+}: IAddStock) => {
   const { toast } = useToast();
   const [voucherType, setVoucherType] = useState<string>("percentage");
 
@@ -80,7 +86,7 @@ const AddVoucherStore = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
       voucher_store_maximum_nominal: "",
       voucher_store_startdate: new Date(),
       voucher_store_enddate: new Date(),
-      store_id: "",
+      store_id: store_id ? String(store_id) : "",
     },
   });
 
@@ -96,7 +102,11 @@ const AddVoucherStore = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
       store_id: values.store_id,
     };
 
-    const submitNewStock = await callAPI.post("/voucher/store", payload);
+    const submitNewStock = await callAPI.post("/voucher/store", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (submitNewStock.status === 200) {
       toast({

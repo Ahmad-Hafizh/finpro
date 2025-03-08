@@ -18,9 +18,10 @@ import { useToast } from "@/hooks/use-toast";
 
 export type IAddCategory = {
   setOpenDialog: (open: boolean) => void;
+  token: string;
 };
 
-const AddCategory = ({ setOpenDialog }: IAddCategory) => {
+const AddCategory = ({ setOpenDialog, token }: IAddCategory) => {
   const { toast } = useToast();
   const formSchema = z.object({
     category: z.string().nonempty({ message: "Category is required!" }),
@@ -40,7 +41,11 @@ const AddCategory = ({ setOpenDialog }: IAddCategory) => {
 
     const submitApi = async (payload: any) => {
       try {
-        const response = await callAPI.post("/category", payload);
+        const response = await callAPI.post("/category", payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log("Ini response submit category: ", response);
         if (response.data.isSuccess) {
           toast({

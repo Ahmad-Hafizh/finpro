@@ -16,6 +16,7 @@ export class AccountRouter {
   private initializeRoutes() {
     this.route.post('/sign-up', this.accountController.signUp);
     this.route.post('/verify', verifyToken, this.accountController.verifyEmailsetPassword);
+    this.route.post('/ask-verify', this.accountController.askVerify);
 
     this.route.post('/sign-in', this.accountController.signIn);
     this.route.post('/forgot-password', this.accountController.forgotPassword);

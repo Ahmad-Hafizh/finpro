@@ -78,7 +78,17 @@ export class VoucherController {
   async createNewOngkirVoucher(req: Request, res: Response): Promise<any> {
     try {
       const { code, nominal, startdate, enddate, store_id } = req.body;
-      const admin = 4;
+
+      const user = res.locals.user.id;
+      const adminId = await prisma.admin.findFirst({
+        where: {
+          user_id: user,
+        },
+      });
+
+      if (!adminId) {
+        return ResponseHandler.error(res, 400, "Admin not found");
+      }
 
       const newOngkirVoucher = await prisma.voucherOngkir.create({
         data: {
@@ -87,7 +97,7 @@ export class VoucherController {
           voucher_ongkir_startdate: new Date(startdate),
           voucher_ongkir_enddate: new Date(enddate),
           store_id: parseInt(store_id),
-          admin_responsible: admin,
+          admin_responsible: adminId?.admin_id,
           created_at: new Date(),
         },
       });
@@ -99,6 +109,7 @@ export class VoucherController {
         newOngkirVoucher
       );
     } catch (error) {
+      console.log("ERROR : ", error);
       return ResponseHandler.error(res, 500, "Internal server error", error);
     }
   }
@@ -106,14 +117,22 @@ export class VoucherController {
   async createNewProductVoucher(req: Request, res: Response): Promise<any> {
     try {
       const { code, nominal, startdate, enddate, product_id } = req.body;
-      const admin = 4;
+      const user = res.locals.user.id;
+      const adminId = await prisma.admin.findFirst({
+        where: {
+          user_id: user,
+        },
+      });
 
+      if (!adminId) {
+        return ResponseHandler.error(res, 400, "Admin not found");
+      }
       const newProductVoucher = await prisma.voucherProduct.create({
         data: {
           voucher_product_code: code,
           voucher_product_startdate: new Date(startdate),
           voucher_product_enddate: new Date(enddate),
-          admin_responsible: admin,
+          admin_responsible: adminId?.admin_id,
           created_at: new Date(),
           product_id: parseInt(product_id),
         },
@@ -143,7 +162,17 @@ export class VoucherController {
         store_id,
       } = req.body;
 
-      const admin = 4;
+      const user = res.locals.user.id;
+
+      const adminId = await prisma.admin.findFirst({
+        where: {
+          user_id: user,
+        },
+      });
+
+      if (!adminId) {
+        return ResponseHandler.error(res, 400, "Admin not found");
+      }
 
       const newStoreVoucher = await prisma.voucherStore.create({
         data: {
@@ -158,7 +187,7 @@ export class VoucherController {
           voucher_store_enddate: new Date(enddate as string),
           store_id: parseInt(store_id as string),
           created_at: new Date(),
-          admin_responsible: admin,
+          admin_responsible: adminId?.admin_id,
         },
       });
 
@@ -170,6 +199,17 @@ export class VoucherController {
       );
     } catch (error) {
       console.log(error);
+      return ResponseHandler.error(res, 500, "Internal Server Error");
+    }
+  }
+  async getBanner(req: Request, res: Response): Promise<any> {
+    try {
+      const banners = await prisma.banner.findMany({
+        take: 3,
+      });
+
+      return ResponseHandler.success(res, 200, "get banner success", banners);
+    } catch (error) {
       return ResponseHandler.error(res, 500, "Internal Server Error");
     }
   }

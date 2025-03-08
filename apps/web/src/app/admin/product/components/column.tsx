@@ -119,6 +119,7 @@ export const columns = (
       const productList = row.original;
 
       const onHandleEdit = () => {
+        console.log("INI PRODUCT LIST : PRODUCT ID : ", productList.product_id);
         setProductId(productList.product_id);
         setAction("Edit");
         setOpenDialog(true);

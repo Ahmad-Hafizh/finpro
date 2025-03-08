@@ -55,7 +55,7 @@ const EditAdminForm = ({
   const [admin, setAdmin] = useState<any>([]);
 
   useEffect(() => {
-    setAdmin(adminData);
+    setAdmin(adminData[0]);
   }, [adminData]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,11 +68,15 @@ const EditAdminForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const submit = await callAPI.patch(
-        "/admin",
-        { admin_id: admin, position: values.position, store_id: values.store },
-        { headers: { Authorization: `Bearer ${superAdminAccessToken}` } },
-      );
+      const payload = {
+        admin_id: adminData[0].admin_id,
+        position: values.position,
+        store_id: values.store,
+      };
+      console.log("PAYLOAD : ", payload);
+      const submit = await callAPI.patch("/admin", payload, {
+        headers: { Authorization: `Bearer ${superAdminAccessToken}` },
+      });
       console.log("INI SUBMIT", submit);
       if (submit.data.isSuccess) {
         toast({
@@ -81,6 +85,9 @@ const EditAdminForm = ({
           className: "bg-gradient-to-r from-green-300 to-green-200",
         });
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       setOpenDialog(false);
     } catch (error) {
       toast({
@@ -88,6 +95,7 @@ const EditAdminForm = ({
         description: "Something went wrong while updating admin",
         variant: "destructive",
       });
+      setOpenDialog(false);
     }
   };
 
@@ -105,7 +113,7 @@ const EditAdminForm = ({
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder={admin ? adminData[0]?.user?.name : "Name"}
+                  placeholder={adminData[0]?.user?.name || "Name"}
                   {...field}
                   disabled
                 />

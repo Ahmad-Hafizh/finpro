@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Input } from "@/components/ui/input";
 import HeaderDashboard from "../components/header";
 import { StoreAdmin, columns } from "./column";
 import { DataTable } from "./data-table";
@@ -15,21 +15,23 @@ import SearchBox from "./components/SearchBox";
 import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
-const userPage = () => {
+const UserPage = () => {
   const [action, setAction] = useState<string | null>(null);
   const [adminId, setAdminId] = useState<number>(1);
   const [data, setData] = useState<any>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [store, setStore] = useState<any>([]);
   const [filteredData, setFilteredData] = useState<any>([]);
+  const { data: session, status } = useSession();
 
   const [currentPage, setCurrentPage] = useState<any>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (session?.user.role === "super_admin") {
@@ -38,6 +40,7 @@ const userPage = () => {
   }, [session]);
 
   useEffect(() => {
+    console.log(searchParams.toString());
     const params = new URLSearchParams(searchParams.toString());
     const pageParam = params.get("page") || "1";
 
@@ -48,13 +51,14 @@ const userPage = () => {
     if (!params.has("page")) {
       params.set("page", "1");
       router.replace(`?${params.toString()}`, { scroll: false });
+      console.log("Params to string :", params.toString());
     }
+    getData(params.toString());
   }, [searchParams, router]);
 
-
-  const getData = async () => {
+  const getData = async (params: string) => {
     try {
-      const response = await callAPI.get("/admin");
+      const response = await callAPI.get(`/admin?${params}`);
 
       const data = response.data.result.admins;
 
@@ -67,13 +71,11 @@ const userPage = () => {
   };
 
   useEffect(() => {
-    getData();
     getAllStore();
     relevantData();
 
     getAllStore();
     relevantData();
-
   }, [adminId]);
 
   const relevantData = async () => {
@@ -90,6 +92,38 @@ const userPage = () => {
       // setStoreId(8);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const deleteAdmin = async (id: any) => {
+    try {
+      const payload = {
+        admin_id: id,
+      };
+      const response = await callAPI.patch("/admin/delete", payload, {
+        headers: {
+          Authorization: `Bearer ${session?.user.auth_token}`,
+        },
+      });
+      if (response.data.isSuccess) {
+        toast({
+          title: "Success",
+          description: "Updating Admin Success",
+          className: "bg-gradient-to-r from-green-300 to-green-200",
+        });
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      setOpenDialog(false);
+    } catch (error) {
+      console.log("INI ERROR FROM DELETE :", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong while updating admin",
+        variant: "destructive",
+      });
+      setOpenDialog(false);
     }
   };
 
@@ -126,9 +160,7 @@ const userPage = () => {
                       <>
                         <DialogTitle>Are you sure?</DialogTitle>
                         <p>This action cannot be undone.</p>
-                        <Button
-                          onClick={() => console.log(`Deleted ${adminId}`)}
-                        >
+                        <Button onClick={() => deleteAdmin(adminId)}>
                           Confirm Delete
                         </Button>
                       </>
@@ -137,24 +169,10 @@ const userPage = () => {
                         <DialogTitle>Edit Admin Role</DialogTitle>
                         {status == "authenticated" ? (
                           <EditAdminForm
-
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
-                            adminData={adminId}
-                            setOpenDialog={setOpenDialog}
-                            storeData={store}
-                          />
-                        ) : (
-                          <p>loading</p>
-                        )}
-                        {status == "authenticated" ? (
-                          <EditAdminForm
-                            superAdminAccessToken={
-                              session?.user.auth_token as string
-                            }
-
-                            adminData={adminId}
+                            adminData={filteredData}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
                           />
@@ -180,4 +198,4 @@ const userPage = () => {
   );
 };
 
-export default userPage;
+export default UserPage;

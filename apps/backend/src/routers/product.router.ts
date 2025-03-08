@@ -1,10 +1,8 @@
-
 import { Router } from "express";
 import { ProductController } from "../controllers/product.controller";
 import { upload } from "../middleware/upload.middleware";
 import { verifyToken } from "../middleware/verifyToken";
 import authGuard from "../middleware/authGuard";
-
 
 export class ProductRouter {
   private route: Router;
@@ -17,7 +15,6 @@ export class ProductRouter {
   }
 
   private initializeRoutes() {
-
     this.route.get("/dropdown", this.productRouter.getProductDropdown);
     this.route.get("/", this.productRouter.getProduct);
     this.route.post(
@@ -26,6 +23,13 @@ export class ProductRouter {
       verifyToken,
       authGuard.superAdmin,
       this.productRouter.createProduct
+    );
+    this.route.patch(
+      "/update",
+      upload.array("product_image", 5),
+      verifyToken,
+      authGuard.superAdmin,
+      this.productRouter.updateProduct
     );
     this.route.patch(
       "/delete",
