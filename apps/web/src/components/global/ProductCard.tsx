@@ -1,33 +1,54 @@
+"use client";
+import Image from "next/image";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface IProductCard {
   product_name: string;
   product_price: number;
-  product_id: number;
+  product_image?: { image_url: string };
 }
 
 const ProductCard: React.FC<IProductCard> = ({
   product_name,
-  product_id,
   product_price,
+  product_image,
 }) => {
+  const route = useRouter();
   return (
-    <div className="flex h-[300px] flex-col items-center justify-start rounded-xl border border-gray-400 px-4 pb-6 pt-4">
-      <div className="h-2/3 w-full"></div>
-      <div className="flex h-1/3 w-full flex-col justify-between">
+    <div
+      className="flex h-[300px] cursor-pointer flex-col items-center justify-start gap-2 rounded-xl border px-2 pb-4 pt-2 hover:bg-slate-100"
+      onClick={() => route.push(`/product/${product_name}`)}
+    >
+      <div className="relative h-2/3 w-full overflow-hidden rounded-lg">
+        {product_image ? (
+          <Image
+            src={product_image.image_url}
+            fill
+            alt="product image"
+            sizes="300"
+            className="absolute object-cover"
+          />
+        ) : (
+          <p>loading...</p>
+        )}
+      </div>
+      <div className="flex h-1/3 w-full flex-col justify-between px-1">
         <div>
-          <p className="text-lg font-semibold">{product_name}</p>
-          <p className="text-gray-400">100 ml</p>
+          <p className="text-md font-medium leading-tight">{product_name}</p>
+          <p className="text-sm text-gray-400">100 ml</p>
         </div>
         <div className="flex items-end justify-between">
-          <p className="text-lg">
-            {product_price.toLocaleString("id-ID", {
-              style: "currency",
-              currency: "IDR",
-            })}
+          <p className="text-sm">
+            {product_price
+              ?.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              })
+              .replace(",00", "")}
           </p>
-          <Button className="h-8 w-4 rounded-full text-xl">
+          <Button className="h-8 w-4 rounded-full bg-green-400 text-xl">
             <Plus className="text-xl" />
           </Button>
         </div>

@@ -34,12 +34,18 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect } from "react";
 
 export type IAddStock = {
-  store_id?: number;
+  store_id?: string;
   allStore: any;
+  token: string;
   setOpenDialog: (open: boolean) => void;
 };
 
-const AddVoucherOngkir = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
+const AddVoucherOngkir = ({
+  store_id,
+  allStore,
+  token,
+  setOpenDialog,
+}: IAddStock) => {
   const { toast } = useToast();
 
   const formSchema = z
@@ -69,7 +75,7 @@ const AddVoucherOngkir = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
       voucher_ongkir_nominal: 0,
       voucher_ongkir_startdate: new Date(),
       voucher_ongkir_enddate: new Date(),
-      store_id: "",
+      store_id: store_id ? String(store_id) : "",
     },
   });
 
@@ -82,7 +88,11 @@ const AddVoucherOngkir = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
       store_id: store_id ? store_id : values.store_id,
     };
 
-    const submitNewStock = await callAPI.post("/voucher/ongkir", payload);
+    const submitNewStock = await callAPI.post("/voucher/ongkir", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (submitNewStock.status === 200) {
       toast({
@@ -224,6 +234,10 @@ const AddVoucherOngkir = ({ store_id, allStore, setOpenDialog }: IAddStock) => {
             const selectedStore = allStore.find(
               (store: any) => store.store_id === (store_id || field.value),
             );
+
+            console.log("SELECTED STORE : ", selectedStore);
+            console.log("SELECTED STORE ID : ", store_id);
+            console.log("SELECTED STORE ALL : ", allStore);
 
             return (
               <FormItem>

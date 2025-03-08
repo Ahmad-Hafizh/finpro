@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { AddressController } from "../controllers/address.controller";
-import { verifyToken } from "../middleware/verifyToken";
+import { Router } from 'express';
+import { AddressController } from '../controllers/address.controller';
+import { verifyToken } from '../middleware/verifyToken';
 
 export class AddressRouter {
   private route: Router;
@@ -13,30 +13,14 @@ export class AddressRouter {
   }
 
   private initializeRoutes(): void {
-    this.route.get("/", verifyToken, (req, res) =>
-      this.addressController.getAddresses(req, res)
-    );
-    this.route.get("/", verifyToken, this.addressController.getAddresses);
-    this.route.get(
-      "/get-address",
-      verifyToken,
-      this.addressController.getAddresses
-    );
-    this.route.post("/set-address", this.addressController.setDeliveryAddress);
-    this.route.patch(
-      "/update-address",
-      this.addressController.updateDeliveryAddress
-    );
-    this.route.delete(
-      "/del-address/:address_id",
-      verifyToken,
-      this.addressController.deleteAddress
-    );
-    this.route.get(
-      "/get-address/:address_id",
-      verifyToken,
-      this.addressController.getAddressDetail
-    );
+    this.route.get('/', verifyToken, (req, res) => this.addressController.getAddresses(req, res));
+    this.route.get('/', verifyToken, this.addressController.getAddresses);
+    this.route.post('/ongkir', this.addressController.getOngkir);
+    this.route.get('/get-address', verifyToken, this.addressController.getAddresses);
+    this.route.post('/set-address', this.addressController.setDeliveryAddress);
+    this.route.patch('/update-address', this.addressController.updateDeliveryAddress);
+    this.route.delete('/del-address/:address_id', verifyToken, this.addressController.deleteAddress);
+    this.route.get('/get-address/:address_id', verifyToken, this.addressController.getAddressDetail);
   }
 
   public getRouter(): Router {

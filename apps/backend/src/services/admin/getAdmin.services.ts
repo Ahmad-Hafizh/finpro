@@ -20,11 +20,12 @@ export const findAdmin = async ({
   pageSize,
   keyword,
 }: IfindAdmin): Promise<any> => {
+  const storeIds = store ? store.split(",").map((id) => parseInt(id)) : [];
   const result = await prisma.admin.findMany({
     skip: (pageNumber - 1) * pageSize,
     where: {
       AND: [
-        store ? { store_id: parseInt(store) } : {},
+        storeIds.length > 0 ? { store_id: { in: storeIds } } : {},
         keyword
           ? {
               OR: [
@@ -45,7 +46,7 @@ export const findAdmin = async ({
   const totalItems = await prisma.admin.count({
     where: {
       AND: [
-        store ? { store_id: parseInt(store) } : {},
+        storeIds.length > 0 ? { store_id: { in: storeIds } } : {},
         keyword
           ? {
               OR: [

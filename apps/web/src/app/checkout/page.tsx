@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,6 @@ import {
   Stepper,
   Step,
   StepLabel,
-  useMediaQuery,
   FormControl,
   InputLabel,
   Select,
@@ -32,7 +32,7 @@ import ShippingCourier from "./components/ShippingCourier";
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  // const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<number | "">("");
@@ -43,7 +43,8 @@ const CheckoutPage: React.FC = () => {
   const [voucherCode, setVoucherCode] = useState("");
 
   const subtotal = calculateSubtotal(selectedItems);
-  const shippingCost = 15000;
+  const [shippingCost, setShippingCost] = useState(0);
+  const [courier, setCourier] = useState("");
   const totalPrice = subtotal + shippingCost;
 
   const session = useSession();
@@ -72,9 +73,10 @@ const CheckoutPage: React.FC = () => {
       const response = await callAPI.get("/address/get-address", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAddresses(response.data);
-      if (response.data && response.data.length > 0) {
-        setSelectedAddress(response.data[0].address_id);
+
+      setAddresses(response.data.result);
+      if (response.data.result && response.data.result.length > 0) {
+        setSelectedAddress(response.data.result[0].address_id);
       }
     } catch (err: any) {
       console.error("Error fetching addresses:", err);
@@ -137,6 +139,12 @@ const CheckoutPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleSelectOngkir = (courier: string, cost: number) => {
+    setCourier(courier);
+    setShippingCost(cost);
+  };
+
   if (selectedItems.length === 0) {
     return <EmptyCart />;
   }
@@ -187,10 +195,11 @@ const CheckoutPage: React.FC = () => {
                 error={error}
               />
               <ShippingCourier
-                addresses={addresses}
+                // addresses={addresses}
                 selectedAddress={selectedAddress}
-                onAddressChange={handleAddressChange}
-                onAddNewAddress={() => router.push("/address/new")}
+                // onAddressChange={handleAddressChange}
+                selectedCourier={courier}
+                onSelectCourier={handleSelectOngkir}
                 error={error}
               />
             </Grid>

@@ -1,4 +1,5 @@
 import * as React from "react";
+// import SidePanel from "./SidePanel";
 
 interface ISettingLayoutProps {
   children: React.ReactNode;
@@ -7,7 +8,12 @@ interface ISettingLayoutProps {
 const SettingLayout: React.FunctionComponent<ISettingLayoutProps> = ({
   children,
 }) => {
-  return <div className="max-w-5xl py-24">{children}</div>;
+  return (
+    <div className="flex max-w-6xl gap-4 py-24">
+      {/* <SidePanel /> */}
+      {children}
+    </div>
+  );
 };
 
 export default SettingLayout;

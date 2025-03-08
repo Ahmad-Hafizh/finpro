@@ -23,11 +23,13 @@ interface EditCategoryFormProps {
     product_category_name: string;
   };
   setOpenDialog: (open: boolean) => void;
+  token: string;
 }
 
 const EditCategory: React.FC<EditCategoryFormProps> = ({
   categoryData,
   setOpenDialog,
+  token,
 }) => {
   const { toast } = useToast();
   const [category, setCategory] = useState<{ id: number; name: string }>({
@@ -62,7 +64,11 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
 
     const submitApi = async (payload: any) => {
       try {
-        const response = await callAPI.patch("/category", payload);
+        const response = await callAPI.patch("/category", payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log("Ini respons: ", response);
         if (response.data.isSuccess) {
           toast({
@@ -71,12 +77,17 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
             className: "bg-gradient-to-r from-green-300 to-green-200",
           });
         }
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+        setOpenDialog(false);
       } catch (error) {
         toast({
           title: "Error",
           description: "Something went wrong while updating category",
           variant: "destructive",
         });
+        setOpenDialog(false);
         console.log("Error editing category: ", error);
       }
     };

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Paper,
@@ -32,11 +32,6 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({
   // onAddNewAddress,
   error,
 }) => {
-  useEffect(() => {
-    console.log("ShippingAddress - addresses:", addresses);
-    console.log("ShippingAddress - selectedAddress:", selectedAddress);
-  }, [addresses, selectedAddress]);
-
   const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
     const value = event.target.value;
     onAddressChange(value === "" ? "" : Number(value));

@@ -40,8 +40,11 @@ const stockPage = () => {
     getAllVoucher();
     getAllProduct(products);
     getProductForEdit();
-    getAdminInfo();
   }, [products]);
+
+  useEffect(() => {
+    getAdminInfo();
+  }, [session]);
 
   useEffect(() => {
     getAllStore();
@@ -63,9 +66,10 @@ const stockPage = () => {
 
   const getAdminInfo = async () => {
     try {
+      console.log("USESESSION :", session?.user);
       const payload = { email: session?.user.email };
       const response = await callAPI.post("/admin/detail", payload);
-      console.log("INI ADMIN INFO : ", response.data.result[0]);
+      console.log("INI ADMIN INFO : ", response.data);
       setAdminInfo(response.data.result);
       console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
       if (response.data.result[0]?.store_id) {
@@ -177,8 +181,8 @@ const stockPage = () => {
   return (
     <>
       <HeaderDashboard pagename="Stock Management" />
-      <div className="flex h-full w-full flex-col gap-5 p-5">
-        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
+      <div className="flex h-full w-full flex-col p-5">
+        <div className="informasi flex h-1/4 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
             <h2 className="text-2xl font-bold">
               Welcome, {session?.user.name}!
@@ -235,9 +239,10 @@ const stockPage = () => {
                       <>
                         <DialogTitle>Add New Ongkir Voucher</DialogTitle>
                         <AddVoucherOngkir
-                          store_id={storeId}
+                          store_id={storeId as string}
                           setOpenDialog={setOpenDialog}
                           allStore={allStore}
+                          token={session?.user.auth_token as string}
                         />
                       </>
                     )}
@@ -265,6 +270,7 @@ const stockPage = () => {
                         <AddVoucherProduct
                           allProduct={allProducts}
                           setOpenDialog={setOpenDialog}
+                          token={session?.user.auth_token as string}
                         />
                       </>
                     )}
@@ -275,6 +281,7 @@ const stockPage = () => {
                           allStore={allStore}
                           store_id={storeId}
                           setOpenDialog={setOpenDialog}
+                          token={session?.user.auth_token as string}
                         />
                       </>
                     )}
