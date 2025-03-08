@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Carousel,
@@ -9,8 +10,13 @@ import {
 import React from "react";
 import { type CarouselApi } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
 
-export function LargeCarousel() {
+interface ILargeCarousel {
+  banner: any[];
+}
+
+export const LargeCarousel: React.FC<ILargeCarousel> = ({ banner }) => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -42,21 +48,19 @@ export function LargeCarousel() {
       opts={{ loop: true }}
     >
       <CarouselContent className="-ml-4 h-[27vh] md:h-[35vh] lg:h-[40vh]">
-        <CarouselItem className="h-full rounded-xl pl-4">
-          <div className="flex h-full items-center justify-center rounded-xl bg-gray-300">
-            1
-          </div>
-        </CarouselItem>
-        <CarouselItem className="h-full rounded-xl pl-4">
-          <div className="flex h-full items-center justify-center rounded-xl bg-gray-300">
-            2
-          </div>
-        </CarouselItem>
-        <CarouselItem className="h-full rounded-xl pl-4">
-          <div className="flex h-full items-center justify-center rounded-xl bg-gray-300">
-            3
-          </div>
-        </CarouselItem>
+        {banner.map((e, i) => (
+          <CarouselItem className="h-full rounded-xl pl-4" key={i}>
+            <div className="relative h-full justify-center overflow-hidden rounded-xl bg-gray-300">
+              <Image
+                src={e.image}
+                fill
+                alt="banner image"
+                className="absolute object-cover"
+                sizes="1040"
+              />
+            </div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
       <div className="absolute bottom-5 flex w-full items-center justify-center gap-2">
         {Array.from({ length: count }).map((e, i) => (
@@ -70,4 +74,4 @@ export function LargeCarousel() {
       <CarouselPrevious className="left-4 opacity-20 hover:opacity-100" />
     </Carousel>
   );
-}
+};

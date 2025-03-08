@@ -22,10 +22,9 @@ const AddressList: React.FunctionComponent<IAddressListProps> = async ({
     }
   };
   const address = await addresses();
-  console.log(address);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       {address ? (
         address.map((e: any, i: number) => (
           <AddressCard {...e} token={token} key={i} />

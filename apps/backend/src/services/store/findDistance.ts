@@ -17,6 +17,5 @@ export const findDistance = (latitude1: any, latitude2: any, longitude1: any, lo
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   const distance = radius * c;
-
   return distance;
 };

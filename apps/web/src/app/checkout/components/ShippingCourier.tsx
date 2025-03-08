@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -8,39 +9,57 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
   Alert,
-  SelectChangeEvent,
+  // SelectChangeEvent,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Address } from "../types";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { callAPI } from "@/config/axios";
+// import { Address } from "../types";
 
 interface ShippingCourierProps {
-  addresses: Address[];
+  // addresses: any[];
   selectedAddress: number | "";
-  onAddressChange: (addressId: number | "") => void;
-  onAddNewAddress: () => void;
+  // onAddressChange: (addressId: number | "") => void;
+  // onAddNewAddress: () => void;
+  onSelectCourier: (courier: string, cost: number) => void;
+  selectedCourier: string;
   error: string | null;
 }
 
 const ShippingCourier: React.FC<ShippingCourierProps> = ({
-  addresses,
+  // addresses,
   selectedAddress,
-  onAddressChange,
-  onAddNewAddress,
+  // onAddressChange,
+  // onAddNewAddress
+  // ,
+  selectedCourier,
+  onSelectCourier,
   error,
 }) => {
-  const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
-    const value = event.target.value;
-    onAddressChange(value === "" ? "" : Number(value));
-  };
+  const store = useAppSelector((state) => state.store);
+  const [courier, setCourier] = useState([]);
+  // const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
+  //   const value = event.target.value;
+  //   onAddressChange(value === "" ? "" : Number(value));
+  // };
 
   const onGetCourier = async () => {
     try {
+      const response = await callAPI.post("/address/ongkir", {
+        store_id: store.store_id,
+        address_id: selectedAddress,
+      });
+
+      setCourier(response.data.result);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    onGetCourier();
+  }, [selectedAddress]);
 
   return (
     <Paper
@@ -63,13 +82,16 @@ const ShippingCourier: React.FC<ShippingCourierProps> = ({
       <Divider sx={{ mb: 3 }} />
 
       <FormControl fullWidth required sx={{ mb: 3 }}>
-        <InputLabel id="address-label">Pilih Alamat Pengiriman</InputLabel>
+        <InputLabel id="courier-label">Pilih Jasa Pengiriman</InputLabel>
         <Select
-          labelId="address-label"
-          id="address-select"
-          value={selectedAddress}
-          label="Pilih Alamat Pengiriman"
-          onChange={handleAddressChange}
+          labelId="courier-label"
+          id="courier-select"
+          value={selectedCourier}
+          label="Pilih Jasa Pengiriman"
+          onChange={(e) => {
+            const selectedValue = JSON.parse(e.target.value);
+            onSelectCourier(selectedValue.courier, selectedValue.cost);
+          }}
           MenuProps={{
             PaperProps: {
               style: {
@@ -79,9 +101,12 @@ const ShippingCourier: React.FC<ShippingCourierProps> = ({
             },
           }}
         >
-          {addresses.map((address) => (
-            <MenuItem key={address.address_id} value={address.address_id}>
-              {address.street}, {address.city}, {address.province}
+          {courier.map((c: any, i: number) => (
+            <MenuItem
+              key={i}
+              value={JSON.stringify({ courier: c.courier, cost: c.cost })}
+            >
+              {c.courier}
             </MenuItem>
           ))}
         </Select>

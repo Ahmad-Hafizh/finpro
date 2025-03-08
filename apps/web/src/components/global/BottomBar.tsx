@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BiHomeSmile } from "react-icons/bi";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiPackage } from "react-icons/fi";
@@ -7,6 +7,7 @@ import { MdOutlineAccountCircle } from "react-icons/md";
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Botbar = () => {
   const navList = [
@@ -33,15 +34,15 @@ const Botbar = () => {
   ];
 
   const pathName = usePathname();
-  const [isVisible, setIsVisible] = useState(false);
+  const { status } = useSession();
 
-  useEffect(() => {
-    setIsVisible(pathName == "/" ? true : false);
-  }, [pathName]);
+  if (status != "authenticated") {
+    return;
+  }
 
   return (
     <div
-      className={`${isVisible ? "flex" : "hidden"} fixed bottom-0 h-20 w-full items-center justify-between rounded-t-xl border-t bg-white px-[5%] py-4 md:hidden`}
+      className={`${pathName == "/" || pathName.startsWith("/explore") ? "flex" : "hidden"} fixed bottom-0 h-20 w-full items-center justify-between rounded-t-xl border-t bg-white px-[5%] py-4 md:hidden`}
     >
       {navList.map((e, i) => (
         <Link

@@ -30,7 +30,6 @@ export class AccountController {
         const referralCode: string = `${user.name?.slice(0, 4).toUpperCase() ?? 'USER'}${Math.round(Math.random() * 10000).toString()}`;
 
         const authToken = sign({ email: user.email }, process.env.TOKEN_KEY || 'secretkey', { expiresIn: '1h' });
-        console.log('Generated auth token:', authToken);
         const profile = await tx.profile.create({
           data: {
             user_id: user.id,
@@ -54,7 +53,7 @@ export class AccountController {
         html: `<div>
                 <h1>Thank you ${createUserFlow.user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
+                <a href='http://localhost:3000/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
                 </div>`,
       });
 
@@ -77,6 +76,45 @@ export class AccountController {
       });
 
       return ResponseHandler.success(res, 200, 'verify success', newAccount);
+    } catch (error) {
+      return ResponseHandler.error(res, 500, 'Internal Server Error', error);
+    }
+  }
+
+  async askVerify(req: Request, res: Response): Promise<any> {
+    try {
+      const { email } = req.body;
+
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+          emailVerified: null,
+        },
+        include: { accounts: true },
+      });
+
+      if (!user) {
+        return ResponseHandler.success(res, 404, 'account not found ');
+      }
+
+      if (user.accounts) {
+        return ResponseHandler.success(res, 404, 'account is an oauth');
+      }
+
+      const authToken = sign({ email: user.email }, process.env.TOKEN_KEY || 'secretkey', { expiresIn: '1h' });
+
+      await transporter.sendMail({
+        from: 'grocery',
+        to: user.email ?? '',
+        subject: 'email verification and set password',
+        html: `<div>
+                <h1>Thank you ${user.name}, for registrater your account</h1>
+                <p>klik link below to verify your account</p>
+                <a href='http://localhost:3000/auth/verify?a_t=${authToken}'>Verify Account</a>
+                </div>`,
+      });
+
+      return ResponseHandler.success(res, 200, 'ask verify success');
     } catch (error) {
       return ResponseHandler.error(res, 500, 'Internal Server Error', error);
     }
