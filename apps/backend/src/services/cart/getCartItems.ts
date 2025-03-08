@@ -38,6 +38,11 @@ export async function getCartItemsService(userId: string) {
     store_name: item.product.stock[0]?.store?.store_name ?? "Unknown Store",
     product: {
       ...item.product,
+      product_img: item.product.product_img
+        ? item.product.product_img.map((img) => ({
+            url: img.image_url,
+          }))
+        : [],
       stock:
         item.product.stock.length > 0
           ? {

@@ -4,7 +4,7 @@ export interface CartItem {
   product: {
     product_name: string;
     product_price: number;
-    product_img?: { url: string }[];
+    product_img?: { image_url: string }[];
   };
 }
 

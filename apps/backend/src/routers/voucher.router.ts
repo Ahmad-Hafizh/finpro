@@ -13,6 +13,12 @@ export class VoucherRouter {
   }
 
   private initializeRoute() {
+    this.route.get(
+      "/available",
+      verifyToken,
+      this.voucherController.getVouchers.bind(this.voucherController)
+    );
+
     this.route.get("/", this.voucherController.getAllVoucher);
     this.route.post(
       "/ongkir",
@@ -29,7 +35,7 @@ export class VoucherRouter {
       verifyToken,
       this.voucherController.createNewStoreVoucher
     );
-    this.route.get("/order", this.voucherController.getVoucherTwo);
+    // this.route.get("/order", this.voucherController.getVoucherTwo);
   }
 
   public getRouter() {
