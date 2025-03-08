@@ -202,12 +202,12 @@ exports.Prisma.StockJournalScalarFieldEnum = {
   stock_journal_id: 'stock_journal_id',
   store_id: 'store_id',
   stock_id: 'stock_id',
-  product_id: 'product_id',
   quantity: 'quantity',
-  stock_result: 'stock_result',
   type: 'type',
   notes: 'notes',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  product_id: 'product_id',
+  stock_result: 'stock_result'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -298,12 +298,12 @@ exports.Prisma.OrderScalarFieldEnum = {
   shipping_price: 'shipping_price',
   total_payment: 'total_payment',
   tracking_number: 'tracking_number',
-  voucher_code: 'voucher_code',
   status: 'status',
   order_date: 'order_date',
   profile_id: 'profile_id',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  voucher_code: 'voucher_code'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {

@@ -19,6 +19,7 @@ export class OrderController {
         products,
         shipping_price,
         voucherType,
+        // voucher_id,
         voucher_code,
       } = req.body;
       if (!products || !Array.isArray(products) || products.length === 0) {
@@ -30,6 +31,7 @@ export class OrderController {
         products,
         shipping_price,
         voucherType,
+        // voucher_id,
         voucher_code,
       });
       return res.status(201).json(order);

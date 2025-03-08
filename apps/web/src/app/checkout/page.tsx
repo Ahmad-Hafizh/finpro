@@ -13,7 +13,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ThemeProvider } from "@mui/material/styles";
@@ -39,8 +38,11 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeStep] = useState(1);
-  const [voucherType, setVoucherType] = useState<"ongkir" | "payment" | "">("");
-  const [voucherCode, setVoucherCode] = useState("");
+  const [voucherType, setVoucherType] = useState<
+    "ongkir" | "payment" | "product" | ""
+  >("");
+  const [selectedVoucherCode, setSelectedVoucherCode] = useState<string>("");
+  const [availableVouchers, setAvailableVouchers] = useState<any[]>([]);
 
   const subtotal = calculateSubtotal(selectedItems);
   const shippingCost = 15000;
@@ -54,6 +56,27 @@ const CheckoutPage: React.FC = () => {
       fetchAddresses();
     }
   }, [session]);
+
+  useEffect(() => {
+    if (voucherType) {
+      const fetchVouchers = async () => {
+        try {
+          const token = session?.data?.user.auth_token;
+          const response = await callAPI.get("/voucher/available", {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { type: voucherType },
+          });
+          setAvailableVouchers(response.data);
+        } catch (error) {
+          console.error("Error fetching vouchers", error);
+        }
+      };
+      fetchVouchers();
+    } else {
+      setAvailableVouchers([]);
+      setSelectedVoucherCode("");
+    }
+  }, [voucherType, session]);
 
   const loadCartItems = () => {
     const items = localStorage.getItem("selectedCartItems");
@@ -105,8 +128,10 @@ const CheckoutPage: React.FC = () => {
         quantity: item.quantity,
       })),
       voucherType: voucherType || undefined,
-      voucher_code: voucherCode || undefined,
+      voucher_code: selectedVoucherCode || undefined,
     };
+
+    console.log("Payload:", payload);
 
     try {
       const token = session?.data?.user.auth_token;
@@ -114,6 +139,7 @@ const CheckoutPage: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const createdOrder = response.data;
+      console.log("Created Order:", createdOrder);
 
       localStorage.removeItem("selectedCartItems");
 
@@ -123,7 +149,11 @@ const CheckoutPage: React.FC = () => {
         variant: "default",
       });
 
-      router.push(`/payment-proof/${createdOrder.order_id}`);
+      const orderId = createdOrder.order_id || createdOrder.order?.order_id;
+      if (!orderId) {
+        throw new Error("Order ID not found in response");
+      }
+      router.push(`/payment-proof/${orderId}`);
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || err.message;
       setError(errorMessage);
@@ -137,6 +167,7 @@ const CheckoutPage: React.FC = () => {
       setLoading(false);
     }
   };
+
   if (selectedItems.length === 0) {
     return <EmptyCart />;
   }
@@ -183,7 +214,6 @@ const CheckoutPage: React.FC = () => {
                 addresses={addresses}
                 selectedAddress={selectedAddress}
                 onAddressChange={handleAddressChange}
-                // onAddNewAddress={() => router.push("/address/new")}
                 error={error}
               />
               <ShippingCourier
@@ -197,31 +227,69 @@ const CheckoutPage: React.FC = () => {
 
             <Grid size={{ xs: 12, md: 5 }}>
               <Box sx={{ mb: 2 }}>
-                <FormControl fullWidth>
+                <FormControl fullWidth sx={{ mb: 2 }}>
                   <InputLabel id="voucher-type-label">Voucher Type</InputLabel>
                   <Select
                     labelId="voucher-type-label"
                     id="voucher-type-select"
                     value={voucherType}
                     label="Voucher Type"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setVoucherType(
-                        e.target.value as "ongkir" | "payment" | "",
-                      )
-                    }
+                        e.target.value as "ongkir" | "payment" | "product" | "",
+                      );
+                      setSelectedVoucherCode("");
+                    }}
                   >
                     <MenuItem value="">None</MenuItem>
                     <MenuItem value="ongkir">Shipping Voucher</MenuItem>
                     <MenuItem value="payment">Payment Voucher</MenuItem>
+                    <MenuItem value="product">
+                      Product Voucher (Buy 1 Get 1)
+                    </MenuItem>
                   </Select>
                 </FormControl>
-                <TextField
-                  fullWidth
-                  label="Voucher Code"
-                  value={voucherCode}
-                  onChange={(e) => setVoucherCode(e.target.value)}
-                  sx={{ mt: 2 }}
-                />
+                {voucherType && (
+                  <FormControl fullWidth>
+                    <InputLabel id="voucher-select-label">
+                      Select Voucher
+                    </InputLabel>
+                    <Select
+                      labelId="voucher-select-label"
+                      id="voucher-select"
+                      value={selectedVoucherCode}
+                      label="Select Voucher"
+                      onChange={(e) =>
+                        setSelectedVoucherCode(e.target.value as string)
+                      }
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      {availableVouchers.map((voucher: any) => (
+                        <MenuItem
+                          key={
+                            voucher.voucher_code ||
+                            voucher.voucher_ongkir_code ||
+                            voucher.voucher_store_code ||
+                            voucher.voucher_product_code
+                          }
+                          value={
+                            voucher.voucher_code ||
+                            voucher.voucher_ongkir_code ||
+                            voucher.voucher_store_code ||
+                            voucher.voucher_product_code
+                          }
+                        >
+                          {voucher.voucher_code ||
+                            voucher.voucher_ongkir_code ||
+                            voucher.voucher_store_code ||
+                            voucher.voucher_product_code}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
               </Box>
               <OrderSummary
                 items={selectedItems}

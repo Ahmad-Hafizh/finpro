@@ -32,6 +32,12 @@ const CartItemRow: React.FC<CartItemRowProps> = ({
   onUpdateQuantity,
   onDeleteItem,
 }) => {
+  const hasImage =
+    item.product.product_img &&
+    Array.isArray(item.product.product_img) &&
+    item.product.product_img.length > 0 &&
+    item.product.product_img[0]?.image_url;
+
   return (
     <Box
       sx={{
@@ -62,9 +68,9 @@ const CartItemRow: React.FC<CartItemRowProps> = ({
               justifyContent: "center",
             }}
           >
-            {item.product.product_img && item.product.product_img.length > 0 ? (
+            {hasImage ? (
               <img
-                src={item.product.product_img[0].url}
+                src={item.product.product_img?.[0]?.image_url}
                 alt={item.product.product_name}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

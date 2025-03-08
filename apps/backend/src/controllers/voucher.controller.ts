@@ -1,7 +1,37 @@
 import { Request, Response } from "express";
 import ResponseHandler from "../utils/responseHandler";
 import prisma from "../prisma";
+import { getVouchersService } from "../services/voucher/get.voucher.service";
+interface FormattedOngkirVoucher {
+  id: number;
+  code: string;
+  type: "ongkir";
+  discount: number;
+  validUntil: Date;
+  displayText: string;
+}
 
+interface FormattedStoreVoucher {
+  id: number;
+  code: string;
+  type: "payment";
+  percentageDiscount: number;
+  exactDiscount: number;
+  minimumPurchase: number;
+  maximumDiscount: number;
+  validUntil: Date;
+  displayText: string;
+}
+
+interface FormattedProductVoucher {
+  id: number;
+  code: string;
+  type: "product";
+  productId: number;
+  productName: string;
+  validUntil: Date;
+  displayText: string;
+}
 export class VoucherController {
   async getAllVoucher(req: Request, res: Response): Promise<any> {
     try {
@@ -141,6 +171,21 @@ export class VoucherController {
     } catch (error) {
       console.log(error);
       return ResponseHandler.error(res, 500, "Internal Server Error");
+    }
+  }
+  async getVouchers(req: Request, res: Response): Promise<any> {
+    try {
+      const type = req.query.type as string;
+      if (!type) {
+        return res.status(400).json({ error: "Voucher type is required" });
+      }
+      const vouchers = await getVouchersService(type);
+      return res.status(200).json(vouchers);
+    } catch (error: any) {
+      console.error("Get Vouchers Error:", error);
+      return res
+        .status(500)
+        .json({ error: error.message || "Failed to get vouchers" });
     }
   }
 }

@@ -91,12 +91,12 @@ model Address {
 
 model Admin {
   admin_id        Int              @id @default(autoincrement())
-  store_id        Int
+  store_id        Int?
   phone           String
   position        String
   user_id         String           @unique
   deleted_at      DateTime?
-  store           Store            @relation(fields: [store_id], references: [store_id])
+  store           Store?           @relation(fields: [store_id], references: [store_id])
   user            User             @relation(fields: [user_id], references: [id])
   admin_orders    AdminOrder[]
   voucher_ongkir  VoucherOngkir[]
@@ -142,15 +142,15 @@ model StockJournal {
   stock_journal_id Int      @id @default(autoincrement())
   store_id         Int
   stock_id         Int
-  product_id       Int
   quantity         Int
-  stock_result     Int
   type             String
   notes            String
   created_at       DateTime
+  product_id       Int
+  stock_result     Int
+  product          Product  @relation(fields: [product_id], references: [product_id])
   stock            Stock    @relation(fields: [stock_id], references: [stock_id])
   store            Store    @relation(fields: [store_id], references: [store_id])
-  product          Product  @relation(fields: [product_id], references: [product_id])
 
   @@map("stock_journal")
 }
@@ -167,8 +167,8 @@ model Product {
   product_category    ProductCategory  @relation(fields: [product_category_id], references: [product_category_id])
   product_img         ProductImg[]
   stock               Stock[]
-  voucher             VoucherProduct[]
   stockJournal        StockJournal[]
+  voucher             VoucherProduct[]
 
   @@map("product")
 }
@@ -279,12 +279,12 @@ model Order {
   shipping_price  Int?
   total_payment   Int?
   tracking_number String?
-  voucher_code    String?
   status          OrderStatus
   order_date      DateTime
   profile_id      Int
   createdAt       DateTime?     @default(now())
   updatedAt       DateTime?     @updatedAt
+  voucher_code    String?
   admin_orders    AdminOrder[]
   address         Address       @relation(fields: [address_id], references: [address_id])
   profile         Profile       @relation(fields: [profile_id], references: [profile_id])
@@ -342,6 +342,12 @@ model AdminOrder {
   @@map("admin_order")
 }
 
+model Banner {
+  banner_id Int    @id @default(autoincrement())
+  url       String
+  image     String
+}
+
 enum Role {
   user
   admin
@@ -352,12 +358,6 @@ enum adminPosition {
   store_manager
   store_delivery
   store_logistic
-}
-
-model Banner {
-  banner_id Int    @id @default(autoincrement())
-  url       String
-  image     String
 }
 
 enum StockType {

@@ -15,7 +15,7 @@ interface CreateOrderParams {
   address_id: number;
   products: Array<{ product_id: number; quantity: number }>;
   shipping_price?: number;
-  voucherType?: string;
+  voucherType?: "ongkir" | "payment" | "product";
   voucher_code?: string;
 }
 
@@ -135,15 +135,20 @@ export async function createOrderService(params: CreateOrderParams) {
         nearestStore.store_id,
         products[0].product_id
       );
+      console.log("Voucher Data:", voucherData);
       let appliedVoucher = null;
       if (voucherType === "ongkir") {
         appliedVoucher = voucherData.getOngkirVoucher.find(
-          (v: any) =>
-            v.voucher_ongkir_id === Number(voucher_code) ||
-            v.voucher_ongkir_code === voucher_code
+          (v: any) => v.voucher_ongkir_code === voucher_code
         );
         if (appliedVoucher) {
           discountAmount = appliedVoucher.voucher_ongkir_nominal;
+          console.log(
+            "Applied Ongkir Voucher:",
+            appliedVoucher,
+            "Discount:",
+            discountAmount
+          );
           finalShippingPrice = finalShippingPrice - discountAmount;
           if (finalShippingPrice < 0) finalShippingPrice = 0;
           finalTotalPayment = total + finalShippingPrice;
@@ -151,11 +156,10 @@ export async function createOrderService(params: CreateOrderParams) {
         }
       } else if (voucherType === "payment") {
         appliedVoucher = voucherData.getStoreVoucher.find(
-          (v: any) =>
-            v.voucher_store_id === Number(voucher_code) ||
-            v.voucher_store_code === voucher_code
+          (v: any) => v.voucher_store_code === voucher_code
         );
         if (appliedVoucher) {
+          console.log("Applied Store Voucher:", appliedVoucher);
           if (appliedVoucher.voucher_store_amount_percentage > 0) {
             if (total >= appliedVoucher.voucher_store_minimum_buy) {
               discountAmount = Math.floor(
@@ -173,21 +177,44 @@ export async function createOrderService(params: CreateOrderParams) {
           finalTotalPayment = finalTotalPayment - discountAmount;
           if (finalTotalPayment < 0) finalTotalPayment = 0;
           appliedVoucherCode = appliedVoucher.voucher_store_code;
+          console.log(
+            "Discount Amount:",
+            discountAmount,
+            "Final Total Payment:",
+            finalTotalPayment
+          );
         } else {
           appliedVoucher = voucherData.getProductVoucher.find(
-            (v: any) =>
-              v.voucher_product_id === Number(voucher_code) ||
-              v.voucher_product_code === voucher_code
+            (v: any) => v.voucher_product_code === voucher_code
           );
           if (appliedVoucher) {
             discountAmount = 0;
-            finalTotalPayment = finalTotalPayment - discountAmount;
             appliedVoucherCode = appliedVoucher.voucher_product_code;
             voucherProductApplied = { product_id: appliedVoucher.product_id };
+            console.log("Applied Product Voucher:", appliedVoucher);
           }
+        }
+      } else if (voucherType === "product") {
+        appliedVoucher = voucherData.getProductVoucher.find(
+          (v: any) => v.voucher_product_code === voucher_code
+        );
+        if (appliedVoucher) {
+          discountAmount = 0;
+          appliedVoucherCode = appliedVoucher.voucher_product_code;
+          voucherProductApplied = { product_id: appliedVoucher.product_id };
+          console.log("Applied Product Voucher:", appliedVoucher);
         }
       }
     }
+
+    console.log(
+      "Total:",
+      total,
+      "Shipping after discount:",
+      finalShippingPrice,
+      "Final Total:",
+      finalTotalPayment
+    );
 
     const updatedOrder = await tx.order.update({
       where: { order_id: createdOrder.order_id },
