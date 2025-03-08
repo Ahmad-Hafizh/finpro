@@ -74,6 +74,7 @@ export class CategoryController {
         result
       );
     } catch (error) {
+      console.log("INI ERROR CATEOGRY : ", error);
       return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }

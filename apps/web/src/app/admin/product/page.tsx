@@ -92,9 +92,13 @@ const productPage = () => {
 
   const deleteProduct = async (id: any) => {
     try {
-      const response = await callAPI.patch("/product/delete", {
-        product_id: id,
-      });
+      const response = await callAPI.patch(
+        "/product/delete",
+        {
+          product_id: id,
+        },
+        { headers: { Authorization: `Bearer ${session?.user.auth_token}` } },
+      );
       if (response.data.isSuccess) {
         toast({
           title: "Success",
@@ -102,6 +106,9 @@ const productPage = () => {
           className: "bg-gradient-to-r from-green-300 to-green-200",
         });
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       setOpenDialog(false);
       console.log("Ini response delete :", response);
     } catch (error) {
@@ -232,7 +239,11 @@ const productPage = () => {
                     {action === "Edit" && (
                       <>
                         <DialogTitle>Edit Product</DialogTitle>
-                        <EditProduct productData={editedData} />
+                        <EditProduct
+                          productData={editedData}
+                          token={session?.user.auth_token as string}
+                          setOpenDialog={setOpenDialog}
+                        />
                       </>
                     )}
                   </DialogContent>

@@ -25,6 +25,13 @@ export class ProductRouter {
       this.productRouter.createProduct
     );
     this.route.patch(
+      "/update",
+      upload.array("product_image", 5),
+      verifyToken,
+      authGuard.superAdmin,
+      this.productRouter.updateProduct
+    );
+    this.route.patch(
       "/delete",
       verifyToken,
       authGuard.superAdmin,

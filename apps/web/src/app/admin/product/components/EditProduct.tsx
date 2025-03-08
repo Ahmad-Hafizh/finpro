@@ -22,18 +22,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
+import { callAPI } from "@/config/axios";
+import { useToast } from "@/hooks/use-toast";
 
 interface EditAdminFormProps {
   productData: any;
+  token: string;
+  setOpenDialog: (open: boolean) => void;
 }
 
-const EditProduct = ({ productData }: EditAdminFormProps) => {
+export const EditProduct = ({
+  productData,
+  setOpenDialog,
+  token,
+}: EditAdminFormProps) => {
+  const { toast } = useToast();
   console.log("product data :", productData);
   const [product, setProduct] = useState<any>({});
 
   useEffect(() => {
     setProduct(productData);
     form.reset(productData);
+    form.setValue(
+      "category",
+      productData.product_category.product_category_name,
+    );
+    console.log(
+      "Category Default Value:",
+      productData?.product_category?.product_category_name,
+    );
   }, [productData]);
 
   const category = [
@@ -101,7 +118,7 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const updatedFields = {
       name: values.name ?? product.name,
       price: values.price ?? product.price,
@@ -110,7 +127,56 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
       images: values.images ?? product.images,
     };
 
-    console.log("Payload :", updatedFields);
+    const formData = new FormData();
+
+    formData.append("product_id", productData?.product_id);
+    formData.append("product_name", values.name || productData?.product_name);
+    formData.append(
+      "product_price",
+      (values.price || productData?.product_price).toString(),
+    );
+    formData.append(
+      "product_description",
+      values.description || productData?.product_description,
+    );
+    formData.append(
+      "product_category",
+      values.category || productData?.product_category?.product_category_name,
+    );
+
+    if (values.images && values.images.length > 0) {
+      values.images.forEach((file) => formData.append("product_image", file));
+    }
+    console.log("Payload :", formData);
+
+    try {
+      const response = await callAPI.patch("/product/update", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Ini response :", response);
+      if (response.data.isSuccess) {
+        toast({
+          title: "Success",
+          description: "Updating Product Success",
+          className: "bg-gradient-to-r from-green-300 to-green-200",
+        });
+      }
+      setOpenDialog(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      return;
+    } catch (error) {
+      console.log("error");
+      toast({
+        title: "Error",
+        description: "Something went wrong while updating product",
+        variant: "destructive",
+      });
+      setOpenDialog(false);
+      console.log("Ini error: ", error);
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,13 +277,7 @@ const EditProduct = ({ productData }: EditAdminFormProps) => {
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue
-                      placeholder={
-                        productData?.product_category?.product_category_name
-                          ? productData?.product_category?.product_category_name
-                          : ""
-                      }
-                    />
+                    <SelectValue placeholder={"Select a category"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

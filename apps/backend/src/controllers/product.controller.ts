@@ -7,6 +7,7 @@ import { deleteProduct } from "../services/product/deleteProduct.services";
 import { findDetailedProduct } from "../services/product/getDetailedProduct.services";
 import { uploadImage } from "../utils/cloudinary";
 import { findProductDropdown } from "../services/product/getProductDropdown.services";
+import { updateProduct } from "../services/product/updateProduct.services";
 
 export class ProductController {
   async getProduct(req: Request, res: Response): Promise<any> {
@@ -176,6 +177,41 @@ export class ProductController {
     } catch (error) {
       console.log("error from get detailed product", error);
       return ResponseHandler.error(res, 500, "Internal server error", error);
+    }
+  }
+
+  async updateProduct(req: Request, res: Response): Promise<any> {
+    try {
+      const id = parseInt(req.body.product_id as string);
+      const name = req.body.product_name as string;
+      const price = req.body.product_price as string;
+      const description = req.body.product_description as string;
+      const category = req.body.product_category as string;
+      console.log("INI NAME FROM CONTROLLER : ", name);
+      const user = res.locals.user;
+      console.log("USER ", user);
+
+      let image: string[] | undefined;
+      if (req.files && (req.files as Express.Multer.File[]).length > 0) {
+        image = await Promise.all(
+          (req.files as Express.Multer.File[]).map(async (file) => {
+            const result = await uploadImage(file.path, "product_image");
+            return result.secure_url;
+          })
+        );
+      }
+
+      const objectPayload = { id, name, price, description, category, image };
+      const result = await updateProduct(objectPayload);
+
+      return ResponseHandler.success(
+        res,
+        200,
+        "Update Product Success",
+        result
+      );
+    } catch (error) {
+      return ResponseHandler.error(res, 500, "Internal Server Error", error);
     }
   }
 }

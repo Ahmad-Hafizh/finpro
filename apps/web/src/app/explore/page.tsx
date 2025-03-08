@@ -81,7 +81,7 @@ const ExplorePage = () => {
               return (
                 <ProductCard
                   {...product}
-                  product_image={product.product_img}
+                  product_image={product.product_img[0]}
                   key={i}
                 />
               );

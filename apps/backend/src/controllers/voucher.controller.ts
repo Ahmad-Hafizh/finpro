@@ -50,6 +50,8 @@ export class VoucherController {
     try {
       const { code, nominal, startdate, enddate, store_id } = req.body;
       const admin = 4;
+      const user = res.locals.user;
+      console.log("INI USER VOUCHER : ", user);
 
       const newOngkirVoucher = await prisma.voucherOngkir.create({
         data: {
@@ -70,6 +72,7 @@ export class VoucherController {
         newOngkirVoucher
       );
     } catch (error) {
+      console.log("ERROR : ", error);
       return ResponseHandler.error(res, 500, "Internal server error", error);
     }
   }

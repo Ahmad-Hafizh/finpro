@@ -17,20 +17,20 @@ export class CategoryRouter {
     this.route.get("/", this.categoryRouter.getCategory);
     this.route.post(
       "/",
-      // verifyToken,
-      // authGuard.superAdmin,
+      verifyToken,
+      authGuard.superAdmin,
       this.categoryRouter.createCategory
     );
     this.route.patch(
       "/",
-      // verifyToken,
-      // authGuard.superAdmin,
+      verifyToken,
+      authGuard.superAdmin,
       this.categoryRouter.updateCategory
     );
     this.route.patch(
       "/delete",
-      // verifyToken,
-      // authGuard.superAdmin,
+      verifyToken,
+      authGuard.superAdmin,
       this.categoryRouter.deleteCategory
     );
     // this.route.post("/", this.productRouter.createProduct);

@@ -111,12 +111,15 @@ const AddProduct = ({ categories, token, setOpenDialog }: IaddProduct) => {
             className: "bg-gradient-to-r from-green-300 to-green-200",
           });
         }
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
         setOpenDialog(false);
         return;
       } catch (error) {
         toast({
           title: "Error",
-          description: "Something went wrong while updating category",
+          description: "Something went wrong while adding product",
           variant: "destructive",
         });
         setOpenDialog(false);

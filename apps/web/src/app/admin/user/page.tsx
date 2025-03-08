@@ -15,6 +15,7 @@ import SearchBox from "./components/SearchBox";
 import { callAPI } from "@/config/axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 const UserPage = () => {
   const [action, setAction] = useState<string | null>(null);
@@ -30,6 +31,7 @@ const UserPage = () => {
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (session?.user.role === "super_admin") {
@@ -38,6 +40,7 @@ const UserPage = () => {
   }, [session]);
 
   useEffect(() => {
+    console.log(searchParams.toString());
     const params = new URLSearchParams(searchParams.toString());
     const pageParam = params.get("page") || "1";
 
@@ -48,12 +51,14 @@ const UserPage = () => {
     if (!params.has("page")) {
       params.set("page", "1");
       router.replace(`?${params.toString()}`, { scroll: false });
+      console.log("Params to string :", params.toString());
     }
+    getData(params.toString());
   }, [searchParams, router]);
 
-  const getData = async () => {
+  const getData = async (params: string) => {
     try {
-      const response = await callAPI.get("/admin");
+      const response = await callAPI.get(`/admin?${params}`);
 
       const data = response.data.result.admins;
 
@@ -66,7 +71,6 @@ const UserPage = () => {
   };
 
   useEffect(() => {
-    getData();
     getAllStore();
     relevantData();
 
@@ -88,6 +92,38 @@ const UserPage = () => {
       // setStoreId(8);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const deleteAdmin = async (id: any) => {
+    try {
+      const payload = {
+        admin_id: id,
+      };
+      const response = await callAPI.patch("/admin/delete", payload, {
+        headers: {
+          Authorization: `Bearer ${session?.user.auth_token}`,
+        },
+      });
+      if (response.data.isSuccess) {
+        toast({
+          title: "Success",
+          description: "Updating Admin Success",
+          className: "bg-gradient-to-r from-green-300 to-green-200",
+        });
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      setOpenDialog(false);
+    } catch (error) {
+      console.log("INI ERROR FROM DELETE :", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong while updating admin",
+        variant: "destructive",
+      });
+      setOpenDialog(false);
     }
   };
 
@@ -124,9 +160,7 @@ const UserPage = () => {
                       <>
                         <DialogTitle>Are you sure?</DialogTitle>
                         <p>This action cannot be undone.</p>
-                        <Button
-                          onClick={() => console.log(`Deleted ${adminId}`)}
-                        >
+                        <Button onClick={() => deleteAdmin(adminId)}>
                           Confirm Delete
                         </Button>
                       </>
@@ -138,19 +172,7 @@ const UserPage = () => {
                             superAdminAccessToken={
                               session?.user.auth_token as string
                             }
-                            adminData={adminId}
-                            setOpenDialog={setOpenDialog}
-                            storeData={store}
-                          />
-                        ) : (
-                          <p>loading</p>
-                        )}
-                        {status == "authenticated" ? (
-                          <EditAdminForm
-                            superAdminAccessToken={
-                              session?.user.auth_token as string
-                            }
-                            adminData={adminId}
+                            adminData={filteredData}
                             setOpenDialog={setOpenDialog}
                             storeData={store}
                           />

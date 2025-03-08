@@ -24,6 +24,15 @@ export const deleteCategory = async ({ id }: IdeleteCategory): Promise<any> => {
         deletedAt: new Date(Date.now()),
       },
     });
+
+    const deleteProduct = await tx.product.updateMany({
+      where: {
+        product_category_id: createCategory.product_category_id,
+      },
+      data: {
+        deletedAt: new Date(Date.now()),
+      },
+    });
   });
 
   return result;

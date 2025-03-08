@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
+import { Badge } from "@/components/ui/badge";
 //===============================
 
 interface IProductDetailPage {
@@ -196,7 +197,7 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 h-fit w-full rounded-xl border-2 p-4">
+      <div className="sticky left-20 right-0 top-32 h-fit w-fit rounded-xl border-2 p-4">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex w-full justify-between">
             <p>Quantity :</p>
