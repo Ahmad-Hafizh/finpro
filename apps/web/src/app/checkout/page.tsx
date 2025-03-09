@@ -56,7 +56,7 @@ const CheckoutPage: React.FC = () => {
         const response = await callAPI.get("/store/get-store", {
           params: { lat, lng },
         });
-        console.log("Nearest Store Response:", response.data);
+
         setStoreId(response.data.result.store_id);
       } catch (error) {
         console.error("Error fetching nearest store", error);
@@ -68,7 +68,7 @@ const CheckoutPage: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("Coordinates:", latitude, longitude);
+
           fetchNearestStore(latitude, longitude);
         },
         (error) => {
@@ -89,7 +89,6 @@ const CheckoutPage: React.FC = () => {
   }, [session]);
 
   useEffect(() => {
-    console.log("Voucher Type:", voucherType, "Store ID:", storeId);
     if (voucherType && storeId) {
       const fetchVouchers = async () => {
         try {
@@ -98,7 +97,7 @@ const CheckoutPage: React.FC = () => {
             headers: { Authorization: `Bearer ${token}` },
             params: { type: voucherType, store_id: storeId },
           });
-          console.log("Voucher Response:", response.data);
+
           const vouchers = response.data.result
             ? response.data.result
             : response.data;
@@ -194,14 +193,13 @@ const CheckoutPage: React.FC = () => {
       store_id: storeId || undefined,
     };
 
-    console.log("Payload:", payload);
     try {
       const token = session?.data?.user.auth_token;
       const response = await callAPI.post("/order/new", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const createdOrder = response.data;
-      console.log("Created Order:", createdOrder);
+
       localStorage.removeItem("selectedCartItems");
       toast({
         title: "Order is created successfully",
