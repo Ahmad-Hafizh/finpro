@@ -50,7 +50,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             Product
           </Typography>
         </Grid>
-        <Grid size={{ xs: 4 }}>
+        <Grid size={{ xs: 3 }}>
           <Typography
             variant="subtitle2"
             fontWeight={600}
@@ -59,7 +59,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             Name
           </Typography>
         </Grid>
-        <Grid size={{ xs: 2 }} sx={{ textAlign: "center" }}>
+        <Grid size={{ xs: 2 }} pl={1} sx={{ textAlign: "center" }}>
           <Typography
             variant="subtitle2"
             fontWeight={600}
@@ -68,7 +68,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             Product Price
           </Typography>
         </Grid>
-        <Grid size={{ xs: 2 }} sx={{ textAlign: "center" }}>
+        <Grid size={{ xs: 2 }} pl={1} sx={{ textAlign: "center" }}>
           <Typography
             variant="subtitle2"
             fontWeight={600}
@@ -77,7 +77,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             Quantity
           </Typography>
         </Grid>
-        <Grid size={{ xs: 1 }} sx={{ textAlign: "right" }}>
+        <Grid size={{ xs: 2 }} pl={3} sx={{ textAlign: "left" }}>
           <Typography
             variant="subtitle2"
             fontWeight={600}
@@ -86,6 +86,7 @@ const CartDesktopHeader: React.FC<CartDesktopHeaderProps> = ({
             Total
           </Typography>
         </Grid>
+        <Grid size={{ xs: 2 }} pl={1} sx={{ textAlign: "center" }}></Grid>
       </Grid>
     </Box>
   );

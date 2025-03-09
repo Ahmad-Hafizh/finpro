@@ -25,7 +25,13 @@ export async function getOrderListService({
   const orders = await prisma.order.findMany({
     where: whereClause,
     include: {
-      order_items: { include: { product: true } },
+      order_items: {
+        include: {
+          product: {
+            include: { product_img: true },
+          },
+        },
+      },
       payment_proof: true,
     },
   });

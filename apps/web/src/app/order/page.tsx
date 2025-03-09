@@ -24,7 +24,6 @@ import { useToast } from "@/hooks/use-toast";
 
 const OrderListPage: React.FC = () => {
   const { toast } = useToast();
-
   const { data: session, status } = useSession();
   const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
@@ -56,7 +55,23 @@ const OrderListPage: React.FC = () => {
         params,
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrders(response.data);
+      const mappedOrders = response.data.map((order: any) => ({
+        ...order,
+        order_items: order.order_items
+          ? order.order_items.map((item: any) => ({
+              ...item,
+              product: {
+                ...item.product,
+                product_img: item.product.product_img
+                  ? item.product.product_img.map((img: any) => ({
+                      image_url: img.image_url,
+                    }))
+                  : [],
+              },
+            }))
+          : [],
+      }));
+      setOrders(mappedOrders);
     } catch (err: any) {
       setError(err.response?.data?.error || err.message);
     } finally {
