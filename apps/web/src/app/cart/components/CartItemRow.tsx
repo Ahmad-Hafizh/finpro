@@ -79,7 +79,7 @@ const CartItemRow: React.FC<CartItemRowProps> = ({
             )}
           </Box>
         </Grid>
-        <Grid size={{ xs: 4 }}>
+        <Grid size={{ xs: 3 }}>
           <Typography variant="subtitle1" fontWeight={500}>
             {item.product.product_name}
           </Typography>
@@ -140,31 +140,19 @@ const CartItemRow: React.FC<CartItemRowProps> = ({
             </IconButton>
           </Box>
         </Grid>
-        <Grid size={{ xs: 1 }} container alignItems="center">
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-            }}
+        <Grid size={{ xs: 1 }} sx={{ textAlign: "right" }}>
+          <Typography variant="subtitle1" fontWeight={600} color="primary.dark">
+            Rp {(item.product.product_price * quantity).toLocaleString()}
+          </Typography>
+        </Grid>
+        <Grid size={{ xs: 1 }} sx={{ textAlign: "center" }}>
+          <IconButton
+            color="error"
+            size="small"
+            onClick={() => onDeleteItem(item.cart_item_id)}
           >
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              color="primary.dark"
-              sx={{ mr: 1 }}
-            >
-              Rp {(item.product.product_price * quantity).toLocaleString()}
-            </Typography>
-            <IconButton
-              color="error"
-              size="small"
-              onClick={() => onDeleteItem(item.cart_item_id)}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Box>
+            <DeleteIcon fontSize="small" />
+          </IconButton>
         </Grid>
       </Grid>
     </Box>

@@ -26,6 +26,10 @@ interface ShippingCourierProps {
   selectedCourier: string;
   error: string | null;
 }
+interface CourierType {
+  courier: string;
+  cost: number;
+}
 
 const ShippingCourier: React.FC<ShippingCourierProps> = ({
   // addresses,
@@ -38,7 +42,8 @@ const ShippingCourier: React.FC<ShippingCourierProps> = ({
   error,
 }) => {
   const store = useAppSelector((state) => state.store);
-  const [courier, setCourier] = useState([]);
+  // const [courier, setCourier] = useState([]);
+  const [courier, setCourier] = useState<CourierType[]>([]);
   // const handleAddressChange = (event: SelectChangeEvent<number | "">) => {
   //   const value = event.target.value;
   //   onAddressChange(value === "" ? "" : Number(value));
@@ -89,8 +94,13 @@ const ShippingCourier: React.FC<ShippingCourierProps> = ({
           value={selectedCourier}
           label="Pilih Jasa Pengiriman"
           onChange={(e) => {
-            const selectedValue = JSON.parse(e.target.value);
-            onSelectCourier(selectedValue.courier, selectedValue.cost);
+            const selectedValue = e.target.value;
+            const selectedOption = courier.find(
+              (c: any) => c.courier === selectedValue,
+            );
+            if (selectedOption) {
+              onSelectCourier(selectedOption.courier, selectedOption.cost);
+            }
           }}
           MenuProps={{
             PaperProps: {
@@ -102,10 +112,7 @@ const ShippingCourier: React.FC<ShippingCourierProps> = ({
           }}
         >
           {courier.map((c: any, i: number) => (
-            <MenuItem
-              key={i}
-              value={JSON.stringify({ courier: c.courier, cost: c.cost })}
-            >
+            <MenuItem key={i} value={c.courier}>
               {c.courier}
             </MenuItem>
           ))}

@@ -39,7 +39,7 @@ const PaymentProofSummary: React.FC<PaymentProofSummaryProps> = ({
                 <Grid size={{ xs: 3, sm: 2 }}>
                   {item.product?.product_img?.length ? (
                     <img
-                      src={item.product.product_img[0].url}
+                      src={item.product.product_img[0].image_url}
                       alt={item.product.product_name}
                       style={{
                         width: "100%",
