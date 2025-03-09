@@ -26,7 +26,9 @@ export default function ClientLayout({
             {isAdminRoute ? (
               children
             ) : (
-              <div className="container relative mx-auto max-w-7xl px-[5%]">
+              <div
+                className={`container relative mx-auto max-w-7xl ${pathname.startsWith("/product") ? `px-0` : `px-[5%]`}`}
+              >
                 {children}
               </div>
             )}

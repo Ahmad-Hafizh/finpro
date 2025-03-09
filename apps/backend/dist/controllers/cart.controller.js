@@ -8,225 +8,94 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartController = void 0;
-const prisma_1 = __importDefault(require("../prisma"));
+const addToCart_1 = require("../services/cart/addToCart");
+const getCartItemCount_1 = require("../services/cart/getCartItemCount");
+const getCartItems_1 = require("../services/cart/getCartItems");
+const updateCartItems_1 = require("../services/cart/updateCartItems");
+const deleteCartItem_1 = require("../services/cart/deleteCartItem");
 class CartController {
-    // add to cart
     addToCart(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const { product_id, quantity } = req.body;
-            const userId = "1"; // test user id
+            const userId = (_a = res.locals.user) === null || _a === void 0 ? void 0 : _a.id;
+            if (!userId)
+                return res.status(401).json({ error: 'Unauthorized' });
             try {
-                const user = yield prisma_1.default.user.findUnique({
-                    where: { id: userId },
-                    include: { accounts: true },
+                const cartItem = yield (0, addToCart_1.addToCartService)({
+                    userId,
+                    product_id,
+                    quantity,
                 });
-                if (!user || !user.emailVerified) {
-                    return res.status(403).json({
-                        error: "User not found or not verified",
-                    });
-                }
-                const profile = yield prisma_1.default.profile.findUnique({
-                    where: { user_id: user.id },
-                });
-                if (!profile) {
-                    return res.status(404).json({ error: "Profile not found" });
-                }
-                const stock = yield prisma_1.default.stock.findFirst({
-                    where: { product_id },
-                });
-                if (!stock || stock.quantity < quantity) {
-                    return res.status(400).json({
-                        error: "Insufficient product stock",
-                    });
-                }
-                let cart = yield prisma_1.default.cart.findFirst({
-                    where: { profile_id: profile.profile_id },
-                    include: { cart_items: true },
-                });
-                if (!cart) {
-                    cart = yield prisma_1.default.cart.create({
-                        data: {
-                            profile_id: profile.profile_id,
-                            created_at: new Date(),
-                            cart_items: {
-                                create: [],
-                            },
-                        },
-                        include: { cart_items: true },
-                    });
-                }
-                if (!cart) {
-                    return res.status(500).json({ error: "Failed to create cart" });
-                }
-                const existingCartItem = yield prisma_1.default.cartItem.findFirst({
-                    where: {
-                        cart_id: cart.cart_id,
-                        product_id,
-                    },
-                });
-                if (existingCartItem) {
-                    const updatedCartItem = yield prisma_1.default.cartItem.update({
-                        where: { cart_item_id: existingCartItem.cart_item_id },
-                        data: { quantity: existingCartItem.quantity + quantity },
-                    });
-                    return res.status(200).json(updatedCartItem);
-                }
-                const newCartItem = yield prisma_1.default.cartItem.create({
-                    data: {
-                        cart_id: cart.cart_id,
-                        product_id,
-                        quantity,
-                    },
-                });
-                return res.status(201).json(newCartItem);
+                return res.status(cartItem ? 200 : 201).json(cartItem);
             }
             catch (error) {
-                console.error(error);
-                return res.status(500).json({ error: "Failed to add to cart" });
+                console.error('Add To Cart Error:', error);
+                return res.status(500).json({ error: error.message || 'Failed to add to cart' });
             }
         });
     }
-    // get cart items count
     getCartItemsCount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
-            const userId = "1";
+            var _a;
+            const userId = (_a = res.locals.user) === null || _a === void 0 ? void 0 : _a.id;
+            if (!userId)
+                return res.status(401).json({ error: 'Unauthorized' });
             try {
-                const profile = yield prisma_1.default.profile.findUnique({
-                    where: { user_id: userId },
-                });
-                if (!profile) {
-                    return res.status(404).json({ error: "Profile not found" });
-                }
-                const cart = yield prisma_1.default.cart.findFirst({
-                    where: { profile_id: profile.profile_id },
-                    include: { cart_items: true },
-                });
-                const itemCount = (_b = (_a = cart === null || cart === void 0 ? void 0 : cart.cart_items) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
-                return res.status(200).json({ count: itemCount });
+                const result = yield (0, getCartItemCount_1.getCartItemsCountService)(res, userId);
+                return res.status(200).json(result);
             }
             catch (error) {
-                console.error(error);
-                return res.status(500).json({ error: "Failed to get item count" });
+                console.error('Get Cart Items Count Error:', error);
+                return res.status(500).json({ error: error.message || 'Failed to get item count' });
             }
         });
     }
-    // get cart items
     getCartItems(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = "1";
+            var _a;
+            const userId = (_a = res.locals.user) === null || _a === void 0 ? void 0 : _a.id;
+            if (!userId)
+                return res.status(401).json({ error: 'Unauthorized' });
             try {
-                const profile = yield prisma_1.default.profile.findUnique({
-                    where: { user_id: userId },
-                });
-                if (!profile) {
-                    return res.status(404).json({ error: "Profile not found" });
-                }
-                const cart = yield prisma_1.default.cart.findFirst({
-                    where: { profile_id: profile.profile_id },
-                    include: {
-                        cart_items: {
-                            include: {
-                                product: {
-                                    include: {
-                                        product_img: true,
-                                        stock: {
-                                            include: {
-                                                store: true,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                });
-                if (!cart) {
-                    return res.status(200).json({ items: [] });
-                }
-                // const itemsWithTotal = cart.cart_items.map((item) => ({
-                //   ...item,
-                //   subtotal: item.quantity * item.product.product_price,
-                //   store_name: item.product.stock?.store?.store_name ?? "Unknown Store",
-                //   product: {
-                //     ...item.product,
-                //     stock: item.product.stock
-                //       ? {
-                //           ...item.product.stock,
-                //           store: item.product.stock.store,
-                //         }
-                //       : null,
-                //   },
-                // }));
-                // const total = itemsWithTotal.reduce(
-                //   (sum, item) => sum + item.subtotal,
-                //   0
-                // );
-                return;
-                // res.status(200).json({
-                //   items: itemsWithTotal,
-                //   total,
-                // });
+                const result = yield (0, getCartItems_1.getCartItemsService)(userId);
+                return res.status(200).json(result);
             }
             catch (error) {
-                console.error(error);
-                return res.status(500).json({ error: "Failed to get items" });
+                console.error('Get Cart Items Error:', error);
+                return res.status(500).json({ error: error.message || 'Failed to get items' });
             }
         });
     }
-    // update cart item quantity
     updateCartItem(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { cart_item_id } = req.params;
             const { quantity } = req.body;
             try {
-                if (quantity < 1) {
-                    return res.status(400).json({
-                        error: "Quantity should be more than 0",
-                    });
-                }
-                const cartItem = yield prisma_1.default.cartItem.findUnique({
-                    where: { cart_item_id: parseInt(cart_item_id, 10) },
-                });
-                if (!cartItem) {
-                    return res.status(404).json({ error: "Item doesn't exist" });
-                }
-                const stock = yield prisma_1.default.stock.findFirst({
-                    where: { product_id: cartItem.product_id },
-                });
-                if (!stock || stock.quantity < quantity) {
-                    return res.status(400).json({ error: "Insufficient stock" });
-                }
-                const updatedCartItem = yield prisma_1.default.cartItem.update({
-                    where: { cart_item_id: parseInt(cart_item_id, 10) },
-                    data: { quantity },
+                const updatedCartItem = yield (0, updateCartItems_1.updateCartItemService)({
+                    cart_item_id: parseInt(cart_item_id, 10),
+                    quantity,
                 });
                 return res.status(200).json(updatedCartItem);
             }
             catch (error) {
-                console.error(error);
-                return res.status(500).json({ error: "Failed to update item" });
+                console.error('Update Cart Item Error:', error);
+                return res.status(500).json({ error: error.message || 'Failed to update item' });
             }
         });
     }
-    // delete cart item
     deleteCartItem(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { cart_item_id } = req.params;
             try {
-                yield prisma_1.default.cartItem.delete({
-                    where: { cart_item_id: parseInt(cart_item_id, 10) },
-                });
-                return res.status(200).json({ message: "Item deleted successfully" });
+                const result = yield (0, deleteCartItem_1.deleteCartItemService)(parseInt(cart_item_id, 10));
+                return res.status(200).json(result);
             }
             catch (error) {
-                console.error(error);
-                return res.status(500).json({ error: "Failed to delete item" });
+                console.error('Delete Cart Item Error:', error);
+                return res.status(500).json({ error: error.message || 'Failed to delete item' });
             }
         });
     }

@@ -17,17 +17,40 @@ const responseHandler_1 = __importDefault(require("../utils/responseHandler"));
 const prisma_1 = __importDefault(require("../prisma"));
 const findDistance_1 = require("../services/store/findDistance");
 class StoreController {
-    findNearestStore(req, res, next) {
+    getAllStore(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const stores = yield prisma_1.default.store.findMany();
+                return responseHandler_1.default.success(res, 200, "get all store succeed", stores);
+            }
+            catch (error) {
+                return responseHandler_1.default.error(res, 500, "server error", error);
+            }
+        });
+    }
+    getStoreByName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const store = yield prisma_1.default.store.findUnique({
+                    where: { store_name: req.body.store_name },
+                });
+                if (!store)
+                    return responseHandler_1.default.error(res, 404, "store not found");
+                return responseHandler_1.default.success(res, 200, "get store succeed", store);
+            }
+            catch (error) {
+                return responseHandler_1.default.error(res, 500, "server error", error);
+            }
+        });
+    }
+    findNearestStore(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { lat, lng } = req.query;
                 if (!lat && !lng) {
                     const mainStore = yield prisma_1.default.store.findUnique({
                         where: {
-                            store_id: 12,
-                            city: "jakarta",
-                            lat: "-6.980870",
-                            lng: "108.477570",
+                            store_id: 8,
                         },
                     });
                     return responseHandler_1.default.success(res, 200, "get main store success", Object.assign(Object.assign({}, mainStore), { distance: 999 }));
@@ -69,10 +92,10 @@ class StoreController {
     deleteStore(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { store_id } = req.body;
+                const { store_id } = req.params;
                 yield prisma_1.default.store.update({
                     where: {
-                        store_id,
+                        store_id: parseInt(store_id),
                     },
                     data: {
                         isActive: false,
@@ -93,7 +116,14 @@ class StoreController {
                     where: {
                         store_id,
                     },
-                    data: Object.assign({}, req.body),
+                    data: {
+                        store_name: req.body.store_name,
+                        store_address: req.body.store_address,
+                        country: req.body.country,
+                        city: req.body.city,
+                        lat: req.body.lat,
+                        lng: req.body.lng,
+                    },
                 });
                 return responseHandler_1.default.success(res, 200, "Update store success");
             }
@@ -117,6 +147,23 @@ class StoreController {
             }
             catch (error) {
                 return responseHandler_1.default.error(res, 500, "server error", error);
+            }
+        });
+    }
+    getStoreById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { store_id } = req.body;
+                const getStoreName = yield prisma_1.default.store.findFirst({
+                    where: {
+                        store_id: parseInt(store_id),
+                    },
+                });
+                return responseHandler_1.default.success(res, 200, "Get store success", getStoreName);
+            }
+            catch (error) {
+                console.log("Error : ", error);
+                return responseHandler_1.default.error(res, 500, "internal server error");
             }
         });
     }

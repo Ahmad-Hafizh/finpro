@@ -8,6 +8,9 @@ import { sign } from "jsonwebtoken";
 import { findUser } from "../utils/findUser";
 import { signUpSchema } from "../schemas/authSchema";
 import { uploadImage } from "../utils/cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class AccountController {
   async signUp(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -57,7 +60,7 @@ export class AccountController {
         html: `<div>
                 <h1>Thank you ${createUserFlow.user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
+                <a href='${process.env.FE_URL}/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
                 </div>`,
       });
 
@@ -118,7 +121,7 @@ export class AccountController {
         html: `<div>
                 <h1>Thank you ${user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/auth/verify?a_t=${authToken}'>Verify Account</a>
+                <a href='${process.env.FE_URL}/auth/verify?a_t=${authToken}'>Verify Account</a>
                 </div>`,
       });
 
@@ -221,7 +224,7 @@ export class AccountController {
       });
 
       if (!exist) {
-        return ResponseHandler.success(res, 200, 'first sign up');
+        return ResponseHandler.success(res, 200, "first sign up");
       }
 
       const existProfile = await prisma.profile.findUnique({

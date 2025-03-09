@@ -106,7 +106,7 @@ const MobileNav: React.FunctionComponent<IMobileNavProps> = ({
           <p className="text-xl capitalize">
             {parseInt(currentLoc)
               ? pathName.split("/")[pathName.split("/").length - 2]
-              : currentLoc}
+              : currentLoc.replaceAll("%20", " ")}
           </p>
         </div>
       )}

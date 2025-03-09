@@ -62,7 +62,7 @@ class AccountController {
                     html: `<div>
                 <h1>Thank you ${createUserFlow.user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
+                <a href='http://localhost:3000/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
                 </div>`,
                 });
                 return responseHandler_1.default.success(res, 200, "sign up success");
@@ -90,11 +90,45 @@ class AccountController {
             }
         });
     }
+    askVerify(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const { email } = req.body;
+                const user = yield prisma_1.default.user.findUnique({
+                    where: {
+                        email,
+                        emailVerified: null,
+                    },
+                    include: { accounts: true },
+                });
+                if (!user) {
+                    return responseHandler_1.default.success(res, 404, "account not found ");
+                }
+                if (user.accounts) {
+                    return responseHandler_1.default.success(res, 404, "account is an oauth");
+                }
+                const authToken = (0, jsonwebtoken_1.sign)({ email: user.email }, process.env.TOKEN_KEY || "secretkey", { expiresIn: "1h" });
+                yield nodemailer_1.transporter.sendMail({
+                    from: "grocery",
+                    to: (_a = user.email) !== null && _a !== void 0 ? _a : "",
+                    subject: "email verification and set password",
+                    html: `<div>
+                <h1>Thank you ${user.name}, for registrater your account</h1>
+                <p>klik link below to verify your account</p>
+                <a href='http://localhost:3000/auth/verify?a_t=${authToken}'>Verify Account</a>
+                </div>`,
+                });
+                return responseHandler_1.default.success(res, 200, "ask verify success");
+            }
+            catch (error) {
+                return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
+            }
+        });
+    }
     signIn(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // const validateData = signInSchema.parse(req.body);
-                // const { email, password } = validateData;
                 const { email, password } = req.body;
                 const userExist = yield (0, findUser_1.findUser)(email);
                 if (!userExist) {
@@ -128,7 +162,28 @@ class AccountController {
                 if (!user) {
                     return responseHandler_1.default.error(res, 404, "User not found");
                 }
-                return responseHandler_1.default.success(res, 200, "Sign in is success", user);
+                const authToken = (0, jsonwebtoken_1.sign)({ email: user.email, id: user.id }, process.env.TOKEN_KEY || "secretkey", { expiresIn: "1h" });
+                return responseHandler_1.default.success(res, 200, "Sign in is success", Object.assign(Object.assign({}, user), { auth_token: authToken }));
+            }
+            catch (error) {
+                return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
+            }
+        });
+    }
+    getRoleByEmail(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield prisma_1.default.user.findUnique({
+                    where: {
+                        email: req.body.email,
+                    },
+                });
+                if (!user) {
+                    return responseHandler_1.default.error(res, 404, "User not found");
+                }
+                return responseHandler_1.default.success(res, 200, "Sign in is success", {
+                    role: user.role,
+                });
             }
             catch (error) {
                 return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
@@ -138,9 +193,15 @@ class AccountController {
     createProfileReferral(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, id } = req.body;
+                const { name, email } = req.body;
+                const exist = yield prisma_1.default.user.findUnique({
+                    where: { email },
+                });
+                if (!exist) {
+                    return responseHandler_1.default.success(res, 200, 'first sign up');
+                }
                 const existProfile = yield prisma_1.default.profile.findUnique({
-                    where: { user_id: id },
+                    where: { user_id: exist.id },
                 });
                 if (existProfile) {
                     return responseHandler_1.default.success(res, 200, "profile is already exist");
@@ -150,7 +211,7 @@ class AccountController {
                     const referralCode = `${(_a = name === null || name === void 0 ? void 0 : name.slice(0, 4).toUpperCase()) !== null && _a !== void 0 ? _a : "USER"}${Math.round(Math.random() * 10000).toString()}`;
                     const profile = yield tx.profile.create({
                         data: {
-                            user_id: id,
+                            user_id: exist === null || exist === void 0 ? void 0 : exist.id,
                         },
                     });
                     yield tx.referral.create({
@@ -240,8 +301,7 @@ class AccountController {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             try {
-                const { email } = req.body;
-                const user = yield (0, findUser_1.findUser)(email);
+                const user = res.locals.user;
                 if (!(user === null || user === void 0 ? void 0 : user.email)) {
                     return responseHandler_1.default.error(res, 400, "User not found");
                 }
@@ -252,12 +312,13 @@ class AccountController {
                 yield prisma_1.default.user.update({
                     where: { email: user.email },
                     data: {
-                        image: image.result.secure_url,
+                        image: image.secure_url,
                     },
                 });
                 return responseHandler_1.default.success(res, 200, "Update profile picture success");
             }
             catch (error) {
+                console.log(error);
                 return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
             }
         });

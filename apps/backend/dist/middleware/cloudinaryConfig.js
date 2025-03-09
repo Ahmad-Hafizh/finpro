@@ -7,8 +7,8 @@ const cloudinary_1 = require("cloudinary");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 cloudinary_1.v2.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: "dk2sik7oi",
+    api_key: "185537156573628",
+    api_secret: "jin_Y3euY4cqJDR1I51mya6KNH4",
 });
 exports.default = cloudinary_1.v2;

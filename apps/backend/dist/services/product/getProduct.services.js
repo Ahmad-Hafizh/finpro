@@ -14,15 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findProduct = void 0;
 const prisma_1 = __importDefault(require("../../prisma"));
-const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ category, pageNumber, pageSize, keyword, sortBy, deletedAt, theStore, }) {
-    console.log("category in services :", category);
-    console.log("Sort by :", sortBy);
-    console.log("Deleted at :", deletedAt);
-    const categories = category
-        ? Array.isArray(category)
-            ? category.map(String)
-            : category.split(",")
-        : [];
+const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ category, pageNumber, pageSize, keyword, sortBy, deletedAt, theStore }) {
+    console.log('category in services :', category);
+    console.log('Sort by :', sortBy);
+    console.log('Deleted at :', deletedAt);
+    const categories = category ? (Array.isArray(category) ? category.map(String) : category.split(',')) : [];
     const result = yield prisma_1.default.product.findMany({
         skip: (pageNumber - 1) * pageSize,
         take: pageSize,
@@ -38,33 +34,29 @@ const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ categor
                 keyword
                     ? {
                         OR: [
-                            { product_name: { contains: keyword, mode: "insensitive" } },
+                            { product_name: { contains: keyword, mode: 'insensitive' } },
                             {
                                 product_description: {
                                     contains: keyword,
-                                    mode: "insensitive",
+                                    mode: 'insensitive',
                                 },
                             },
                         ],
                     }
                     : {},
-                deletedAt === "true"
-                    ? { deletedAt: { not: null } }
-                    : deletedAt === "false"
-                        ? { deletedAt: null }
-                        : {},
+                deletedAt === 'true' ? { deletedAt: { not: null } } : deletedAt === 'false' ? { deletedAt: null } : {},
                 theStore ? { stock: { some: { store_id: parseInt(theStore) } } } : {},
             ],
         },
         orderBy: sortBy
-            ? sortBy === "name-asc"
-                ? { product_name: "asc" }
-                : sortBy === "name-desc"
-                    ? { product_name: "desc" }
-                    : sortBy === "price-asc"
-                        ? { product_price: "asc" }
-                        : sortBy === "price-desc"
-                            ? { product_price: "desc" }
+            ? sortBy === 'name-asc'
+                ? { product_name: 'asc' }
+                : sortBy === 'name-desc'
+                    ? { product_name: 'desc' }
+                    : sortBy === 'price-asc'
+                        ? { product_price: 'asc' }
+                        : sortBy === 'price-desc'
+                            ? { product_price: 'desc' }
                             : undefined
             : undefined,
         include: {
@@ -87,21 +79,17 @@ const findProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ categor
                 keyword
                     ? {
                         OR: [
-                            { product_name: { contains: keyword, mode: "insensitive" } },
+                            { product_name: { contains: keyword, mode: 'insensitive' } },
                             {
                                 product_description: {
                                     contains: keyword,
-                                    mode: "insensitive",
+                                    mode: 'insensitive',
                                 },
                             },
                         ],
                     }
                     : {},
-                deletedAt === "true"
-                    ? { deletedAt: { not: null } }
-                    : deletedAt === "false"
-                        ? { deletedAt: null }
-                        : {},
+                deletedAt === 'true' ? { deletedAt: { not: null } } : deletedAt === 'false' ? { deletedAt: null } : {},
             ],
         },
     });

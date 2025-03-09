@@ -32,6 +32,14 @@ const deleteCategory = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id }
                 deletedAt: new Date(Date.now()),
             },
         });
+        const deleteProduct = yield tx.product.updateMany({
+            where: {
+                product_category_id: createCategory.product_category_id,
+            },
+            data: {
+                deletedAt: new Date(Date.now()),
+            },
+        });
     }));
     return result;
 });

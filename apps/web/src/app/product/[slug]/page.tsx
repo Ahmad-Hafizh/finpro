@@ -160,7 +160,7 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
   }
   //===============================
   return (
-    <div className="relative grid h-full min-h-screen w-full grid-cols-1 gap-4 py-24 lg:grid-cols-3">
+    <div className="relative grid h-full min-h-screen w-full grid-cols-1 gap-4 px-[5%] py-24 lg:grid-cols-3">
       <div className="flex h-full w-full flex-col gap-4 lg:col-span-2 lg:py-10">
         {productData?.product_img?.length ? (
           <img
@@ -211,7 +211,7 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
           </div>
         </div>
       </div>
-      <div className="sticky left-20 right-0 top-32 h-fit w-fit rounded-xl border-2 p-4">
+      <div className="fixed bottom-0 h-fit w-full border-2 bg-white p-4 lg:sticky lg:left-20 lg:right-0 lg:top-32">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex w-full justify-between">
             <p>Quantity :</p>

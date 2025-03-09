@@ -1,12 +1,33 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { Input } from "../../ui/input";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { usePathname, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const SearchBar = () => {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") || "",
+  );
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (pathName.startsWith("/explore")) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (search) {
+        params.set("search", search);
+      } else {
+        params.delete("search");
+      }
+      router.push(`?${params.toString()}`, { scroll: false });
+    }
+  }, [search, pathName, searchParams.toString()]);
 
   return (
     <div className="relative flex w-full items-center">

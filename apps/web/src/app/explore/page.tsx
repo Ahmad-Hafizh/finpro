@@ -67,15 +67,15 @@ const ExplorePage = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-5 lg:p-10">
-      <div className="searchbox h-full w-full">
+    <div className="flex h-full w-full flex-col gap-5 lg:p-10 lg:py-32">
+      {/* <div className="searchbox h-full w-full">
         <SearchBox />
-      </div>
+      </div> */}
       <div className="main section flex flex-col lg:flex-row">
         <div className="filterbox h-full w-full lg:w-[200px]">
           <FilterBox categories={categories} />
         </div>
-        <div className="product-section grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:px-10">
+        <div className="product-section grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:px-10">
           {products.length > 0 ? (
             products.map((product: any, i: number) => {
               return (
