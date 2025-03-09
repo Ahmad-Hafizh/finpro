@@ -9,12 +9,6 @@ import { fetchCartItems, fetchCartCount } from "@/lib/redux/reducers/cartSlice";
 import { useCart } from "@/contexts/CartContext";
 // import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
@@ -80,7 +74,9 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
       const response = await callAPI.post("/store/get-id", payload);
       console.log("RESPONSE DATA : ", response.data.result);
       return response.data.result.store_name;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const formatStore = async () => {

@@ -183,6 +183,10 @@ export class AddressController {
 
       const distance = findDistance(address?.lat, store?.lat, address?.lng, store?.lng);
 
+      if (distance > 40) {
+        return ResponseHandler.error(res, 403, 'Loaction too far');
+      }
+
       const ongkir = [
         {
           courier: 'jnt',

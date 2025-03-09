@@ -23,9 +23,18 @@ const Home = async () => {
       console.log(error);
     }
   };
+  const getCategory = async () => {
+    try {
+      const response = await callAPI.get("/category");
+      return response.data.result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const banner: any[] = await getBanner();
   const products: any[] = await getProducts();
+  const categories: any[] = await getCategory();
 
   return (
     <div className="flex flex-col gap-6 py-24">
@@ -35,13 +44,15 @@ const Home = async () => {
       </div>
       <div className="hidden flex-col gap-2 md:flex">
         <p className="text-lg md:text-xl">Categories</p>
-        <CategoryCarousel />
+        <CategoryCarousel categories={categories} />
       </div>
       {products.map((e: any, i: number) => (
         <div className="flex flex-col gap-2" key={i}>
           <div className="flex w-full justify-between">
             <p className="text-lg md:text-xl">{e.product_category_name}</p>
-            <Link href="/explore">see all</Link>
+            <Link href={`/explore?cat=${encodeURI(e.product_category_name)}`}>
+              see all
+            </Link>
           </div>
           <ProductCarousel products={e.product} />
         </div>

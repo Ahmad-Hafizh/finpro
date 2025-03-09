@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { callAPI } from "@/config/axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import z from "zod";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -82,7 +88,7 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
             <FormField
               name="profile_image"
               control={form.control}
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
@@ -90,8 +96,13 @@ const ProfilePictureForm: React.FC<IProfilePictureFormProps> = ({
                       type="file"
                       placeholder="profile picture"
                       disabled={isOauth}
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

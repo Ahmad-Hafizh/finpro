@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import { IoCartOutline } from "react-icons/io5";
 import Link from "next/link";
-import { MapPin, Package, Search } from "lucide-react";
-import { Button } from "../ui/button";
+import { MapPin, Package } from "lucide-react";
+import { Button } from "../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,12 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SearchBar from "./SearchBar";
 
 interface IDesktopNavProps {
   store_name: string;
   user_name?: string | null | undefined;
   cart_count: number;
   user_pfp: string | null | undefined;
+  stores: any[];
+  onSelectStore: (storeName: string) => void;
 }
 
 const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
@@ -33,6 +37,8 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
   user_name,
   cart_count,
   user_pfp,
+  stores,
+  onSelectStore,
 }) => {
   return (
     <div
@@ -41,34 +47,32 @@ const DesktopNav: React.FunctionComponent<IDesktopNavProps> = ({
       <div className="flex w-full items-center gap-10">
         <Link href="/" className="flex items-center">
           <Image
-            src="/logofinpro.png"
-            width={40}
-            height={40}
+            src="/greeneries.svg"
+            width={20}
+            height={20}
             sizes="512"
             alt="greeneries logo"
+            priority
           />
-          <p className="text-2xl font-bold">reeneries</p>
+          <p className="text-2xl font-bold md:hidden lg:block">reeneries</p>
         </Link>
         <div className="flex w-full gap-4">
-          <div className="relative flex w-2/3 items-center">
-            <Search className="absolute left-2 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="search"
-              className="w-full rounded-md border py-1 pl-8 pr-3"
-            />
+          <div className="w-2/3">
+            <SearchBar />
           </div>
-          <Select defaultValue="nearest">
-            <SelectTrigger className="w-1/3">
+          <Select value={store_name} onValueChange={(e) => onSelectStore(e)}>
+            <SelectTrigger className="w-1/3 overflow-hidden">
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
                 <SelectValue />
               </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="nearest">{store_name}</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              {stores.map((e: any, i: number) => (
+                <SelectItem value={e.store_name} key={i}>
+                  {e.store_name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

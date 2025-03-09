@@ -57,6 +57,7 @@ export const LargeCarousel: React.FC<ILargeCarousel> = ({ banner }) => {
                 alt="banner image"
                 className="absolute object-cover"
                 sizes="1040"
+                priority
               />
             </div>
           </CarouselItem>
