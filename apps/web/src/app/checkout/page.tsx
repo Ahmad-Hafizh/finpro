@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -31,7 +30,6 @@ import ShippingCourier from "./components/ShippingCourier";
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<number | "">("");
@@ -43,6 +41,7 @@ const CheckoutPage: React.FC = () => {
   >("");
   const [selectedVoucherCode, setSelectedVoucherCode] = useState<string>("");
   const [availableVouchers, setAvailableVouchers] = useState<any[]>([]);
+  const [storeId, setStoreId] = useState<number | null>(null);
 
   const subtotal = calculateSubtotal(selectedItems);
   const [shippingCost, setShippingCost] = useState(0);
@@ -52,6 +51,37 @@ const CheckoutPage: React.FC = () => {
   const session = useSession();
 
   useEffect(() => {
+    const fetchNearestStore = async (lat: number, lng: number) => {
+      try {
+        const response = await callAPI.get("/store/get-store", {
+          params: { lat, lng },
+        });
+        console.log("Nearest Store Response:", response.data);
+        setStoreId(response.data.result.store_id);
+      } catch (error) {
+        console.error("Error fetching nearest store", error);
+        setStoreId(8);
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("Coordinates:", latitude, longitude);
+          fetchNearestStore(latitude, longitude);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          setStoreId(8);
+        },
+      );
+    } else {
+      setStoreId(8);
+    }
+  }, [session]);
+
+  useEffect(() => {
     loadCartItems();
     if (session.status === "authenticated" && session.data) {
       fetchAddresses();
@@ -59,15 +89,29 @@ const CheckoutPage: React.FC = () => {
   }, [session]);
 
   useEffect(() => {
-    if (voucherType) {
+    console.log("Voucher Type:", voucherType, "Store ID:", storeId);
+    if (voucherType && storeId) {
       const fetchVouchers = async () => {
         try {
           const token = session?.data?.user.auth_token;
           const response = await callAPI.get("/voucher/available", {
             headers: { Authorization: `Bearer ${token}` },
-            params: { type: voucherType },
+            params: { type: voucherType, store_id: storeId },
           });
-          setAvailableVouchers(response.data);
+          console.log("Voucher Response:", response.data);
+          const vouchers = response.data.result
+            ? response.data.result
+            : response.data;
+          let data = vouchers;
+          if (voucherType === "product") {
+            const productIds = selectedItems.map(
+              (item) => item.product.product_id,
+            );
+            data = vouchers.filter((voucher: any) =>
+              productIds.includes(voucher.product_id),
+            );
+          }
+          setAvailableVouchers(data);
         } catch (error) {
           console.error("Error fetching vouchers", error);
         }
@@ -77,7 +121,7 @@ const CheckoutPage: React.FC = () => {
       setAvailableVouchers([]);
       setSelectedVoucherCode("");
     }
-  }, [voucherType, session]);
+  }, [voucherType, session, storeId, selectedItems]);
 
   const loadCartItems = () => {
     const items = localStorage.getItem("selectedCartItems");
@@ -96,7 +140,6 @@ const CheckoutPage: React.FC = () => {
       const response = await callAPI.get("/address/get-address", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       setAddresses(response.data.result);
       if (response.data.result && response.data.result.length > 0) {
         setSelectedAddress(response.data.result[0].address_id);
@@ -111,13 +154,30 @@ const CheckoutPage: React.FC = () => {
     setSelectedAddress(addressId);
   };
 
+  const handleVoucherChange = (value: string) => {
+    if (voucherType === "payment") {
+      const voucher = availableVouchers.find(
+        (v: any) => (v.voucher_code || v.voucher_store_code) === value,
+      );
+      if (voucher && subtotal < voucher.minimum_buy) {
+        toast({
+          title: "Voucher Error",
+          description: `Minimum purchase for this voucher is Rp ${voucher.minimum_buy.toLocaleString()}.`,
+          variant: "destructive",
+        });
+        setSelectedVoucherCode("");
+        return;
+      }
+    }
+    setSelectedVoucherCode(value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedAddress) {
       setError("Choose delivery address");
       return;
     }
-
     setError(null);
     setLoading(true);
 
@@ -131,10 +191,10 @@ const CheckoutPage: React.FC = () => {
       })),
       voucherType: voucherType || undefined,
       voucher_code: selectedVoucherCode || undefined,
+      store_id: storeId || undefined,
     };
 
     console.log("Payload:", payload);
-
     try {
       const token = session?.data?.user.auth_token;
       const response = await callAPI.post("/order/new", payload, {
@@ -142,15 +202,12 @@ const CheckoutPage: React.FC = () => {
       });
       const createdOrder = response.data;
       console.log("Created Order:", createdOrder);
-
       localStorage.removeItem("selectedCartItems");
-
       toast({
         title: "Order is created successfully",
         description: "You will be directed to payment page",
         variant: "default",
       });
-
       const orderId = createdOrder.order_id || createdOrder.order?.order_id;
       if (!orderId) {
         throw new Error("Order ID not found in response");
@@ -159,7 +216,6 @@ const CheckoutPage: React.FC = () => {
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || err.message;
       setError(errorMessage);
-
       toast({
         title: "Failed to create order",
         description: errorMessage,
@@ -224,15 +280,12 @@ const CheckoutPage: React.FC = () => {
                 error={error}
               />
               <ShippingCourier
-                // addresses={addresses}
                 selectedAddress={selectedAddress}
-                // onAddressChange={handleAddressChange}
                 selectedCourier={courier}
                 onSelectCourier={handleSelectOngkir}
                 error={error}
               />
             </Grid>
-
             <Grid size={{ xs: 12, md: 5 }}>
               <Box sx={{ mb: 2 }}>
                 <FormControl fullWidth sx={{ mb: 2 }}>
@@ -268,7 +321,7 @@ const CheckoutPage: React.FC = () => {
                       value={selectedVoucherCode}
                       label="Select Voucher"
                       onChange={(e) =>
-                        setSelectedVoucherCode(e.target.value as string)
+                        handleVoucherChange(e.target.value as string)
                       }
                     >
                       <MenuItem value="">

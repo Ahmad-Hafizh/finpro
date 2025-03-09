@@ -104,7 +104,9 @@ const data = {
   settings: [
     {
       name: "Settings",
+
       url: "setting/account",
+
       icon: Settings2,
     },
   ],
