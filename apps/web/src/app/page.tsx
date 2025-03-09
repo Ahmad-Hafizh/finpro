@@ -1,16 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import { CategoryCarousel } from "@/components/global/CategoryCarousel";
 import { LargeCarousel } from "@/components/global/LargeCarousel";
 import { ProductCarousel } from "@/components/global/ProductCarousel";
 import { callAPI } from "@/config/axios";
+import { useState, useEffect } from "react";
 // import StorePick from "@/components/global/StorePick";
 import Link from "next/link";
 
-const Home = async () => {
+const Home = () => {
+  const [product, setProduct] = useState<any>([]);
+  const [banner, setBanner] = useState<any>([]);
+  const [categories, setCategory] = useState<any>([]);
+
   const getProducts = async () => {
     try {
       const response = await callAPI.get("/product/landing");
-      return response.data.result;
+      setProduct(response.data.result);
     } catch (error) {
       console.log(error);
     }
@@ -18,7 +24,7 @@ const Home = async () => {
   const getBanner = async () => {
     try {
       const response = await callAPI.get("/voucher/banner");
-      return response.data.result;
+      setBanner(response.data.result);
     } catch (error) {
       console.log(error);
     }
@@ -26,15 +32,17 @@ const Home = async () => {
   const getCategory = async () => {
     try {
       const response = await callAPI.get("/category");
-      return response.data.result;
+      setCategory(response.data.result);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const banner: any[] = await getBanner();
-  const products: any[] = await getProducts();
-  const categories: any[] = await getCategory();
+  useEffect(() => {
+    getProducts();
+    getBanner();
+    getCategory();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 py-24">
@@ -46,7 +54,7 @@ const Home = async () => {
         <p className="text-lg md:text-xl">Categories</p>
         <CategoryCarousel categories={categories} />
       </div>
-      {products.map((e: any, i: number) => (
+      {product.map((e: any, i: number) => (
         <div className="flex flex-col gap-2" key={i}>
           <div className="flex w-full justify-between">
             <p className="text-lg md:text-xl">{e.product_category_name}</p>

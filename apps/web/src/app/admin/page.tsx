@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -5,7 +7,7 @@ import HeaderDashboard from "./components/header";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const adminPage = () => {
+const AdminPage = () => {
   const { data: session } = useSession();
   const route = useRouter();
 
@@ -121,4 +123,4 @@ const adminPage = () => {
   );
 };
 
-export default adminPage;
+export default AdminPage;

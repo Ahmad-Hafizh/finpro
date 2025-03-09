@@ -64,7 +64,6 @@ function autoCancelOrdersService() {
                     data: { status: "dibatalkan" },
                 });
             }));
-            console.log(`Order ${order.order_id} auto cancelled and stock returned.`);
         }
     });
 }

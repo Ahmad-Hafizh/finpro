@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { callAPI } from "@/config/axios";
 

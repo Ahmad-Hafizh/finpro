@@ -3,8 +3,10 @@ import HeaderDashboard from "../components/header";
 import { columns } from "./components/column";
 import { DataTable } from "./components/data-table";
 import { callAPI } from "@/config/axios";
+import { auth } from "@/auth";
 
-const storePage = async () => {
+const StorePage = async () => {
+  const session = await auth();
   const stores = async () => {
     try {
       const response = await callAPI.get("/store");
@@ -25,10 +27,10 @@ const storePage = async () => {
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-4 pt-0">
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns(session)} data={data} />
       </div>
     </>
   );
 };
 
-export default storePage;
+export default StorePage;

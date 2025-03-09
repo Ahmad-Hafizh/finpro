@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -81,6 +83,7 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
         }, 500);
         setOpenDialog(false);
       } catch (error) {
+        console.log(error);
         toast({
           title: "Error",
           description: "Something went wrong while updating category",

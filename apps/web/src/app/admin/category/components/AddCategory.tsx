@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -57,6 +59,7 @@ const AddCategory = ({ setOpenDialog, token }: IAddCategory) => {
           }, 500);
         }
       } catch (error) {
+        console.log(error);
         toast({
           title: "Error",
           description: "Something went wrong while adding category",

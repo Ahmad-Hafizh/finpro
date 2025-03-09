@@ -22,6 +22,8 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const findUser_1 = require("../utils/findUser");
 const authSchema_1 = require("../schemas/authSchema");
 const cloudinary_1 = require("../utils/cloudinary");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 class AccountController {
     signUp(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,7 +64,7 @@ class AccountController {
                     html: `<div>
                 <h1>Thank you ${createUserFlow.user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
+                <a href='${process.env.FE_URL}/auth/verify?a_t=${createUserFlow.authToken}'>Verify Account</a>
                 </div>`,
                 });
                 return responseHandler_1.default.success(res, 200, "sign up success");
@@ -116,7 +118,7 @@ class AccountController {
                     html: `<div>
                 <h1>Thank you ${user.name}, for registrater your account</h1>
                 <p>klik link below to verify your account</p>
-                <a href='http://localhost:3000/auth/verify?a_t=${authToken}'>Verify Account</a>
+                <a href='${process.env.FE_URL}/auth/verify?a_t=${authToken}'>Verify Account</a>
                 </div>`,
                 });
                 return responseHandler_1.default.success(res, 200, "ask verify success");
@@ -198,7 +200,7 @@ class AccountController {
                     where: { email },
                 });
                 if (!exist) {
-                    return responseHandler_1.default.success(res, 200, 'first sign up');
+                    return responseHandler_1.default.success(res, 200, "first sign up");
                 }
                 const existProfile = yield prisma_1.default.profile.findUnique({
                     where: { user_id: exist.id },

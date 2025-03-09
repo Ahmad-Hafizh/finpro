@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import HeaderDashboard from "../components/header";
@@ -15,7 +17,7 @@ import SearchBox from "./components/SearchBox";
 import { useSession } from "next-auth/react";
 import PaginationTable from "../components/Pagination";
 
-const stockPage = () => {
+const StockPage = () => {
   const [action, setAction] = useState<string | null>("");
   const [categoryId, setCategoryId] = useState<number>(0);
   const [category, setCategory] = useState<any>([]);
@@ -258,4 +260,4 @@ const stockPage = () => {
   );
 };
 
-export default stockPage;
+export default StockPage;

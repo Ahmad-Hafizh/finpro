@@ -28,7 +28,6 @@ function autoConfirmOrdersService() {
                 where: { order_id: order.order_id },
                 data: { status: "pesanan_dikonfirmasi" },
             });
-            console.log(`Order ${order.order_id} auto confirmed.`);
         }
     });
 }

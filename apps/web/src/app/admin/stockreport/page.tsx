@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import HeaderDashboard from "../components/header";
@@ -12,7 +14,7 @@ import { callAPI } from "@/config/axios";
 import SortBox from "./components/SortBox";
 import { useSession } from "next-auth/react";
 
-const stockReportPage = () => {
+const StockReportPage = () => {
   const [category, setCategory] = useState<any>([]);
   const [storeId, setStoreId] = useState<any>(null);
   const [allProducts, setAllProducts] = useState<any>([]);
@@ -227,4 +229,4 @@ const stockReportPage = () => {
   );
 };
 
-export default stockReportPage;
+export default StockReportPage;
