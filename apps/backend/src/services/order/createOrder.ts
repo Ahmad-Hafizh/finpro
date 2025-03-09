@@ -17,6 +17,7 @@ interface CreateOrderParams {
   shipping_price?: number;
   voucherType?: "ongkir" | "payment" | "product";
   voucher_code?: string;
+  store_id: number;
 }
 
 export async function createOrderService(params: CreateOrderParams) {
@@ -27,6 +28,7 @@ export async function createOrderService(params: CreateOrderParams) {
     shipping_price,
     voucherType,
     voucher_code,
+    store_id,
   } = params;
   const now = new Date();
 
@@ -40,8 +42,10 @@ export async function createOrderService(params: CreateOrderParams) {
   });
   if (!address) throw new Error("Address not found");
 
-  const nearestStore = await prisma.store.findFirst();
-  if (!nearestStore) throw new Error("No store available");
+  const nearestStore = await prisma.store.findUnique({
+    where: { store_id },
+  });
+  if (!nearestStore) throw new Error("Store not found");
 
   for (const item of products) {
     const stock = await prisma.stock.findFirst({
@@ -57,133 +61,142 @@ export async function createOrderService(params: CreateOrderParams) {
 
   const orderNumber = generateOrderNumber(now);
 
-  const order = await prisma.$transaction(async (tx) => {
-    const createdOrder = await tx.order.create({
-      data: {
-        order_number: orderNumber,
-        store_id: nearestStore.store_id,
-        address_id: address.address_id,
-        total_price: 0,
-        shipping_price: shipping_price || null,
-        total_payment: 0,
-        status: "menunggu_pembayaran",
-        order_date: now,
-        profile_id: profile.profile_id,
-        order_items: {
-          create: products.map((item) => ({
-            product_id: item.product_id,
-            quantity: item.quantity,
-            price: 0,
-            subtotal: 0,
-          })),
-        },
-      },
-      include: { order_items: true },
-    });
-
-    let total = 0;
-
-    for (const item of createdOrder.order_items) {
-      const product = await tx.product.findUnique({
-        where: { product_id: item.product_id },
-      });
-      if (product) {
-        const price = product.product_price;
-        const subtotal = price * item.quantity;
-        total += subtotal;
-
-        await tx.orderItem.update({
-          where: { order_item_id: item.order_item_id },
-          data: { price, subtotal },
-        });
-
-        const stock = await tx.stock.findFirst({
-          where: {
-            product_id: item.product_id,
-            store_id: nearestStore.store_id,
-          },
-        });
-        if (stock) {
-          await tx.stock.update({
-            where: { stock_id: stock.stock_id },
-            data: { quantity: stock.quantity - item.quantity },
-          });
-          await tx.stockJournal.create({
-            data: {
-              store_id: nearestStore.store_id,
-              stock_id: stock.stock_id,
+  const order = await prisma.$transaction(
+    async (tx) => {
+      const createdOrder = await tx.order.create({
+        data: {
+          order_number: orderNumber,
+          store_id: nearestStore.store_id,
+          address_id: address.address_id,
+          total_price: 0,
+          shipping_price: shipping_price || null,
+          total_payment: 0,
+          status: "menunggu_pembayaran",
+          order_date: now,
+          profile_id: profile.profile_id,
+          order_items: {
+            create: products.map((item) => ({
               product_id: item.product_id,
               quantity: item.quantity,
-              type: "out",
-              notes: `Order ${orderNumber} created - stock deducted`,
-              created_at: now,
-              stock_result: stock.quantity - item.quantity,
-            },
+              price: 0,
+              subtotal: 0,
+            })),
+          },
+        },
+        include: { order_items: true },
+      });
+
+      let total = 0;
+      for (const item of createdOrder.order_items) {
+        const product = await tx.product.findUnique({
+          where: { product_id: item.product_id },
+        });
+        if (product) {
+          const price = product.product_price;
+          const subtotal = price * item.quantity;
+          total += subtotal;
+
+          await tx.orderItem.update({
+            where: { order_item_id: item.order_item_id },
+            data: { price, subtotal },
           });
         }
       }
-    }
 
-    let finalShippingPrice = shipping_price || 0;
-    let finalTotalPayment = total + finalShippingPrice;
-    let discountAmount = 0;
-    let appliedVoucherCode: string | null = null;
-    let voucherProductApplied: { product_id: number } | null = null;
+      let finalShippingPrice = shipping_price || 0;
+      let finalTotalPayment = total + finalShippingPrice;
+      let discountAmount = 0;
+      let appliedVoucherCode: string | null = null;
+      let voucherProductApplied: { product_id: number } | null = null;
 
-    if (voucherType && voucher_code) {
-      const voucherData = await getVoucher(
-        nearestStore.store_id,
-        products[0].product_id
-      );
-      console.log("Voucher Data:", voucherData);
-      let appliedVoucher = null;
-      if (voucherType === "ongkir") {
-        appliedVoucher = voucherData.getOngkirVoucher.find(
-          (v: any) => v.voucher_ongkir_code === voucher_code
-        );
-        if (appliedVoucher) {
-          discountAmount = appliedVoucher.voucher_ongkir_nominal;
-          console.log(
-            "Applied Ongkir Voucher:",
-            appliedVoucher,
-            "Discount:",
-            discountAmount
-          );
-          finalShippingPrice = finalShippingPrice - discountAmount;
-          if (finalShippingPrice < 0) finalShippingPrice = 0;
-          finalTotalPayment = total + finalShippingPrice;
-          appliedVoucherCode = appliedVoucher.voucher_ongkir_code;
-        }
-      } else if (voucherType === "payment") {
-        appliedVoucher = voucherData.getStoreVoucher.find(
-          (v: any) => v.voucher_store_code === voucher_code
-        );
-        if (appliedVoucher) {
-          console.log("Applied Store Voucher:", appliedVoucher);
-          if (appliedVoucher.voucher_store_amount_percentage > 0) {
-            if (total >= appliedVoucher.voucher_store_minimum_buy) {
-              discountAmount = Math.floor(
-                (total * appliedVoucher.voucher_store_amount_percentage) / 100
+      if (voucherType && voucher_code) {
+        let voucherData;
+        if (voucherType === "product") {
+          const combinedVoucherData = { getProductVoucher: [] };
+          for (const prod of products) {
+            const data = await getVoucher(
+              nearestStore.store_id,
+              prod.product_id
+            );
+            combinedVoucherData.getProductVoucher =
+              combinedVoucherData.getProductVoucher.concat(
+                data.getProductVoucher || []
               );
-              if (
-                discountAmount > appliedVoucher.voucher_store_maximum_nominal
-              ) {
-                discountAmount = appliedVoucher.voucher_store_maximum_nominal;
-              }
-            }
-          } else {
-            discountAmount = appliedVoucher.voucher_store_exact_nominal;
           }
-          finalTotalPayment = finalTotalPayment - discountAmount;
-          if (finalTotalPayment < 0) finalTotalPayment = 0;
-          appliedVoucherCode = appliedVoucher.voucher_store_code;
-          console.log(
-            "Discount Amount:",
-            discountAmount,
-            "Final Total Payment:",
-            finalTotalPayment
-          );
+          voucherData = combinedVoucherData;
         } else {
+          voucherData = await getVoucher(
+            nearestStore.store_id,
+            products[0].product_id
+          );
+        }
+        console.log("Voucher Data:", voucherData);
+        let appliedVoucher = null;
+        if (voucherType === "ongkir") {
+          appliedVoucher = voucherData.getOngkirVoucher.find(
+            (v: any) => v.voucher_ongkir_code === voucher_code
+          );
+          if (appliedVoucher) {
+            discountAmount = appliedVoucher.voucher_ongkir_nominal;
+            console.log(
+              "Applied Ongkir Voucher:",
+              appliedVoucher,
+              "Discount:",
+              discountAmount
+            );
+            finalShippingPrice = finalShippingPrice - discountAmount;
+            if (finalShippingPrice < 0) finalShippingPrice = 0;
+            finalTotalPayment = total + finalShippingPrice;
+            appliedVoucherCode = appliedVoucher.voucher_ongkir_code;
+          }
+        } else if (voucherType === "payment") {
+          appliedVoucher = voucherData.getStoreVoucher.find(
+            (v: any) => v.voucher_store_code === voucher_code
+          );
+          if (appliedVoucher) {
+            console.log("Applied Store Voucher:", appliedVoucher);
+            if (appliedVoucher.voucher_store_amount_percentage > 0) {
+              if (total >= appliedVoucher.voucher_store_minimum_buy) {
+                discountAmount = Math.floor(
+                  (total * appliedVoucher.voucher_store_amount_percentage) / 100
+                );
+                if (
+                  discountAmount > appliedVoucher.voucher_store_maximum_nominal
+                ) {
+                  discountAmount = appliedVoucher.voucher_store_maximum_nominal;
+                }
+              } else {
+                throw new Error(
+                  `Minimum purchase for this voucher is Rp ${appliedVoucher.voucher_store_minimum_buy.toLocaleString()}.`
+                );
+              }
+            } else {
+              discountAmount = appliedVoucher.voucher_store_exact_nominal;
+            }
+            finalTotalPayment = finalTotalPayment - discountAmount;
+            if (finalTotalPayment < 0) finalTotalPayment = 0;
+            appliedVoucherCode = appliedVoucher.voucher_store_code;
+            console.log(
+              "Discount Amount:",
+              discountAmount,
+              "Final Total Payment:",
+              finalTotalPayment
+            );
+          } else {
+            appliedVoucher = voucherData.getProductVoucher.find(
+              (v: any) => v.voucher_product_code === voucher_code
+            );
+            if (appliedVoucher) {
+              discountAmount = 0;
+              appliedVoucherCode = appliedVoucher.voucher_product_code;
+              voucherProductApplied = { product_id: appliedVoucher.product_id };
+              console.log(
+                "Applied Product Voucher (fallback):",
+                appliedVoucher
+              );
+            }
+          }
+        } else if (voucherType === "product") {
           appliedVoucher = voucherData.getProductVoucher.find(
             (v: any) => v.voucher_product_code === voucher_code
           );
@@ -194,80 +207,90 @@ export async function createOrderService(params: CreateOrderParams) {
             console.log("Applied Product Voucher:", appliedVoucher);
           }
         }
-      } else if (voucherType === "product") {
-        appliedVoucher = voucherData.getProductVoucher.find(
-          (v: any) => v.voucher_product_code === voucher_code
-        );
-        if (appliedVoucher) {
-          discountAmount = 0;
-          appliedVoucherCode = appliedVoucher.voucher_product_code;
-          voucherProductApplied = { product_id: appliedVoucher.product_id };
-          console.log("Applied Product Voucher:", appliedVoucher);
-        }
       }
-    }
 
-    console.log(
-      "Total:",
-      total,
-      "Shipping after discount:",
-      finalShippingPrice,
-      "Final Total:",
-      finalTotalPayment
-    );
+      console.log(
+        "Total:",
+        total,
+        "Shipping after discount:",
+        finalShippingPrice,
+        "Final Total:",
+        finalTotalPayment
+      );
 
-    const updatedOrder = await tx.order.update({
-      where: { order_id: createdOrder.order_id },
-      data: {
-        total_price: total,
-        shipping_price: finalShippingPrice,
-        total_payment: finalTotalPayment,
-        voucher_code: appliedVoucherCode,
-      },
-      include: { order_items: true },
-    });
-
-    for (const item of updatedOrder.order_items) {
-      const stock = await tx.stock.findFirst({
-        where: {
-          product_id: item.product_id,
-          store_id: nearestStore.store_id,
+      const updatedOrder = await tx.order.update({
+        where: { order_id: createdOrder.order_id },
+        data: {
+          total_price: total,
+          shipping_price: finalShippingPrice,
+          total_payment: finalTotalPayment,
+          voucher_code: appliedVoucherCode,
         },
+        include: { order_items: true },
       });
-      if (stock) {
-        let deductionQuantity = item.quantity;
-        if (
-          voucherProductApplied &&
-          item.product_id === voucherProductApplied.product_id
-        ) {
-          deductionQuantity = item.quantity + 1;
-        }
-        await tx.stock.update({
-          where: { stock_id: stock.stock_id },
-          data: { quantity: stock.quantity - deductionQuantity },
-        });
-        await tx.stockJournal.create({
-          data: {
-            store_id: nearestStore.store_id,
-            stock_id: stock.stock_id,
+
+      for (const item of updatedOrder.order_items) {
+        const stock = await tx.stock.findFirst({
+          where: {
             product_id: item.product_id,
-            quantity: deductionQuantity,
-            type: "out",
-            notes:
-              `Order ${orderNumber} created - stock deducted` +
-              (voucherProductApplied &&
-              item.product_id === voucherProductApplied.product_id
-                ? " (buy 1 get 1 applied)"
-                : ""),
-            created_at: now,
-            stock_result: stock.quantity - deductionQuantity,
+            store_id: nearestStore.store_id,
           },
         });
+        if (stock) {
+          let bonus = 0;
+          if (
+            voucherType === "product" &&
+            voucher_code &&
+            (
+              await getVoucher(nearestStore.store_id, item.product_id)
+            ).getProductVoucher.find(
+              (v: any) => v.voucher_product_code === voucher_code
+            )
+          ) {
+            bonus = 1;
+            console.log(
+              `Voucher Product Applied for product ${item.product_id}: original qty ${item.quantity}, bonus ${bonus}`
+            );
+          }
+          const deductionQuantity = item.quantity + bonus;
+          await tx.stock.update({
+            where: { stock_id: stock.stock_id },
+            data: { quantity: stock.quantity - deductionQuantity },
+          });
+          await tx.stockJournal.create({
+            data: {
+              store_id: nearestStore.store_id,
+              stock_id: stock.stock_id,
+              product_id: item.product_id,
+              quantity: deductionQuantity,
+              type: "out",
+              notes:
+                `Order ${orderNumber} created - stock deducted` +
+                (bonus ? " (buy 1 get 1 applied)" : ""),
+              created_at: now,
+              stock_result: stock.quantity - deductionQuantity,
+            },
+          });
+        }
       }
-    }
 
-    return updatedOrder;
-  });
+      if (voucherType === "product" && voucherProductApplied) {
+        const freeProduct = await tx.product.findUnique({
+          where: { product_id: voucherProductApplied.product_id },
+        });
+        if (freeProduct) {
+          (updatedOrder as any).free_item = {
+            product: freeProduct,
+            quantity: 1,
+          };
+          console.log("Free item added:", (updatedOrder as any).free_item);
+        }
+      }
+
+      return updatedOrder;
+    },
+    { timeout: 10000 }
+  );
 
   return order;
 }
