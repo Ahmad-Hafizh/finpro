@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import HeaderDashboard from "../components/header";
@@ -18,7 +20,7 @@ import AddVoucherStore from "./components/voucherStore/AddVoucherStore";
 import { DataTable } from "./components/data-table";
 import { useSession } from "next-auth/react";
 
-const stockPage = () => {
+const StockPage = () => {
   const [action, setAction] = useState<string | null>("");
   const [categoryId, setCategoryId] = useState<number>(0);
   const [category, setCategory] = useState<any>([]);
@@ -85,16 +87,16 @@ const stockPage = () => {
     try {
       const response = await callAPI.get("/voucher");
       const formattedData = response.data.result.map((voucher: any) => {
-        let voucherCode =
+        const voucherCode =
           voucher.voucher_store_code ||
           voucher.voucher_ongkir_code ||
           voucher.voucher_product_code;
-        let storeOrProduct =
+        const storeOrProduct =
           voucher.store?.store_name || voucher.product?.product_name || "N/A";
-        let discountPercentage = voucher.voucher_store_amount_percentage
+        const discountPercentage = voucher.voucher_store_amount_percentage
           ? `${voucher.voucher_store_amount_percentage}%`
           : "Not applicable";
-        let discountNominal =
+        const discountNominal =
           voucher.voucher_store_exact_nominal ||
           voucher.voucher_ongkir_nominal ||
           "Not Applicable";
@@ -266,4 +268,4 @@ const stockPage = () => {
   );
 };
 
-export default stockPage;
+export default StockPage;

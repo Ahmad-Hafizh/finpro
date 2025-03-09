@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import HeaderDashboard from "../components/header";
 import { useState } from "react";
@@ -15,7 +17,7 @@ import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const categoryPage = () => {
+const CategoryPage = () => {
   const { toast } = useToast();
 
   const [action, setAction] = useState<string | null>("");
@@ -224,4 +226,4 @@ const categoryPage = () => {
   );
 };
 
-export default categoryPage;
+export default CategoryPage;

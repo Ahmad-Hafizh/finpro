@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import SuspenseWrapper from "@/app/SuspenseWrapper";
 import * as React from "react";
 

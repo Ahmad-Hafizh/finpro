@@ -17,9 +17,7 @@ const order_controller_1 = require("../controllers/order.controller");
 const orderController = new order_controller_1.OrderController();
 node_cron_1.default.schedule("* * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     yield orderController.autoCancelOrders();
-    console.log("autoCancelOrders executed at", new Date().toLocaleString());
 }));
 node_cron_1.default.schedule("* * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     yield orderController.autoConfirmOrders();
-    console.log("autoConfirmOrders executed at", new Date().toLocaleString());
 }));

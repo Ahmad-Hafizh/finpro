@@ -29,7 +29,13 @@ function getOrderListService(_a) {
         const orders = yield prisma_1.default.order.findMany({
             where: whereClause,
             include: {
-                order_items: { include: { product: true } },
+                order_items: {
+                    include: {
+                        product: {
+                            include: { product_img: true },
+                        },
+                    },
+                },
                 payment_proof: true,
             },
         });

@@ -150,7 +150,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\apps\\web\\prisma",
+      "value": "/Users/macbook/Documents/finpro-jcwd0412/finpro/apps/web/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -159,17 +159,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\ahaaa\\Desktop\\course purwadhika\\finpro-prisma\\apps\\web\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/macbook/Documents/finpro-jcwd0412/finpro/apps/web/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../.env",
-    "schemaEnvPath": "../.env"
+    "rootEnvPath": null
   },
   "relativePath": "",
   "clientVersion": "6.4.1",

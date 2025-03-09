@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Box, Typography, Checkbox } from "@mui/material";
 import Grid from "@mui/material/Grid2";

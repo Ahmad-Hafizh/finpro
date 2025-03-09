@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import HeaderDashboard from "../components/header";
 import PaginationTable from "../components/Pagination";
@@ -17,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import SortBox from "./components/SortBox";
 import { useSession } from "next-auth/react";
 
-const productPage = () => {
+const ProductPage = () => {
   const [action, setAction] = useState<string | null>("");
   const [productId, setProductId] = useState<number>(0);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -228,4 +230,4 @@ const productPage = () => {
   );
 };
 
-export default productPage;
+export default ProductPage;
