@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import HeaderDashboard from "../components/header";
-import { StoreAdmin, columns } from "./column";
+import { columns } from "./column";
 import { DataTable } from "./data-table";
 
 import PaginationTable from "../components/Pagination";
@@ -40,7 +40,6 @@ const UserPage = () => {
   }, [session]);
 
   useEffect(() => {
-    console.log(searchParams.toString());
     const params = new URLSearchParams(searchParams.toString());
     const pageParam = params.get("page") || "1";
 
@@ -51,7 +50,6 @@ const UserPage = () => {
     if (!params.has("page")) {
       params.set("page", "1");
       router.replace(`?${params.toString()}`, { scroll: false });
-      console.log("Params to string :", params.toString());
     }
     getData(params.toString());
   }, [searchParams, router]);
@@ -62,12 +60,9 @@ const UserPage = () => {
 
       const data = response.data.result.admins;
 
-      console.log("INI DATA ADMIN : ", data);
       setData(data);
       setTotalPage(response.data.result.totalPages);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -87,12 +82,8 @@ const UserPage = () => {
     try {
       const response = await callAPI.get("/stock/store");
       const data = response.data.result;
-      console.log("Ini response get all store : ", data);
       setStore(data);
-      // setStoreId(8);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const deleteAdmin = async (id: any) => {
@@ -117,7 +108,6 @@ const UserPage = () => {
       }, 500);
       setOpenDialog(false);
     } catch (error) {
-      console.log("INI ERROR FROM DELETE :", error);
       toast({
         title: "Error",
         description: "Something went wrong while updating admin",
@@ -131,7 +121,7 @@ const UserPage = () => {
     <>
       <HeaderDashboard pagename="User Management" />
       <div className="flex h-full w-full flex-col gap-5 p-5">
-        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
+        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200 py-20">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
             <h2 className="text-2xl font-bold">
               Welcome, {session?.user.name}!

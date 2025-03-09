@@ -20,10 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 
 export type Product = {
   product_id: number;
@@ -106,8 +104,6 @@ const AddNewStock = ({
         variant: "destructive",
       });
     }
-
-    // console.log("THIS IS PAYLOAD : ", payload);
     setOpenDialog(false);
   };
 

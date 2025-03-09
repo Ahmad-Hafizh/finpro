@@ -165,7 +165,7 @@ const productPage = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <HeaderDashboard pagename="Product Management" />
       <div className="flex h-full w-full flex-col gap-5 p-5">
-        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
+        <div className="informasi flex h-1/5 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200 py-20">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
             <h2 className="text-2xl font-bold">
               Welcome, {session?.user.name}!
