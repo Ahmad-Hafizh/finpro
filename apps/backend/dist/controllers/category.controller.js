@@ -22,7 +22,8 @@ class CategoryController {
     getCategory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield (0, getCategory_services_1.getCategory)();
+                const { page } = req.query;
+                const result = yield (0, getCategory_services_1.getCategory)(page, '8');
                 return responseHandler_1.default.success(res, 200, 'Get Category Data Success', result);
             }
             catch (error) {

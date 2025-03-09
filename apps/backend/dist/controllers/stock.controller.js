@@ -31,7 +31,9 @@ class StockController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { store_id, product_id, quantity } = req.body;
-                const admin = "1";
+                const user = res.locals.user;
+                const admin = user.name;
+                console.log("INI USER : ", user);
                 const newStock = yield prisma_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                     const checkStock = yield tx.stock.findFirst({
                         where: {
@@ -61,13 +63,11 @@ class StockController {
                             },
                             quantity: parseInt(quantity),
                             type: "in",
-
                             product: {
                                 connect: { product_id: parseInt(product_id) },
                             },
                             notes: `Admin ${admin} create new stock: stock added`,
                             stock_result: createStock.quantity,
-
                         },
                     });
                     return { createStock, newStockJournal };
@@ -75,6 +75,7 @@ class StockController {
                 return responseHandler_1.default.success(res, 200, "create new stock success", newStock);
             }
             catch (error) {
+                console.log("INI ERRROR : ", error);
                 return responseHandler_1.default.error(res, 500, "Internal server error", error);
             }
         });
@@ -83,7 +84,8 @@ class StockController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { store_id, product_id, quantity } = req.body;
-                const admin = "1";
+                const user = res.locals.user;
+                const admin = user.name;
                 const updateStock = yield prisma_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                     const findStock = yield tx.stock.findFirst({
                         where: {
@@ -115,7 +117,6 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: updateOrDelete,
-
                             product: {
                                 connect: { product_id: parseInt(product_id) },
                             },
@@ -123,7 +124,6 @@ class StockController {
                                 ? `Admin ${admin} updating new stock: stock added`
                                 : `Admin ${admin} updating new stock: stock reduced`,
                             stock_result: updateStock.quantity,
-
                         },
                     });
                     return updateStock;
@@ -140,7 +140,8 @@ class StockController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { store_id, product_id, quantity = 0 } = req.body;
-                const admin = "1";
+                const user = res.locals.user;
+                const admin = user.name;
                 const outOfStock = yield prisma_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                     const findStock = yield tx.stock.findFirst({
                         where: {
@@ -171,13 +172,11 @@ class StockController {
                             },
                             quantity: totalAdded,
                             type: "out",
-
                             product: {
                                 connect: { product_id: parseInt(product_id) },
                             },
                             notes: `Admin ${admin} updating new stock: stock reduced`,
                             stock_result: 0,
-
                         },
                     });
                 }));

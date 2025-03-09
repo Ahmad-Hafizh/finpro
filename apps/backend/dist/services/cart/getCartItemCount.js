@@ -12,30 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategory = void 0;
+exports.getCartItemsCountService = getCartItemsCountService;
+const responseHandler_1 = __importDefault(require("../../utils/responseHandler"));
 const prisma_1 = __importDefault(require("../../prisma"));
-const getCategory = (pageNumber, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
-    if (pageNumber && pageSize) {
-        const number = parseInt(pageNumber);
-        const size = parseInt(pageSize);
-        const result = yield prisma_1.default.productCategory.findMany({
-            skip: (number - 1) * size,
-            take: size,
+function getCartItemsCountService(res, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
+        const profile = yield prisma_1.default.profile.findUnique({
+            where: { user_id: userId },
         });
-        const totalItems = yield prisma_1.default.productCategory.count();
-        // Calculate total pages
-        const totalPages = Math.ceil(totalItems / size);
-        return {
-            result: result,
-            totalItems,
-            totalPages,
-            currentPage: number,
-            pageSize: size,
-        };
-    }
-    else {
-        const result = yield prisma_1.default.productCategory.findMany();
-        return result;
-    }
-});
-exports.getCategory = getCategory;
+        if (!profile) {
+            return responseHandler_1.default.error(res, 404, 'Profile not found');
+        }
+        const cart = yield prisma_1.default.cart.findFirst({
+            where: { profile_id: profile.profile_id },
+            include: { cart_items: true },
+        });
+        const itemCount = (_b = (_a = cart === null || cart === void 0 ? void 0 : cart.cart_items) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+        return { count: itemCount };
+    });
+}

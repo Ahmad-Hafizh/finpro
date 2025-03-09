@@ -12,30 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategory = void 0;
+exports.autoConfirmOrdersService = autoConfirmOrdersService;
 const prisma_1 = __importDefault(require("../../prisma"));
-const getCategory = (pageNumber, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
-    if (pageNumber && pageSize) {
-        const number = parseInt(pageNumber);
-        const size = parseInt(pageSize);
-        const result = yield prisma_1.default.productCategory.findMany({
-            skip: (number - 1) * size,
-            take: size,
+function autoConfirmOrdersService() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+        const ordersToConfirm = yield prisma_1.default.order.findMany({
+            where: {
+                status: "dikirim",
+                order_date: { lt: twoDaysAgo },
+            },
         });
-        const totalItems = yield prisma_1.default.productCategory.count();
-        // Calculate total pages
-        const totalPages = Math.ceil(totalItems / size);
-        return {
-            result: result,
-            totalItems,
-            totalPages,
-            currentPage: number,
-            pageSize: size,
-        };
-    }
-    else {
-        const result = yield prisma_1.default.productCategory.findMany();
-        return result;
-    }
-});
-exports.getCategory = getCategory;
+        for (const order of ordersToConfirm) {
+            yield prisma_1.default.order.update({
+                where: { order_id: order.order_id },
+                data: { status: "pesanan_dikonfirmasi" },
+            });
+            console.log(`Order ${order.order_id} auto confirmed.`);
+        }
+    });
+}

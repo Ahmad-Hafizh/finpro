@@ -39,20 +39,20 @@ class AdminController {
     updateAdmin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { admin_id, user_id, store_id, position } = req.body;
+                const { admin_id, store_id, position } = req.body;
                 const checkAdmin = yield prisma_1.default.admin.findUnique({
-                    where: { admin_id: admin_id },
+                    where: { admin_id: parseInt(admin_id) },
                 });
                 if (!checkAdmin) {
                     throw new Error("Admin not found");
                 }
                 const result = yield prisma_1.default.admin.update({
                     where: {
-                        admin_id: admin_id,
+                        admin_id,
                     },
                     data: {
                         position: position,
-                        store_id: store_id,
+                        store_id: parseInt(store_id),
                     },
                 });
                 return responseHandler_1.default.success(res, 200, "Update admin success", result);
@@ -65,7 +65,7 @@ class AdminController {
     createAdmin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email, name, password, store_id, phone } = req.body;
+                const { email, name, password, store_id, phone, position } = req.body;
                 const user = yield (0, findUser_1.findUser)(email);
                 if (user)
                     return responseHandler_1.default.error(res, 404, "Email already used");
@@ -78,12 +78,12 @@ class AdminController {
                         emailVerified: new Date().toISOString(),
                     },
                 });
-                const admin = yield prisma_1.default.admin.create({
+                yield prisma_1.default.admin.create({
                     data: {
                         user_id: newUser.id,
                         phone,
-                        store_id,
-                        position: "store_manager",
+                        store_id: parseInt(store_id),
+                        position,
                     },
                 });
                 return responseHandler_1.default.success(res, 200, "Create Admin Success");
@@ -105,6 +105,67 @@ class AdminController {
             }
             catch (error) {
                 return responseHandler_1.default.error(res, 500, "Internal Server Error", error);
+            }
+        });
+    }
+    checkAdminDetailRoleFromFrontend(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { admin_id, email } = req.body;
+                let result = [];
+                if (admin_id) {
+                    const getAdminInfo = yield prisma_1.default.admin.findFirst({
+                        where: Object.assign({}, (admin_id ? { admin_id: admin_id } : {})),
+                    });
+                    result.push(getAdminInfo);
+                }
+                if (email) {
+                    const getAdminInfoByEmail = yield prisma_1.default.admin.findFirst({
+                        where: {
+                            user: {
+                                email: email,
+                            },
+                        },
+                        include: {
+                            user: true,
+                            store: true,
+                        },
+                    });
+                    console.log("GET INFOR BY ADMIN : ", getAdminInfoByEmail);
+                    if (!getAdminInfoByEmail) {
+                        const getSuperAdminByEmail = yield prisma_1.default.user.findFirst({
+                            where: {
+                                email: email,
+                            },
+                        });
+                        result.push(getSuperAdminByEmail);
+                    }
+                    result.push(getAdminInfoByEmail);
+                }
+                return responseHandler_1.default.success(res, 200, "Get Admin success", result);
+            }
+            catch (error) {
+                console.log("Error : ", error);
+            }
+        });
+    }
+    deleteAdmin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { admin_id } = req.body;
+                const deleteAdmin = yield prisma_1.default.admin.update({
+                    where: {
+                        admin_id: parseInt(admin_id),
+                    },
+                    data: {
+                        deleted_at: new Date(),
+                    },
+                });
+                return responseHandler_1.default.success(res, 200, "Delete admin success", deleteAdmin);
+            }
+            catch (error) {
+                console.log("Ini error: ", error);
+                return responseHandler_1.default.error(res, 500, "Internal server error", error);
             }
         });
     }

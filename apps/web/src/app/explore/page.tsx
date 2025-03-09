@@ -67,7 +67,7 @@ const ExplorePage = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-5 lg:p-10">
+    <div className="flex h-full w-full flex-col gap-5 lg:p-10 lg:py-32">
       <div className="searchbox h-full w-full">
         <SearchBox />
       </div>

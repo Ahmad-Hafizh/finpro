@@ -15,10 +15,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findAdmin = void 0;
 const prisma_1 = __importDefault(require("../../prisma"));
 const findAdmin = (_a) => __awaiter(void 0, [_a], void 0, function* ({ store, pageNumber, pageSize, keyword, }) {
+    const storeIds = store ? store.split(",").map((id) => parseInt(id)) : [];
     const result = yield prisma_1.default.admin.findMany({
         skip: (pageNumber - 1) * pageSize,
+        where: {
+            AND: [
+                storeIds.length > 0 ? { store_id: { in: storeIds } } : {},
+                keyword
+                    ? {
+                        OR: [
+                            { user: { name: { contains: keyword, mode: "insensitive" } } },
+                            { user: { email: { contains: keyword, mode: "insensitive" } } },
+                        ],
+                    }
+                    : {},
+            ],
+        },
         take: pageSize,
+        include: {
+            user: true,
+            store: true,
+        },
     });
-    return result;
+    const totalItems = yield prisma_1.default.admin.count({
+        where: {
+            AND: [
+                storeIds.length > 0 ? { store_id: { in: storeIds } } : {},
+                keyword
+                    ? {
+                        OR: [
+                            { user: { name: { contains: keyword, mode: "insensitive" } } },
+                            { user: { email: { contains: keyword, mode: "insensitive" } } },
+                        ],
+                    }
+                    : {},
+            ],
+        },
+    });
+    const totalPages = Math.ceil(totalItems / pageSize);
+    return { admins: result, totalItems, totalPages };
 });
 exports.findAdmin = findAdmin;

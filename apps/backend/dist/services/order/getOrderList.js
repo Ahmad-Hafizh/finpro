@@ -12,30 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategory = void 0;
+exports.getOrderListService = getOrderListService;
 const prisma_1 = __importDefault(require("../../prisma"));
-const getCategory = (pageNumber, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
-    if (pageNumber && pageSize) {
-        const number = parseInt(pageNumber);
-        const size = parseInt(pageSize);
-        const result = yield prisma_1.default.productCategory.findMany({
-            skip: (number - 1) * size,
-            take: size,
+function getOrderListService(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ profile_id, date, order_id, }) {
+        let whereClause = { profile_id };
+        if (order_id)
+            whereClause.order_id = order_id;
+        if (date) {
+            const localStart = new Date(date + "T00:00:00");
+            const localEnd = new Date(date + "T23:59:59");
+            const start = new Date(localStart.getTime() - 7 * 60 * 60 * 1000);
+            const end = new Date(localEnd.getTime() - 7 * 60 * 60 * 1000);
+            whereClause.order_date = { gte: start, lt: end };
+        }
+        const orders = yield prisma_1.default.order.findMany({
+            where: whereClause,
+            include: {
+                order_items: { include: { product: true } },
+                payment_proof: true,
+            },
         });
-        const totalItems = yield prisma_1.default.productCategory.count();
-        // Calculate total pages
-        const totalPages = Math.ceil(totalItems / size);
-        return {
-            result: result,
-            totalItems,
-            totalPages,
-            currentPage: number,
-            pageSize: size,
-        };
-    }
-    else {
-        const result = yield prisma_1.default.productCategory.findMany();
-        return result;
-    }
-});
-exports.getCategory = getCategory;
+        return orders;
+    });
+}

@@ -12,35 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCategory = void 0;
+exports.sendUserOrderService = sendUserOrderService;
 const prisma_1 = __importDefault(require("../../prisma"));
-const deleteCategory = (_a) => __awaiter(void 0, [_a], void 0, function* ({ id }) {
-    const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
-        const checkCategoryId = yield tx.productCategory.findFirst({
-            where: {
-                product_category_id: parseInt(id),
-            },
+function sendUserOrderService(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ admin, order_id, tracking_number, }) {
+        const order = yield prisma_1.default.order.findUnique({
+            where: { order_id: Number(order_id) },
         });
-        if (!checkCategoryId) {
-            throw new Error("Category not found");
+        if (!order)
+            throw new Error("Order tidak ditemukan");
+        if (order.status !== "diproses") {
+            throw new Error("Order is not in a state that can be sent");
         }
-        const createCategory = yield tx.productCategory.update({
-            where: {
-                product_category_id: parseInt(id),
-            },
+        const updatedOrder = yield prisma_1.default.order.update({
+            where: { order_id: order.order_id },
             data: {
-                deletedAt: new Date(Date.now()),
+                status: "dikirim",
+                tracking_number: tracking_number !== undefined ? tracking_number : order.tracking_number,
             },
         });
-        const deleteProduct = yield tx.product.updateMany({
-            where: {
-                product_category_id: createCategory.product_category_id,
-            },
+        yield prisma_1.default.adminOrder.create({
             data: {
-                deletedAt: new Date(Date.now()),
+                admin_id: admin ? admin.admin_id : 0,
+                order_id: order.order_id,
+                action: "kirim_pesanan",
+                action_time: new Date(),
             },
         });
-    }));
-    return result;
-});
-exports.deleteCategory = deleteCategory;
+        return updatedOrder;
+    });
+}
