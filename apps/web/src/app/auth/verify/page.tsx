@@ -81,7 +81,11 @@ const VerifyPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="enter your password" />
+                    <Input
+                      {...field}
+                      placeholder="enter your password"
+                      type="password"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,7 +98,11 @@ const VerifyPage = () => {
                 <FormItem>
                   <FormLabel>Confrim Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="confirm your password" />
+                    <Input
+                      {...field}
+                      placeholder="confirm your password"
+                      type="password"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

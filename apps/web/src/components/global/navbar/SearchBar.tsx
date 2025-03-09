@@ -9,8 +9,13 @@ const SearchBar = () => {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") || "",
+  );
 
-  const [search, setSearch] = useState(searchParams.get("keyword") || "");
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     if (pathName.startsWith("/explore")) {
@@ -20,9 +25,9 @@ const SearchBar = () => {
       } else {
         params.delete("search");
       }
-      router.push(`?${params.toString()}⁠, { scroll: false }`);
+      router.push(`?${params.toString()}`, { scroll: false });
     }
-  }, [search, pathName, searchParams]);
+  }, [search, pathName, searchParams.toString()]);
 
   return (
     <div className="relative flex w-full items-center">
