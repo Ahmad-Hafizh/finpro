@@ -1,11 +1,14 @@
-import prisma from "../../prisma";
+import ResponseHandler from '../../utils/responseHandler';
+import prisma from '../../prisma';
+import { Response } from 'express';
 
-export async function getCartItemsCountService(userId: string) {
+export async function getCartItemsCountService(res: Response, userId: string) {
   const profile = await prisma.profile.findUnique({
     where: { user_id: userId },
   });
+
   if (!profile) {
-    throw new Error("Profile not found");
+    return ResponseHandler.error(res, 404, 'Profile not found');
   }
 
   const cart = await prisma.cart.findFirst({

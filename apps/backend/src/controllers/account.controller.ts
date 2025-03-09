@@ -214,9 +214,18 @@ export class AccountController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const { name, id } = req.body;
+      const { name, email } = req.body;
+
+      const exist = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!exist) {
+        return ResponseHandler.success(res, 200, 'first sign up');
+      }
+
       const existProfile = await prisma.profile.findUnique({
-        where: { user_id: id },
+        where: { user_id: exist.id },
       });
 
       if (existProfile) {
@@ -227,7 +236,7 @@ export class AccountController {
         const referralCode: string = `${name?.slice(0, 4).toUpperCase() ?? "USER"}${Math.round(Math.random() * 10000).toString()}`;
         const profile = await tx.profile.create({
           data: {
-            user_id: id,
+            user_id: exist?.id,
           },
         });
 
