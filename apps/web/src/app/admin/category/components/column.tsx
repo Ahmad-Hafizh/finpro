@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { AiOutlineSortAscending } from "react-icons/ai";
 import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
@@ -70,7 +69,6 @@ export const columns = (
       const categoryList = row.original;
 
       const onHandleEdit = () => {
-        console.log("INI CATEGORY LIST ID :", categoryList.product_category_id);
         setCategoryId(categoryList.product_category_id);
         setAction("Edit");
         setOpenDialog(true);

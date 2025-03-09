@@ -48,36 +48,26 @@ const stockPage = () => {
 
   useEffect(() => {
     getAllStore();
-    console.log("Ini store IDIDIDIDI : ", storeId);
     getCategory();
-    console.log("INI PRODUCTSSSS : ", products);
     setLoading(false);
   }, [storeId]);
 
   const getCategory = async () => {
     try {
       const response = await callAPI.get("/category");
-      console.log("Ini response get category :", response.data.result);
       setCategory(response.data.result);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getAdminInfo = async () => {
     try {
-      console.log("USESESSION :", session?.user);
       const payload = { email: session?.user.email };
       const response = await callAPI.post("/admin/detail", payload);
-      console.log("INI ADMIN INFO : ", response.data);
       setAdminInfo(response.data.result);
-      console.log("MENCARI STORE ID  : ", response.data.result[0]?.store_id);
       if (response.data.result[0]?.store_id) {
         setStoreId(response.data.result[0]?.store_id);
       }
-    } catch (error) {
-      console.log("error : ", error);
-    }
+    } catch (error) {}
   };
 
   const getProduct = async (id: string, params: string) => {
@@ -88,16 +78,12 @@ const stockPage = () => {
         (product: any) => product.deletedAt === null,
       );
       setProducts(filteredProducts);
-      console.log("INI PRODUCTSSSS : ", filteredProducts);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getAllVoucher = async () => {
     try {
       const response = await callAPI.get("/voucher");
-      console.log("Ini response get all voucher : ", response.data.result);
       const formattedData = response.data.result.map((voucher: any) => {
         let voucherCode =
           voucher.voucher_store_code ||
@@ -131,11 +117,8 @@ const stockPage = () => {
           ).toLocaleDateString(),
         };
       });
-      console.log("FORMATTED VOUCHER: ", formattedData);
       setAllVoucher(formattedData);
-    } catch (error) {
-      console.log("Error get all voucher : ", error);
-    }
+    } catch (error) {}
   };
 
   const getAllProduct = async (currentProduct: any) => {
@@ -143,15 +126,11 @@ const stockPage = () => {
       const response = await callAPI.get(`product`);
       const data = response.data.result.products;
       const productIds = currentProduct.map((p: any) => p.product_id);
-      console.log("data : ", data);
       const filteredProducts = data.filter(
         (p: any) => !productIds.includes(p.product_id),
       );
-      console.log("Ini response get all product : ", filteredProducts);
       setAllProducts(filteredProducts);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getProductForEdit = async () => {
@@ -159,30 +138,22 @@ const stockPage = () => {
       const response = await callAPI.get("/product");
       const data = response.data.result.products;
       setproductEdit(data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getAllStore = async () => {
     try {
       const response = await callAPI.get("/stock/store");
       const data = response.data.result;
-      console.log("Ini response get all store : ", data);
       setAllStore(data);
-      // setStoreId(8);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
-
-  console.log("Filtered product: ", allProducts);
 
   return (
     <>
-      <HeaderDashboard pagename="Stock Management" />
+      <HeaderDashboard pagename="Voucher Management" />
       <div className="flex h-full w-full flex-col p-5">
-        <div className="informasi flex h-1/4 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200">
+        <div className="informasi my-5 flex h-1/4 w-full rounded-lg bg-gradient-to-r from-green-300 to-green-200 py-20">
           <div className="profile flex h-full w-full flex-col items-start justify-center px-20">
             <h2 className="text-2xl font-bold">
               Welcome, {session?.user.name}!
@@ -219,8 +190,7 @@ const stockPage = () => {
         <div className="main flex h-full w-full gap-5">
           <div className="flex h-fit w-full gap-2">
             <div className="store selection"></div>
-            <div className="data">
-              <div className="searchbox h-14 w-full rounded-lg"></div>
+            <div className="data flex-1">
               <div className="table h-fit w-full rounded-lg shadow-sm">
                 <DataTable
                   columns={columns(setAction, setVoucherId, setOpenDialog)}

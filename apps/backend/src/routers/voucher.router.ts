@@ -19,6 +19,7 @@ export class VoucherRouter {
     this.route.post('/store', verifyToken, this.voucherController.createNewStoreVoucher);
     // this.route.get('/order', this.voucherController.getVoucherTwo);
     this.route.get('/banner', this.voucherController.getBanner);
+    this.route.get('/available', verifyToken, this.voucherController.getVouchers);
   }
 
   public getRouter() {

@@ -1,17 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { AiOutlineSortAscending } from "react-icons/ai";
-import { MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { callAPI } from "@/config/axios";
-import { useToast } from "@/hooks/use-toast";
 
 export type Product = {
   product_id: number;
@@ -39,12 +27,7 @@ export type ProductCategory = {
   deletedAt: string | null;
 };
 
-export const columns = (
-  setAction: (action: string) => void,
-  setProductId: (id: number) => void,
-  setOpenDialog: (open: boolean) => void,
-  storeId: number,
-): ColumnDef<any>[] => [
+export const columns = (): ColumnDef<any>[] => [
   {
     accessorKey: "product.product_name",
     header: ({ column }) => {
@@ -79,17 +62,6 @@ export const columns = (
         </Button>
       );
     },
-    // cell: ({ row }) => {
-    //   const product = row.original;
-    //   console.log("PRODUCT: ", product);
-    //   const stockForStore = product.stock?.find(
-    //     (s: any) => s.store_id === storeId,
-    //   );
-    //   console.log("stockForStore: ", stockForStore);
-    //   return (
-    //     <div className="text-md font-medium">{stockForStore.quantity}</div>
-    //   );
-    // },
   },
   {
     accessorKey: "type",

@@ -1,6 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { AiOutlineSortAscending } from "react-icons/ai";
 import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
@@ -144,12 +143,10 @@ export const columns = (
     },
     cell: ({ row }) => {
       const product = row.original;
-      console.log("PRODUCT: ", product.stock);
       const stockForStore = product.stock?.find(
         (s: any) => s.store_id === storeId,
       );
-      console.log("INI STORE ID DARI COMPONENET : ", storeId);
-      console.log("stockForStore: ", stockForStore);
+
       return (
         <div className="text-md font-medium">{stockForStore?.quantity}</div>
       );
@@ -161,11 +158,8 @@ export const columns = (
       const { toast } = useToast();
       const productList = row.original;
 
-      console.log("ROW: ", row.original);
-
       const onHandleEdit = () => {
         setProductId(productList.product_id);
-        console.log("productList.product_id", productList.product_id);
         setAction("Edit");
         setOpenDialog(true);
       };
@@ -208,12 +202,8 @@ export const columns = (
             }
 
             setProductId(productList.product_id);
-            // setAction("Delete");
-            // setOpenDialog(true);
           }
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       };
 
       return (

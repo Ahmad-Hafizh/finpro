@@ -103,7 +103,6 @@ const AddProduct = ({ categories, token, setOpenDialog }: IaddProduct) => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Ini response :", response);
         if (response.data.isSuccess) {
           toast({
             title: "Success",
@@ -123,7 +122,6 @@ const AddProduct = ({ categories, token, setOpenDialog }: IaddProduct) => {
           variant: "destructive",
         });
         setOpenDialog(false);
-        console.log("Ini error: ", error);
       }
     };
 

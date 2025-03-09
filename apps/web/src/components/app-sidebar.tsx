@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
   Command,
@@ -48,19 +47,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Greeneries",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      plan: "Admin Area",
     },
   ],
   navMain: [
@@ -72,7 +61,7 @@ const data = {
     {
       title: "Categories Management",
       url: "/admin/category",
-      icon: SquareTerminal,
+      icon: Map,
     },
     {
       title: "Voucher Management",
@@ -94,6 +83,11 @@ const data = {
       url: "/admin/order",
       icon: Wallet,
     },
+    {
+      title: "Store Management",
+      url: "/admin/store",
+      icon: Frame,
+    },
   ],
   projects: [
     {
@@ -110,7 +104,9 @@ const data = {
   settings: [
     {
       name: "Settings",
-      url: "/admin/settings",
+
+      url: "setting/account",
+
       icon: Settings2,
     },
   ],
