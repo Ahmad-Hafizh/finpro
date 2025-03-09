@@ -111,13 +111,11 @@ function createOrderService(params) {
                 else {
                     voucherData = yield (0, voucher_service_1.getVoucher)(nearestStore.store_id, products[0].product_id);
                 }
-                console.log("Voucher Data:", voucherData);
                 let appliedVoucher = null;
                 if (voucherType === "ongkir") {
                     appliedVoucher = voucherData.getOngkirVoucher.find((v) => v.voucher_ongkir_code === voucher_code);
                     if (appliedVoucher) {
                         discountAmount = appliedVoucher.voucher_ongkir_nominal;
-                        console.log("Applied Ongkir Voucher:", appliedVoucher, "Discount:", discountAmount);
                         finalShippingPrice = finalShippingPrice - discountAmount;
                         if (finalShippingPrice < 0)
                             finalShippingPrice = 0;
@@ -128,7 +126,6 @@ function createOrderService(params) {
                 else if (voucherType === "payment") {
                     appliedVoucher = voucherData.getStoreVoucher.find((v) => v.voucher_store_code === voucher_code);
                     if (appliedVoucher) {
-                        console.log("Applied Store Voucher:", appliedVoucher);
                         if (appliedVoucher.voucher_store_amount_percentage > 0) {
                             if (total >= appliedVoucher.voucher_store_minimum_buy) {
                                 discountAmount = Math.floor((total * appliedVoucher.voucher_store_amount_percentage) / 100);
@@ -147,7 +144,6 @@ function createOrderService(params) {
                         if (finalTotalPayment < 0)
                             finalTotalPayment = 0;
                         appliedVoucherCode = appliedVoucher.voucher_store_code;
-                        console.log("Discount Amount:", discountAmount, "Final Total Payment:", finalTotalPayment);
                     }
                     else {
                         appliedVoucher = voucherData.getProductVoucher.find((v) => v.voucher_product_code === voucher_code);
@@ -155,7 +151,6 @@ function createOrderService(params) {
                             discountAmount = 0;
                             appliedVoucherCode = appliedVoucher.voucher_product_code;
                             voucherProductApplied = { product_id: appliedVoucher.product_id };
-                            console.log("Applied Product Voucher (fallback):", appliedVoucher);
                         }
                     }
                 }
@@ -165,11 +160,9 @@ function createOrderService(params) {
                         discountAmount = 0;
                         appliedVoucherCode = appliedVoucher.voucher_product_code;
                         voucherProductApplied = { product_id: appliedVoucher.product_id };
-                        console.log("Applied Product Voucher:", appliedVoucher);
                     }
                 }
             }
-            console.log("Total:", total, "Shipping after discount:", finalShippingPrice, "Final Total:", finalTotalPayment);
             const updatedOrder = yield tx.order.update({
                 where: { order_id: createdOrder.order_id },
                 data: {
@@ -193,7 +186,6 @@ function createOrderService(params) {
                         voucher_code &&
                         (yield (0, voucher_service_1.getVoucher)(nearestStore.store_id, item.product_id)).getProductVoucher.find((v) => v.voucher_product_code === voucher_code)) {
                         bonus = 1;
-                        console.log(`Voucher Product Applied for product ${item.product_id}: original qty ${item.quantity}, bonus ${bonus}`);
                     }
                     const deductionQuantity = item.quantity + bonus;
                     yield tx.stock.update({
@@ -224,7 +216,6 @@ function createOrderService(params) {
                         product: freeProduct,
                         quantity: 1,
                     };
-                    console.log("Free item added:", updatedOrder.free_item);
                 }
             }
             return updatedOrder;

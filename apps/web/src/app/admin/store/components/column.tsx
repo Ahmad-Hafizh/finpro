@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
+
 import Link from "next/link";
 
 // This type is used to define the shape of our data.
@@ -13,7 +15,7 @@ export type Store = {
   store_address: string;
 };
 
-export const columns: ColumnDef<Store>[] = [
+export const columns = (session: any): ColumnDef<Store>[] => [
   {
     accessorKey: "store_name",
     header: "Name",
@@ -29,8 +31,6 @@ export const columns: ColumnDef<Store>[] = [
   {
     header: "actions",
     cell: ({ row }) => {
-      const { data: session } = useSession();
-
       if (session?.user.role == "user") {
         return (
           <Link href={`/admin/store/edit/${row.original.store_name}`}>

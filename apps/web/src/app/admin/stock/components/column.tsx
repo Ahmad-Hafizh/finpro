@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
@@ -10,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { callAPI } from "@/config/axios";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 export type Product = {
   product_id: number;
@@ -155,7 +157,6 @@ export const columns = (
   {
     id: "actions",
     cell: ({ row }) => {
-      const { toast } = useToast();
       const productList = row.original;
 
       const onHandleEdit = () => {

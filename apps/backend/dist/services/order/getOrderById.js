@@ -19,7 +19,15 @@ function getOrderByIdService(profile_id, order_id) {
         const order = yield prisma_1.default.order.findUnique({
             where: { order_id },
             include: {
-                order_items: { include: { product: true } },
+                order_items: {
+                    include: {
+                        product: {
+                            include: {
+                                product_img: true,
+                            },
+                        },
+                    },
+                },
                 payment_proof: true,
             },
         });
