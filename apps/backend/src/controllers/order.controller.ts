@@ -21,6 +21,7 @@ export class OrderController {
         voucherType,
         // voucher_id,
         voucher_code,
+        store_id,
       } = req.body;
       if (!products || !Array.isArray(products) || products.length === 0) {
         return res.status(400).json({ error: "No products provided" });
@@ -33,6 +34,7 @@ export class OrderController {
         voucherType,
         // voucher_id,
         voucher_code,
+        store_id,
       });
       return res.status(201).json(order);
     } catch (error: any) {

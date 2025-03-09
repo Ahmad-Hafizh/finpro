@@ -1,11 +1,15 @@
 import prisma from "../../prisma";
 
-export async function getVouchersService(voucherType: string) {
+export async function getVouchersService(
+  voucherType: string,
+  store_id?: number
+) {
   const now = new Date();
   if (voucherType === "ongkir") {
     const vouchers = await prisma.voucherOngkir.findMany({
       where: {
         voucher_ongkir_enddate: { gte: now },
+        ...(store_id ? { store_id: store_id } : {}),
       },
       select: {
         voucher_ongkir_id: true,
@@ -17,11 +21,13 @@ export async function getVouchersService(voucherType: string) {
       voucher_id: v.voucher_ongkir_id,
       voucher_code: v.voucher_ongkir_code,
       nominal: v.voucher_ongkir_nominal,
+      type: "ongkir",
     }));
   } else if (voucherType === "payment") {
     const vouchers = await prisma.voucherStore.findMany({
       where: {
         voucher_store_enddate: { gte: now },
+        ...(store_id ? { store_id: store_id } : {}),
       },
       select: {
         voucher_store_id: true,
@@ -39,11 +45,15 @@ export async function getVouchersService(voucherType: string) {
       exact_nominal: v.voucher_store_exact_nominal,
       minimum_buy: v.voucher_store_minimum_buy,
       maximum_nominal: v.voucher_store_maximum_nominal,
+      type: "payment",
     }));
   } else if (voucherType === "product") {
     const vouchers = await prisma.voucherProduct.findMany({
       where: {
         voucher_product_enddate: { gte: now },
+        ...(store_id
+          ? { product: { stock: { some: { store_id: store_id } } } }
+          : {}),
       },
       select: {
         voucher_product_id: true,
@@ -55,6 +65,7 @@ export async function getVouchersService(voucherType: string) {
       voucher_id: v.voucher_product_id,
       voucher_code: v.voucher_product_code,
       product_id: v.product_id,
+      type: "product",
     }));
   } else {
     return [];
