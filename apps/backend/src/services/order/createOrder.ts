@@ -130,7 +130,7 @@ export async function createOrderService(params: CreateOrderParams) {
             products[0].product_id
           );
         }
-        console.log("Voucher Data:", voucherData);
+
         let appliedVoucher = null;
         if (voucherType === "ongkir") {
           appliedVoucher = voucherData.getOngkirVoucher.find(
@@ -138,12 +138,7 @@ export async function createOrderService(params: CreateOrderParams) {
           );
           if (appliedVoucher) {
             discountAmount = appliedVoucher.voucher_ongkir_nominal;
-            console.log(
-              "Applied Ongkir Voucher:",
-              appliedVoucher,
-              "Discount:",
-              discountAmount
-            );
+
             finalShippingPrice = finalShippingPrice - discountAmount;
             if (finalShippingPrice < 0) finalShippingPrice = 0;
             finalTotalPayment = total + finalShippingPrice;
@@ -154,7 +149,6 @@ export async function createOrderService(params: CreateOrderParams) {
             (v: any) => v.voucher_store_code === voucher_code
           );
           if (appliedVoucher) {
-            console.log("Applied Store Voucher:", appliedVoucher);
             if (appliedVoucher.voucher_store_amount_percentage > 0) {
               if (total >= appliedVoucher.voucher_store_minimum_buy) {
                 discountAmount = Math.floor(
@@ -176,12 +170,6 @@ export async function createOrderService(params: CreateOrderParams) {
             finalTotalPayment = finalTotalPayment - discountAmount;
             if (finalTotalPayment < 0) finalTotalPayment = 0;
             appliedVoucherCode = appliedVoucher.voucher_store_code;
-            console.log(
-              "Discount Amount:",
-              discountAmount,
-              "Final Total Payment:",
-              finalTotalPayment
-            );
           } else {
             appliedVoucher = voucherData.getProductVoucher.find(
               (v: any) => v.voucher_product_code === voucher_code
@@ -190,10 +178,6 @@ export async function createOrderService(params: CreateOrderParams) {
               discountAmount = 0;
               appliedVoucherCode = appliedVoucher.voucher_product_code;
               voucherProductApplied = { product_id: appliedVoucher.product_id };
-              console.log(
-                "Applied Product Voucher (fallback):",
-                appliedVoucher
-              );
             }
           }
         } else if (voucherType === "product") {
@@ -204,19 +188,9 @@ export async function createOrderService(params: CreateOrderParams) {
             discountAmount = 0;
             appliedVoucherCode = appliedVoucher.voucher_product_code;
             voucherProductApplied = { product_id: appliedVoucher.product_id };
-            console.log("Applied Product Voucher:", appliedVoucher);
           }
         }
       }
-
-      console.log(
-        "Total:",
-        total,
-        "Shipping after discount:",
-        finalShippingPrice,
-        "Final Total:",
-        finalTotalPayment
-      );
 
       const updatedOrder = await tx.order.update({
         where: { order_id: createdOrder.order_id },
@@ -248,9 +222,6 @@ export async function createOrderService(params: CreateOrderParams) {
             )
           ) {
             bonus = 1;
-            console.log(
-              `Voucher Product Applied for product ${item.product_id}: original qty ${item.quantity}, bonus ${bonus}`
-            );
           }
           const deductionQuantity = item.quantity + bonus;
           await tx.stock.update({
@@ -283,7 +254,6 @@ export async function createOrderService(params: CreateOrderParams) {
             product: freeProduct,
             quantity: 1,
           };
-          console.log("Free item added:", (updatedOrder as any).free_item);
         }
       }
 

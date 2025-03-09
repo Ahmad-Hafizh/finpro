@@ -12,6 +12,7 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 //===============================
 
 interface IProductDetailPage {
@@ -31,6 +32,7 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
 
   const dispatch = useAppDispatch();
   const { updateCart } = useCart();
+  const { toast } = useToast();
   // const router = useRouter();
 
   useEffect(() => {
@@ -98,7 +100,7 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
     })}`;
   };
 
-  const handleAddToCart: () => Promise<void> = async () => {
+  const handleAddToCart = async (): Promise<void> => {
     if (isAdding) return;
     try {
       setIsAdding(true);
@@ -123,7 +125,23 @@ const DetailProductPage: React.FC<IProductDetailPage> = ({ params }) => {
       updateCart("add_item");
     } catch (error: any) {
       console.error("Error adding to cart:", error);
-      alert("Something went wrong while adding the product to your cart.");
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "";
+      if (errorMessage.includes("Insufficient product stock")) {
+        toast({
+          title: "Error",
+          description: "Insufficient stock available.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "Something went wrong while adding the product to your cart.",
+        });
+      }
     } finally {
       setIsAdding(false);
     }

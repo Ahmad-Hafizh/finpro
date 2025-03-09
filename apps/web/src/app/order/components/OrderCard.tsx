@@ -21,6 +21,7 @@ import {
 } from "@mui/icons-material";
 import { formatTime, useCountdown } from "../utils";
 import { Order, OrderCardProps } from "../types";
+import Link from "next/link";
 
 const formatDate = (dateString: string): string => {
   const options: Intl.DateTimeFormatOptions = {
@@ -263,14 +264,24 @@ const OrderCard: React.FC<OrderCardProps> = ({
               }}
             >
               {order.status === "menunggu_pembayaran" && (
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={onCancel}
-                  startIcon={<CancelIcon />}
-                >
-                  Cancel Order
-                </Button>
+                <>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={onCancel}
+                    startIcon={<CancelIcon />}
+                  >
+                    Cancel Order
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    href={`/payment-proof/${order.order_id}`}
+                  >
+                    Upload Payment
+                  </Button>
+                </>
               )}
               {order.status === "dikirim" && (
                 <Button
