@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import authConfig from "./auth.config";
 import { callAPI } from "./config/axios";
 import { redirect } from "next/navigation";
-import prisma from "./prisma";
+import prisma from "../prisma";
 
 declare module "next-auth" {
   interface Session {
