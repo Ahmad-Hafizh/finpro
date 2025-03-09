@@ -153,6 +153,12 @@ export class StockReportController {
         },
       });
 
+      const stockTotal = await prisma.stock.aggregate({
+        _sum: {
+          quantity: true,
+        },
+      });
+
       const totalAddedStock = await prisma.stockJournal.aggregate({
         _sum: {
           quantity: true,
@@ -188,7 +194,7 @@ export class StockReportController {
         200,
         "Get stock report total success",
         {
-          latestStockEntry,
+          stockTotal,
           totalAddedStock,
           totalReducedStock,
         }

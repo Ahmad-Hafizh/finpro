@@ -28,8 +28,6 @@ const FilterBox = ({ categories }: FilterBoxProps) => {
     setCategory(categories);
   }, [categories]);
 
-  console.log("INI CATEGORIES :", category);
-
   const dynamicFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     const currentValues = params.get(key)?.split(",") || [];

@@ -46,7 +46,6 @@ const AddCategory = ({ setOpenDialog, token }: IAddCategory) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Ini response submit category: ", response);
         if (response.data.isSuccess) {
           toast({
             title: "Success",
@@ -63,15 +62,12 @@ const AddCategory = ({ setOpenDialog, token }: IAddCategory) => {
           description: "Something went wrong while adding category",
           variant: "destructive",
         });
-        console.log("Error submit category :", error);
         setOpenDialog(false);
       }
     };
 
     setOpenDialog(false);
     submitApi(payload);
-
-    console.log("Value: ", payload);
   };
 
   return (

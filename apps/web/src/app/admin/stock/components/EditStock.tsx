@@ -12,18 +12,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import { callAPI } from "@/config/axios";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 
 export type Product = {
   product_id: number;
@@ -64,11 +57,6 @@ const EditStock = ({
   token,
   setOpenDialog,
 }: IEditStock) => {
-  console.log("INI PRODUCT DARI EDIT STOCK: ", products);
-  // console.log(
-  //   "INI PRODUCT DARI EDIT STOCKKKKKKK: ",
-  //   Array.isArray(products.stock),
-  // );
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -81,8 +69,6 @@ const EditStock = ({
     (stock: any) => stock.store_id === store_id,
   );
 
-  console.log("INI NEW STOCK ARRAY : ", newStockArray);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,14 +78,11 @@ const EditStock = ({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("THIS IS PRODUCTS : lll :  ", products);
-
     const payload = {
       product_id: products.product_id,
       store_id: store_id,
       quantity: values.amount,
     };
-    console.log("THIS IS PAYLOAD : ", payload);
 
     const response = await callAPI.patch("/stock", payload, {
       headers: { Authorization: `bearer ${token}` },

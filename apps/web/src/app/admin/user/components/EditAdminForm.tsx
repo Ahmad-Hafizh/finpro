@@ -73,11 +73,9 @@ const EditAdminForm = ({
         position: values.position,
         store_id: values.store,
       };
-      console.log("PAYLOAD : ", payload);
       const submit = await callAPI.patch("/admin", payload, {
         headers: { Authorization: `Bearer ${superAdminAccessToken}` },
       });
-      console.log("INI SUBMIT", submit);
       if (submit.data.isSuccess) {
         toast({
           title: "Success",

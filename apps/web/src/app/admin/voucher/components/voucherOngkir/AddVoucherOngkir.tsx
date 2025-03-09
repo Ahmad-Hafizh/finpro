@@ -111,7 +111,6 @@ const AddVoucherOngkir = ({
       });
     }
 
-    // console.log("THIS IS PAYLOAD : ", payload);
     setOpenDialog(false);
   };
 
@@ -234,10 +233,6 @@ const AddVoucherOngkir = ({
             const selectedStore = allStore.find(
               (store: any) => store.store_id === (store_id || field.value),
             );
-
-            console.log("SELECTED STORE : ", selectedStore);
-            console.log("SELECTED STORE ID : ", store_id);
-            console.log("SELECTED STORE ALL : ", allStore);
 
             return (
               <FormItem>

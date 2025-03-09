@@ -52,15 +52,12 @@ const FilterBoxStoreSelector = ({
 }: FilterBoxProps) => {
   const [category, setCategory] = useState<any>([]);
   const [selectedStore, setSelectedStore] = useState<number | null>(null);
-  // const [store, setStore] = useState<any>("");
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  console.log("INI ADMIN INFO DARI COMPONENT : ", adminInfo);
-
   useEffect(() => {
     setCategory(categories);
-    console.log("INI CATEOGRY : ", categories);
   }, [categories]);
 
   const dynamicFilter = (key: string, value: string) => {
@@ -89,7 +86,6 @@ const FilterBoxStoreSelector = ({
 
   const handleStoreChange = (value: string) => {
     const storeId = parseInt(value);
-    console.log("INI STORE ID", storeId);
     setSelectedStore(storeId);
     setStoreId(storeId);
   };

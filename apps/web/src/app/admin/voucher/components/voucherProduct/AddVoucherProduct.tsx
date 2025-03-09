@@ -106,7 +106,6 @@ const AddVoucherProduct = ({
       });
     }
 
-    // console.log("THIS IS PAYLOAD : ", payload);
     setOpenDialog(false);
   };
 

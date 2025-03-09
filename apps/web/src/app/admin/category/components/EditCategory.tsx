@@ -69,7 +69,6 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Ini respons: ", response);
         if (response.data.isSuccess) {
           toast({
             title: "Success",
@@ -88,12 +87,10 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
           variant: "destructive",
         });
         setOpenDialog(false);
-        console.log("Error editing category: ", error);
       }
     };
 
     submitApi(payload);
-    console.log("Value: ", payload);
   };
 
   return (

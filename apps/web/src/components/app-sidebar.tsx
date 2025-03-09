@@ -48,19 +48,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Greeneries",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      plan: "Admin Area",
     },
   ],
   navMain: [
@@ -110,7 +100,7 @@ const data = {
   settings: [
     {
       name: "Settings",
-      url: "/admin/settings",
+      url: "/users/settings",
       icon: Settings2,
     },
   ],

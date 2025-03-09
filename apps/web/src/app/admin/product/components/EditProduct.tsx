@@ -37,7 +37,6 @@ export const EditProduct = ({
   token,
 }: EditAdminFormProps) => {
   const { toast } = useToast();
-  console.log("product data :", productData);
   const [product, setProduct] = useState<any>({});
 
   useEffect(() => {
@@ -46,10 +45,6 @@ export const EditProduct = ({
     form.setValue(
       "category",
       productData.product_category.product_category_name,
-    );
-    console.log(
-      "Category Default Value:",
-      productData?.product_category?.product_category_name,
     );
   }, [productData]);
 
@@ -147,14 +142,12 @@ export const EditProduct = ({
     if (values.images && values.images.length > 0) {
       values.images.forEach((file) => formData.append("product_image", file));
     }
-    console.log("Payload :", formData);
 
     try {
       const response = await callAPI.patch("/product/update", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("Ini response :", response);
       if (response.data.isSuccess) {
         toast({
           title: "Success",
@@ -168,14 +161,12 @@ export const EditProduct = ({
       }, 500);
       return;
     } catch (error) {
-      console.log("error");
       toast({
         title: "Error",
         description: "Something went wrong while updating product",
         variant: "destructive",
       });
       setOpenDialog(false);
-      console.log("Ini error: ", error);
     }
   };
 

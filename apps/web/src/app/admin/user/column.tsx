@@ -95,7 +95,6 @@ export const columns = (
     },
     cell: ({ row }) => {
       const admin = row.original;
-      console.log("ini admin :", admin);
       if (admin.deleted_at !== null) {
         return (
           <div className="m-2 flex h-fit w-fit items-center justify-center rounded-2xl bg-red-500 px-1">

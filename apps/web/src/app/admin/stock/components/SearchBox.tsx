@@ -24,7 +24,7 @@ const SearchBox = () => {
     <Input
       type="text"
       placeholder="Search here..."
-      className="mb-3 w-full px-7"
+      className="mb-5 w-full px-7 py-7"
       value={searchValue}
       onChange={(e) => setSearchValue(e.target.value)}
     />
