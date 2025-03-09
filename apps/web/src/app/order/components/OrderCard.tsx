@@ -176,7 +176,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Avatar
                           variant="rounded"
-                          src={item.product?.product_img?.[0]?.url}
+                          src={item.product?.product_img?.[0]?.image_url}
                           alt={item.product?.product_name}
                           sx={{
                             width: 40,
