@@ -33,7 +33,6 @@ const productPage = () => {
   const router = useRouter();
 
   const { data: session } = useSession();
-  console.log("INI DATA ADMIN : ", session);
 
   useEffect(() => {
     if (session?.user.role === "super_admin") {
@@ -110,7 +109,6 @@ const productPage = () => {
         window.location.reload();
       }, 500);
       setOpenDialog(false);
-      console.log("Ini response delete :", response);
     } catch (error) {
       toast({
         title: "Error",
@@ -118,41 +116,8 @@ const productPage = () => {
         variant: "destructive",
       });
       setOpenDialog(false);
-      console.log("Ini error product delete :", error);
     }
   };
-  console.log("INI KATEGORI DARI STATE : ", categories);
-  console.log("Ini product list:", productList);
-
-  const fetchUserData = [
-    {
-      auth_token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
-      email: "ahmadmaulanahafizh63@gmail.com",
-      image: null,
-      isOauth: false,
-      name: "ahmad",
-      role: "user",
-    },
-    {
-      auth_token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
-      email: "ahmadmaulanahafizh63@gmail.com",
-      image: null,
-      isOauth: false,
-      name: "satrio",
-      role: "admin",
-    },
-    {
-      auth_token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFobWFkbWF1bGFuYWhhZml6aDYzQGdtYWlsLmNvbSIsImlkIjoiY203Mzc0M25jMDAwMHR4dDhob2xiZm8yZCIsImlhdCI6MTc0MTA5OTQ2MiwiZXhwIjoxNzQxMTAzMDYyfQ.qv54PjhllPYVQswCfvD-WwlfY8felF5pf1Dl_dT36dM",
-      email: "ahmadmaulanahafizh63@gmail.com",
-      image: null,
-      isOauth: false,
-      name: "satrio",
-      role: "super_admin",
-    },
-  ];
 
   const filteredData = async (productId: any) => {
     const newData =

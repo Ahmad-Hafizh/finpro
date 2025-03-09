@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
   Command,
@@ -62,7 +61,7 @@ const data = {
     {
       title: "Categories Management",
       url: "/admin/category",
-      icon: SquareTerminal,
+      icon: Map,
     },
     {
       title: "Voucher Management",
@@ -84,6 +83,11 @@ const data = {
       url: "/admin/order",
       icon: Wallet,
     },
+    {
+      title: "Store Management",
+      url: "/admin/store",
+      icon: Frame,
+    },
   ],
   projects: [
     {
@@ -100,7 +104,9 @@ const data = {
   settings: [
     {
       name: "Settings",
-      url: "/users/settings",
+
+      url: "setting/account",
+
       icon: Settings2,
     },
   ],
