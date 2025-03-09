@@ -38,6 +38,15 @@ const Cart: React.FC<CartProps> = ({ session }) => {
   const [selectedItems, setSelectedItems] = useState<{
     [key: number]: boolean;
   }>({});
+  const mappedCartItems = cartItems.map((item) => ({
+    ...item,
+    product: {
+      ...item.product,
+      product_img: item.product.product_img?.map((img) => ({
+        image_url: img.url,
+      })),
+    },
+  }));
 
   const refreshCartData = async () => {
     try {
@@ -152,7 +161,7 @@ const Cart: React.FC<CartProps> = ({ session }) => {
         <Container maxWidth="lg" sx={{ pt: 4, pb: { xs: 2, md: 4 } }}>
           <CartHeader cartCount={cartCount} />
           <CartItemsList
-            cartItems={cartItems}
+            cartItems={mappedCartItems}
             quantities={quantities}
             selectedItems={selectedItems}
             onUpdateQuantity={handleUpdateQuantity}

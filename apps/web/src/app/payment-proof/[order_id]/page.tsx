@@ -36,6 +36,20 @@ export interface OrderDetail {
       product_img?: { url: string }[];
     };
   }[];
+  discounts?: {
+    shippingDiscount: number;
+    voucherDiscount: number;
+    totalSavings: number;
+  };
+  free_item?: {
+    product: {
+      product_id: number;
+      product_name: string;
+      product_price: number;
+      product_img?: { url: string }[];
+    };
+    quantity: number;
+  };
 }
 
 const PaymentProofUploadPage: React.FC = () => {
